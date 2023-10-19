@@ -55,7 +55,7 @@ jobs:
           file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: mgarbowski/pap-backend:latest
+          tags: mgarbowski/pap-projekt-backend:latest
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy:

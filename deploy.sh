@@ -3,7 +3,7 @@
 start=$(date +"%s")
 
 ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_HOST} -i key.txt -t -t -o StrictHostKeyChecking=no << 'ENDSSH'
-docker pull mgarbowski/pap-projekt-backend:latest
+docker pull --platform linux/arm64/v8 mgarbowski/pap-projekt-backend:latest
 
 CONTAINER_NAME=pap-backend
 if [ "$(docker ps -qa -f name=$CONTAINER_NAME)" ]; then

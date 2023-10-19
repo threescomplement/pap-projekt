@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  build-project:
 
     runs-on: ubuntu-latest
 

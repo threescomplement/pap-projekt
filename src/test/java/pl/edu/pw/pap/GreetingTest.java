@@ -12,4 +12,9 @@ class GreetingTest {
         assertEquals(10, greeting.id());
         assertEquals("Hello", greeting.content());
     }
+
+    @Test
+    public void shouldNotFail() {
+        assertTrue(true);
+    }
 }

@@ -68,5 +68,6 @@ jobs:
           SERVER_PORT: ${{ secrets.SERVER_PORT }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
         run: |
+          chmod 755 ./deploy.sh
           set -e
           ./deploy.sh

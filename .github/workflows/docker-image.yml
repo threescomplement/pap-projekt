@@ -7,12 +7,12 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Publish Docker image
+name: Publish do Docker Hub and deploy to mgarbowski.pl
 
 on: workflow_dispatch
 
 jobs:
-  push_to_registry:
+  docker-build:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     steps:
@@ -50,3 +50,23 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    needs:
+      - docker-build
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add Server key
+        run: |
+          touch key.txt && echo "${{ secrets.SERVER_KEY }}" > key.txt
+          chmod 600 key.txt
+      - name: Deploy the application
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+        run: |
+          set -e
+          ./deploy.sh

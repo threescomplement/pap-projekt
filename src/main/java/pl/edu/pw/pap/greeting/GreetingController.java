@@ -11,13 +11,13 @@ public class GreetingController {
     public static final String template = "Hello, %s!";
     private final AtomicLong counter = new AtomicLong();
 
-    @GetMapping("/greeting")
+    @GetMapping("/")
     public Greeting greeting(@RequestParam(value = "name", defaultValue = "world") String name) {
         return new Greeting(counter.incrementAndGet(), String.format(template, name));
     }
 
     @GetMapping("/secured")
     public String secured() {
-        return "Can you see me?";
+        return "You must be logged in to see this!";
     }
 }

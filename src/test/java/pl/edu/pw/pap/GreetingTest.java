@@ -1,6 +1,7 @@
 package pl.edu.pw.pap;
 
 import org.junit.jupiter.api.Test;
+import pl.edu.pw.pap.greeting.Greeting;
 
 import static org.junit.jupiter.api.Assertions.*;
 

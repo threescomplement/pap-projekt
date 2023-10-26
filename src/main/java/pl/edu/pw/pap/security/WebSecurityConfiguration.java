@@ -23,6 +23,7 @@ public class WebSecurityConfiguration {
                 .securityMatcher("/**")
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/greeting").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
                         .anyRequest().authenticated()  // All endpoints require authentication unless specified otherwise
                 );
 

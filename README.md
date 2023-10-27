@@ -37,15 +37,7 @@ Gradle rejestruje różne zadania, które potrafi wykonywać, można je wykonywa
 używając skryptu [gradlew](./gradlew) dla Linuxa.
 
 #### Baza danych
-Na chwilę obecną uruchomienie aplikacji czy nawet uruchomienie testów wymaga chodzącej bazy danych
-```bash
-docker compose up -d database
-```
-
-Żeby położyć wszystkie kontenery
-```bash
-docker compose down
-```
+W tej wersji backend wykorzystuje bazę danych H2 w pamięci
 
 #### Uruchomienie lokalnie aplikacji
 ```bash
@@ -74,12 +66,4 @@ Wyniki kompilacji itd. można wyczyścić komendą:
 
 ```bash
 ./gradlew clean
-```
-
-#### Uruchomienie całości w kontenerach
-Całą aplikację (backend i bazę danych) można uruchomić jako 2 kontenery.
-Najpierw trzeba zbudować .jar
-```bash
-./gradlew build
-docker compose up
 ```

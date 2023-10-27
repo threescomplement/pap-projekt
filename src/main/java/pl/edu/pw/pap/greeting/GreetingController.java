@@ -22,4 +22,9 @@ public class GreetingController {
     public String secured(@AuthenticationPrincipal UserPrincipal principal) {
         return "You must be logged in to see this! Hello " + principal.getUsername() + "!";
     }
+
+    @GetMapping("/admin")
+    public String admin(@AuthenticationPrincipal UserPrincipal principal) {
+        return "You must be an admin to see this. Hello mr " + principal.getUsername();
+    }
 }

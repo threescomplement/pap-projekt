@@ -13,21 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
-    private final JwtIssuer jwtIssuer;
-    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
     @PostMapping("/auth/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
-        var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        var principal = (UserPrincipal) authentication.getPrincipal();
-
-        var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-
-        var token = jwtIssuer.issue(principal.getUserId(), principal.getUsername(), roles);
-
-        return LoginResponse.builder().accessToken(token).build();
+        return authService.attemptLogin(request.getUsername(), request.getPassword());
     }
 }

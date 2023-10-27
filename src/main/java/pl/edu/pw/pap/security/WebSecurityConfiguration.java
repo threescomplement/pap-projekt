@@ -1,6 +1,5 @@
 package pl.edu.pw.pap.security;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,6 +31,7 @@ public class WebSecurityConfiguration {
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()  // All endpoints require authentication unless specified otherwise
                 );
 
@@ -46,9 +46,11 @@ public class WebSecurityConfiguration {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, CustomUserDetailService customUserDetailService, PasswordEncoder passwordEncoder) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
+        var builder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        builder
                 .userDetailsService(customUserDetailService)
-                .passwordEncoder(passwordEncoder)
-                .and().build();  // TODO use non-deprecated method
+                .passwordEncoder(passwordEncoder());
+
+        return builder.build();
     }
 }

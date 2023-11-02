@@ -1,4 +1,5 @@
 .data
+frontend/node_modules
 
 HELP.md
 .gradle

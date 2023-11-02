@@ -36,6 +36,9 @@ znajduje się w plikach [build.gradle.kts](./build.gradle.kts) i [settings.gradl
 Gradle rejestruje różne zadania, które potrafi wykonywać, można je wykonywać przez wtyczkę do IntelliJ albo z powłoki
 używając skryptu [gradlew](./gradlew) dla Linuxa.
 
+#### Baza danych
+W tej wersji backend wykorzystuje bazę danych H2 w pamięci
+
 #### Uruchomienie lokalnie aplikacji
 ```bash
 ./gradlew bootRun

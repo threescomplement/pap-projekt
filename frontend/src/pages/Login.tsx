@@ -1,23 +1,22 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {useJwt} from "react-jwt";
 import {attemptLogin, LoginRequest, User} from "../lib/User";
+import {CurrentUserContext, ICurrentUserContext} from "../App";
 
 export function Login() {
     const loginRequest: LoginRequest = {username: "rdeckard", password: "password"}
-    const [user, setUser] = useState<User | null>(null);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const {user, setUser} = useContext(CurrentUserContext) as ICurrentUserContext;
 
     useEffect(() => {
-        attemptLogin(loginRequest)
-            .then(u => {
-                setUser(u)
-                setIsLoaded(true)
-            })
+        if (user == null) {
+            attemptLogin(loginRequest)
+                .then(u => setUser(u));
+        }
     }, [])
 
     return <>
         <h1>Login</h1>
-        {isLoaded ? <Welcome user={user!}/> : <p>Loading...</p>}
+        {user != null ? <Welcome user={user!}/> : <p>Loading...</p>}
     </>;
 }
 

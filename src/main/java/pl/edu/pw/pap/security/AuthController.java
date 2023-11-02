@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/auth/login")
+    @PostMapping("/api/auth/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest request) {
         return authService.attemptLogin(request.getUsername(), request.getPassword());
     }

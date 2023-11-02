@@ -8,6 +8,7 @@ import {Courses} from "./pages/Courses";
 import {Teachers} from "./pages/Teachers";
 import {NoPage} from "./pages/NoPage";
 import {Login} from "./pages/Login";
+import SingleCourse from "./pages/SingleCourse";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/" element={<Layout/>}>
           <Route index element={<Home/>}/>
           <Route path="courses" element={<Courses/>}/>
+          <Route path="courses/:courseId" element={<SingleCourse/>}/>
           <Route path="teachers" element={<Teachers/>}/>
           <Route path="login" element={<Login/>}/>
           <Route path="*" element={<NoPage/>}/>

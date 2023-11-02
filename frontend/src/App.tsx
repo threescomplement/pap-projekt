@@ -14,7 +14,7 @@ export interface ICurrentUserContext {
     user: User | null,
     setUser: (user: User) => void,
 };
-
+// TODO move context to separate file
 export const CurrentUserContext = createContext<ICurrentUserContext | null>(null);
 
 function App() {

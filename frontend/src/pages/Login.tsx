@@ -1,11 +1,11 @@
 import {useContext, useEffect, useState} from "react";
 import {useJwt} from "react-jwt";
 import {attemptLogin, LoginRequest, User} from "../lib/User";
-import {CurrentUserContext, ICurrentUserContext} from "../App";
+import useUser from "../hooks/useUser";
 
 export function Login() {
     const loginRequest: LoginRequest = {username: "rdeckard", password: "password"}
-    const {user, setUser} = useContext(CurrentUserContext) as ICurrentUserContext;
+    const {user, setUser} = useUser();
 
     useEffect(() => {
         if (user == null) {

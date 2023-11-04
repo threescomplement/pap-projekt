@@ -1,10 +1,21 @@
+import {decodeToken} from "react-jwt";
+
 export interface LoginRequest {
     username: string,
     password: string,
 }
 
 export interface User extends LoginRequest {
+    id: number
     token: string,
+    roles: string[],
+}
+
+interface AccessToken {
+    sub: string,
+    exp: number,
+    u: string,
+    a: string[]
 }
 
 export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
@@ -17,8 +28,12 @@ export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
         body: JSON.stringify(loginRequest),
     });
     const json = await response.json();
+    const token = json.accessToken as string;
+    const decodedToken = decodeToken(token) as AccessToken;
     return {
+        id: Number.parseInt(decodedToken.sub),
         ...loginRequest,
-        token: json.accessToken
+        token: token,
+        roles: decodedToken.a
     };
 }

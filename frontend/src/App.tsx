@@ -1,4 +1,4 @@
-import React, {createContext, useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Layout} from "./pages/Layout";
@@ -9,13 +9,8 @@ import {NoPage} from "./pages/NoPage";
 import {Login} from "./pages/Login";
 import SingleCourse from "./pages/SingleCourse";
 import {User} from "./lib/User";
+import {CurrentUserContext} from "./hooks/useUser";
 
-export interface ICurrentUserContext {
-    user: User | null,
-    setUser: (user: User) => void,
-};
-// TODO move context to separate file
-export const CurrentUserContext = createContext<ICurrentUserContext | null>(null);
 
 function App() {
     const [user, setUser] = useState<User | null>(null);

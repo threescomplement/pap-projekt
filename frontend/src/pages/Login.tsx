@@ -1,5 +1,5 @@
-import {useContext, useEffect, useState} from "react";
-import {useJwt} from "react-jwt";
+import {useEffect} from "react";
+import {decodeToken, isExpired} from "react-jwt";
 import {attemptLogin, LoginRequest, User} from "../lib/User";
 import useUser from "../hooks/useUser";
 
@@ -23,10 +23,13 @@ export function Login() {
 
 export function Welcome({user}: { user: User }) {
     console.log(user);
-    const {decodedToken, isExpired} = useJwt(user.token!);
     return <h1>
         <p>Welcome {user.username}</p>
-        <p>Your token is {isExpired ? "expired" : "valid"}</p>
-        <p>{JSON.stringify(decodedToken)}</p>
+        <p>Your token is {isExpired(user.token) ? "expired" : "valid"}</p>
+        <p>{JSON.stringify(decodeToken(user.token))}</p>
+        <p>Your roles are:</p>
+        <ul>
+            {user.roles.map(r => <li key={r}>{r}</li>)}
+        </ul>
     </h1>
 }

@@ -13,11 +13,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtIssuer {
     private final JwtProperties properties;
-    public String issue(long userId, String username, List<String> roles) { // TODO: role enum
+    public String issue(long userId, String username, String email, List<String> roles) { // TODO: role enum
         return JWT.create()
                 .withSubject(String.valueOf(userId))
                 .withExpiresAt(Instant.now().plus(1, ChronoUnit.DAYS))
                 .withClaim("u", username)
+                .withClaim("e", email)
                 .withClaim("a", roles)
                 .sign(Algorithm.HMAC256(properties.getSecretKey()));
 

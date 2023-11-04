@@ -25,6 +25,7 @@ export function Welcome({user}: { user: User }) {
     console.log(user);
     return <h1>
         <p>Welcome {user.username}</p>
+        <p>Email: {user.email}</p>
         <p>Your token is {isExpired(user.token) ? "expired" : "valid"}</p>
         <p>{JSON.stringify(decodeToken(user.token))}</p>
         <p>Your roles are:</p>

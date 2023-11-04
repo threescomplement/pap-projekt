@@ -21,7 +21,7 @@ public class AuthService {
 
         var principal = (UserPrincipal) authentication.getPrincipal();
         var roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        var token = jwtIssuer.issue(principal.getUserId(), principal.getUsername(), roles);
+        var token = jwtIssuer.issue(principal.getUserId(), principal.getUsername(), principal.getEmail(), roles);
 
         return LoginResponse.builder().accessToken(token).build();
     }

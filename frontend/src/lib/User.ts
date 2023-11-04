@@ -6,7 +6,8 @@ export interface LoginRequest {
 }
 
 export interface User extends LoginRequest {
-    id: number
+    id: number,
+    email: string,
     token: string,
     roles: string[],
 }
@@ -15,6 +16,7 @@ interface AccessToken {
     sub: string,
     exp: number,
     u: string,
+    e: string,
     a: string[]
 }
 
@@ -32,6 +34,7 @@ export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
     const decodedToken = decodeToken(token) as AccessToken;
     return {
         id: Number.parseInt(decodedToken.sub),
+        email: decodedToken.e,
         ...loginRequest,
         token: token,
         roles: decodedToken.a

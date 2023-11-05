@@ -67,3 +67,8 @@ Wyniki kompilacji itd. można wyczyścić komendą:
 ```bash
 ./gradlew clean
 ```
+
+## Usługa wysyłania emaili
+Żeby móc wysyłać maile za pośrednictwem Gmaila, trzeba dostarczyć hasło. Konfiguracja znajduje się w `application.yml`.
+Nie wrzucamy tajnych haseł do Gita, więc żeby użyć hasła podajemy je z linii poleceń (albo wyklikujemy odpowiednią opcję
+w konfiguracji uruchomienia w IntelliJ) `--spring.mail.password="hasło"`.

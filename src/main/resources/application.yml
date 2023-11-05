@@ -4,3 +4,14 @@ spring:
   data:
     rest:
       base-path: "/api"
+  mail:
+    #    password: "app password goes here"
+    username: "mg.puppet@gmail.com"
+    host: "smtp.gmail.com"
+    port: "587"
+    properties:
+      mail:
+        smtp:
+          auth: "true"
+          starttls:
+            enable: "true"

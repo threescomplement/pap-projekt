@@ -10,60 +10,29 @@ Równoległe repozytoria na GitHub i wydziałowym GitLab
 * [GitLab](https://gitlab-stud.elka.pw.edu.pl/mgarbows/pap2023z-z02)
 
 ## Autorzy
-
 * Mikołaj Garbowski
 * Michał Łuszczek
 * Maksym Bieńkowski
 * Tomasz Kurzela
 
-## Struktura repozytorium, technologie
+## Opis projektu
+Aplikacja służąca do wystawiania przez studentów i przeglądania opinii o kursach językowych oferowanych przez 
+Studium Języków Obcych Politechniki Warszawskiej.
 
-### Backend
+### Funkcjonalności
+* Rejestracja i logowanie użytkowników
+* Przeglądanie oferty kursów SJO i prowadzących
+* Wystawianie opinii kursom SJO (operacje CRUD)
+* Wprowadzanie danych o kursach (przez administratora lub w sposób zautomatyzowany)
 
-* Aplikacja - Java, Spring Framework
-* Budowanie aplikacji - Gradle
-* Testy jednostkowe - JUnit
-* Środowisko uruchomieniowe - Docker
+### Technologia
+* Backend - aplikacja Spring Boot
+  * połączona z relacyjną bazą danych przez JPA
+  * uwierzytelnianie i autoryzacja realizowane z użyciem JSON Web Tokens
+* Frontend - klient webowy, aplikacja w React
+* Komunikacja między warstwami przez REST API
 
-Polecam instalację JDK i Gradle za pośrednictwem [SDKman](https://sdkman.io/). Aktualnie skompilowany projekt ma być
-kompatybilny z Javą 17 ale można używać nowszego JDK.
+## Dokumentacja
+Dokumentacja projektu znajduje się w katalogu [docs](./docs)
 
-### Gradle
-
-Gradle jest zestawem narzędzi do budowania, uruchamiania testów, zarządzania zależnościami itd. Konfiguracja dla Gradle
-znajduje się w plikach [build.gradle.kts](./build.gradle.kts) i [settings.gradle.kts](./settings.gradle.kts).
-
-Gradle rejestruje różne zadania, które potrafi wykonywać, można je wykonywać przez wtyczkę do IntelliJ albo z powłoki
-używając skryptu [gradlew](./gradlew) dla Linuxa.
-
-#### Baza danych
-W tej wersji backend wykorzystuje bazę danych H2 w pamięci
-
-#### Uruchomienie lokalnie aplikacji
-```bash
-./gradlew bootRun
-```
-
-#### Uruchomienie testów
-```bash
-./gradlew check
-```
-
-#### Budowanie aplikacji
-Aplikację możemy zbudować do fat-jar - plik `.jar` wykonywalny przez JVM, który poza aplikacją zawiera wszystkie zależności
-```bash
-./gradlew build
-```
-
-Pojawia się plik `./build/libs/pap-0.0.1-SNAPSHOT.jar` (interesuje nas ten bez "plain" w nazwie). Taki plik można uruchomić podając flagę:
-
-```bash
-java -jar ./build/libs/pap-0.0.1-SNAPSHOT.jar
-```
-
-#### Sprzątanie
-Wyniki kompilacji itd. można wyczyścić komendą:
-
-```bash
-./gradlew clean
-```
+* [Instrukcja uruchomienia, instalacji i pracy z backendem](./docs/backend.md)

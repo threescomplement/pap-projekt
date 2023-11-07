@@ -5,11 +5,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.Instant;
 
 @Entity
 @Getter
+@ToString
 public class EmailVerificationToken {
     @Id
     @GeneratedValue
@@ -28,6 +30,6 @@ public class EmailVerificationToken {
     }
 
     public boolean isExpired() {
-        return expires.isAfter(Instant.now());
+        return expires.isBefore(Instant.now());
     }
 }

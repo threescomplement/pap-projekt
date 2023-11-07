@@ -1,7 +1,9 @@
 package pl.edu.pw.pap.user;
 
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
+@Getter
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private final User user;
 

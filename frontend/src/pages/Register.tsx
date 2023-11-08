@@ -1,6 +1,6 @@
-import {ChangeEvent, FormEvent, useReducer} from "react";
+import {ChangeEvent, FormEvent, useReducer, useState} from "react";
 import {attemptRegister, RegisterRequest} from "../lib/User";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../lib/utils";
 
 const initialFormData: RegisterRequest = {
@@ -12,12 +12,21 @@ const initialFormData: RegisterRequest = {
 export default function Register() {
     const [formData, setFormData] = useReducer(formReducer<RegisterRequest>, initialFormData);
     const navigate = useNavigate();
+    const [isRegistered, setIsRegistered] = useState(false);
 
     function handleFormSubmit(event: FormEvent) {
         event.preventDefault();
         console.log(formData);
         attemptRegister(formData)
-            .then(() => navigate("/user/login"));  // TODO: show message to check the mail inbox instead of redirecting to login page
+            .then(() => setIsRegistered(true));
+    }
+
+    if (isRegistered) {
+        return <>
+            <h1>Registration complete</h1>
+            <p>Confirm your email before logging in</p>
+            <Link to="/user/login">Log in</Link>
+        </>;
     }
 
     return <>

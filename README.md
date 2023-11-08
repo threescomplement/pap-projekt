@@ -36,3 +36,4 @@ Studium Języków Obcych Politechniki Warszawskiej.
 Dokumentacja projektu znajduje się w katalogu [docs](./docs)
 
 * [Instrukcja uruchomienia, instalacji i pracy z backendem](./docs/backend.md)
+* [Instrukcja uruchomienia, instalacji i pracy z frontendem](./docs/frontend.md)

@@ -21,12 +21,14 @@ public class User {
     @JsonIgnore
     private String password;
     private String role;
+    private Boolean enabled;
 
-    public User(String username, String email, String password, String role) {
+    public User(String username, String email, String password, String role, Boolean enabled) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.enabled = enabled;
     }
 
 

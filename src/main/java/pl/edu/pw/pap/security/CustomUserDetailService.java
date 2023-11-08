@@ -18,6 +18,10 @@ public class CustomUserDetailService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userService.findByUsername(username).orElseThrow();
+        if (!user.getEnabled()) {
+            throw new RuntimeException("Verify email before logging in");
+        }
+
         return UserPrincipal.builder()
                 .userId(user.getId())
                 .username(user.getUsername())

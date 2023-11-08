@@ -7,6 +7,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.user.User;
@@ -19,7 +21,6 @@ public class PapApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PapApplication.class, args);
-        System.out.println("Hello world");
     }
 
     @Bean()
@@ -48,8 +49,8 @@ public class PapApplication {
     @Profile("dev")
     public CommandLineRunner addDummyUsers(UserRepository repository) {
         return (args) -> {
-            repository.save(new User("rdeckard", "rdeckard@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_ADMIN")); // password
-            repository.save(new User("rbatty", "rbatty@example.com", "$2a$12$ytByi2pSlciOCNJHAf81K.p1YIqZYx7ATiBl/E.4EVlkBqD8k7Uu.", "ROLE_USER")); // password2
+            repository.save(new User("rdeckard", "rdeckard@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_ADMIN", true)); // password
+            repository.save(new User("rbatty", "rbatty@example.com", "$2a$12$ytByi2pSlciOCNJHAf81K.p1YIqZYx7ATiBl/E.4EVlkBqD8k7Uu.", "ROLE_USER", true)); // password2
         };
     }
 }

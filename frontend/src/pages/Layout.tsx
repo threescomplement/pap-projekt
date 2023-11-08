@@ -13,8 +13,8 @@ export function Layout() {
                 </li>
                 <li className="navbar-link">
                     { user == null
-                        ? <Link to="/register">Register</Link>
-                        : <Link to="/login">Login</Link>}
+                        ? <Link to="/user/register">Register</Link>
+                        : <Link to="/user/login">Login</Link>}
                 </li>
                 <li className="navbar-link">
                     <Link to="/courses">Courses</Link>

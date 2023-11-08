@@ -1,36 +1,42 @@
-import {useEffect} from "react";
-import {decodeToken, isExpired} from "react-jwt";
-import {attemptLogin, LoginRequest, User} from "../lib/User";
+import {FormEvent, useReducer} from "react";
+import {attemptLogin, LoginRequest} from "../lib/User";
 import useUser from "../hooks/useUser";
+import {useNavigate} from "react-router-dom";
+import {formReducer} from "../lib/utils";
 
-export function Login() {
-    const loginRequest: LoginRequest = {username: "rdeckard", password: "password"}
-    const {user, setUser} = useUser();
-
-    useEffect(() => {
-        if (user == null) {
-            attemptLogin(loginRequest)
-                .then(u => setUser(u));
-        }
-    }, [])
-
-    return <>
-        <h1>Login</h1>
-        {user != null ? <Welcome user={user!}/> : <p>Loading...</p>}
-    </>;
+const initialFormData: LoginRequest = {
+    username: "",
+    password: ""
 }
 
+export default function Login() {
+    const {setUser} = useUser();
+    const [formData, setFormData] = useReducer(formReducer<LoginRequest>, initialFormData);
+    const navigate = useNavigate();
 
-export function Welcome({user}: { user: User }) {
-    console.log(user);
-    return <h1>
-        <p>Welcome {user.username}</p>
-        <p>Email: {user.email}</p>
-        <p>Your token is {isExpired(user.token) ? "expired" : "valid"}</p>
-        <p>{JSON.stringify(decodeToken(user.token))}</p>
-        <p>Your roles are:</p>
-        <ul>
-            {user.roles.map(r => <li key={r}>{r}</li>)}
-        </ul>
-    </h1>
+    function handleFormSubmit(event: FormEvent) {
+        event.preventDefault();
+        console.log(formData);
+        attemptLogin(formData)
+            .then(user => {
+                setUser(user)
+                navigate("/user")
+            });
+    }
+
+    return <>
+        <h1>Log In</h1>
+
+        <form onSubmit={handleFormSubmit}>
+            <label>
+                <p>Username:</p>
+                <input name="username" type="text" onChange={setFormData}/>
+            </label>
+            <label>
+                <p>Password:</p>
+                <input name="password" type="password" onChange={setFormData}/>
+            </label>
+            <input type="submit" value="Register"/>
+        </form>
+    </>
 }

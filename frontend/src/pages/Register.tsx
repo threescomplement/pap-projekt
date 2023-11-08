@@ -1,6 +1,7 @@
 import {ChangeEvent, FormEvent, useReducer} from "react";
 import {attemptRegister, RegisterRequest} from "../lib/User";
 import {useNavigate} from "react-router-dom";
+import {formReducer} from "../lib/utils";
 
 const initialFormData: RegisterRequest = {
     username: "",
@@ -9,14 +10,14 @@ const initialFormData: RegisterRequest = {
 }
 
 export default function Register() {
-    const [formData, setFormData] = useReducer(formReducer, initialFormData);
+    const [formData, setFormData] = useReducer(formReducer<RegisterRequest>, initialFormData);
     const navigate = useNavigate();
 
     function handleFormSubmit(event: FormEvent) {
         event.preventDefault();
         console.log(formData);
         attemptRegister(formData)
-            .then(() => navigate("/login"));
+            .then(() => navigate("/user/login"));  // TODO: show message to check the mail inbox instead of redirecting to login page
     }
 
     return <>
@@ -38,11 +39,4 @@ export default function Register() {
             <input type="submit" value="Register"/>
         </form>
     </>
-}
-
-const formReducer = (state: RegisterRequest, event: ChangeEvent<HTMLInputElement>): RegisterRequest => {
-    return {
-        ...state,
-        [event.target.name]: event.target.value
-    }
 }

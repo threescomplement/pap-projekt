@@ -6,12 +6,13 @@ import {Home} from "./pages/Home";
 import {Courses} from "./pages/Courses";
 import {Teachers} from "./pages/Teachers";
 import {NoPage} from "./pages/NoPage";
-import {Login} from "./pages/Login";
+import Login from "./pages/Login";
 import SingleCourse from "./pages/SingleCourse";
 import {User} from "./lib/User";
 import {CurrentUserContext} from "./hooks/useUser";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import ConfirmEmail from "./pages/ConfirmEmail";
 
 
 function App() {
@@ -26,9 +27,12 @@ function App() {
                         <Route path="courses" element={<Courses/>}/>
                         <Route path="courses/:courseId" element={<SingleCourse/>}/>
                         <Route path="teachers" element={<Teachers/>}/>
-                        <Route path="login" element={<Login/>}/>
-                        <Route path="register" element={<Register/>}/>
-                        <Route path="profile" element={<Profile user={user}/>}/>
+                        <Route path="user">
+                            <Route index element={<Profile user={user}/>}/>
+                            <Route path="login" element={<Login/>}/>
+                            <Route path="register" element={<Register/>}/>
+                            <Route path="verify/:token" element={<ConfirmEmail/>}/>
+                        </Route>
                         <Route path="*" element={<NoPage/>}/>
                     </Route>
                 </Routes>

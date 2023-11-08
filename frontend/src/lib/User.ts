@@ -57,3 +57,15 @@ export async function attemptRegister(request: RegisterRequest): Promise<User> {
 
     return await response.json() as User;
 }
+
+export async function verifyEmail(token: string): Promise<User> {
+    const response = await fetch(`${process.env.REACT_APP_API_ROOT}users/verify`, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({token: token})
+    });
+    return await response.json() as User;
+}

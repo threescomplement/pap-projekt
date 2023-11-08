@@ -8,7 +8,7 @@ const initialFormData: LoginRequest = {
     username: "",
     password: ""
 }
-
+// TODO error handling
 export default function Login() {
     const {setUser} = useUser();
     const [formData, setFormData] = useReducer(formReducer<LoginRequest>, initialFormData);
@@ -36,7 +36,7 @@ export default function Login() {
                 <p>Password:</p>
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
-            <input type="submit" value="Register"/>
+            <input type="submit" value="Log In"/>
         </form>
     </>
 }

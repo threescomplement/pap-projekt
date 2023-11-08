@@ -1,19 +1,25 @@
 import {Link, Outlet} from "react-router-dom";
+import "./Layout.css"
+import useUser from "../hooks/useUser";
 
 export function Layout() {
+    const {user} = useUser();
+
     return <>
-        <nav>
-            <ul>
-                <li>
+        <nav className="navbar-nav">
+            <ul className="navbar-list">
+                <li className="navbar-link">
                     <Link to="/">Home</Link>
                 </li>
-                <li>
-                    <Link to="/login">Login</Link>
+                <li className="navbar-link">
+                    { user == null
+                        ? <Link to="/register">Register</Link>
+                        : <Link to="/login">Login</Link>}
                 </li>
-                <li>
+                <li className="navbar-link">
                     <Link to="/courses">Courses</Link>
                 </li>
-                <li>
+                <li className="navbar-link">
                     <Link to="/teachers">Teachers</Link>
                 </li>
             </ul>

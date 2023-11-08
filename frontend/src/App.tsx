@@ -10,6 +10,8 @@ import {Login} from "./pages/Login";
 import SingleCourse from "./pages/SingleCourse";
 import {User} from "./lib/User";
 import {CurrentUserContext} from "./hooks/useUser";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
 
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
                         <Route path="courses/:courseId" element={<SingleCourse/>}/>
                         <Route path="teachers" element={<Teachers/>}/>
                         <Route path="login" element={<Login/>}/>
+                        <Route path="register" element={<Register/>}/>
+                        <Route path="profile" element={<Profile user={user}/>}/>
                         <Route path="*" element={<NoPage/>}/>
                     </Route>
                 </Routes>

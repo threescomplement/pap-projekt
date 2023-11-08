@@ -1,0 +1,14 @@
+.navbar-nav {
+    border: 1px solid black;
+}
+
+.navbar-list {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.navbar-link {
+    list-style: none;
+    margin: 0.5vw 2vw;
+}

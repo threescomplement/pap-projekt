@@ -12,6 +12,10 @@ export interface User extends LoginRequest {
     roles: string[],
 }
 
+export interface RegisterRequest extends LoginRequest {
+    email: string
+}
+
 interface AccessToken {
     sub: string,
     exp: number,
@@ -39,4 +43,17 @@ export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
         token: token,
         roles: decodedToken.a
     };
+}
+
+export async function attemptRegister(request: RegisterRequest): Promise<User> {
+    const response = await fetch(`${process.env.REACT_APP_API_ROOT}users`, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(request),
+    })
+
+    return await response.json() as User;
 }

@@ -15,22 +15,42 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+/**
+ * Unit tests for UserController
+ * <p>
+ * The objective of unit tests is to test the class in isolation.
+ * </p>
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserControllerTest {
+    /**
+     * Allows for mocking HTTP requests to the controller and test its responses
+     */
     @Autowired
     private MockMvc api;
 
+    /**
+     * Allow explicit converting of objects to JSON
+     */
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    /**
+     * `@MockBean` annotation will cause Spring not to inject the actual `UserService` object
+     * into the UserController bean, instead the Mockito library allows us to redefine its behavior
+     * for the purpose of a single test. Unit tests should verify behavior of UserController in isolation,
+     * not its dependencies
+     */
     @MockBean
     private UserService userService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
 
     @Test
     public void registerNewUser() throws Exception {
         var request = new RegisterRequest("rdeckard", "rdeckard@example.com", "password");
+        var json = objectMapper.writeValueAsString(request);
         var user = new User(
                 "rdeckard",
                 "rdeckard@example.com",
@@ -38,10 +58,11 @@ class UserControllerTest {
                 "ROLE_USER",
                 false
         );
-        var json = objectMapper.writeValueAsString(request);
 
+        // Define behavior of mocked object
         Mockito.doReturn(user).when(userService).registerNewUser(request);
 
+        // Perform a mock HTTP request and check response status code and its contents
         api.perform(post("/api/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))

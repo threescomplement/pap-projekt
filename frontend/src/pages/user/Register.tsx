@@ -1,7 +1,7 @@
 import {ChangeEvent, FormEvent, useReducer, useState} from "react";
-import {attemptRegister, RegisterRequest} from "../lib/User";
+import {attemptRegister, RegisterRequest} from "../../lib/User";
 import {Link, useNavigate} from "react-router-dom";
-import {formReducer} from "../lib/utils";
+import {formReducer} from "../../lib/utils";
 
 const initialFormData: RegisterRequest = {
     username: "",

@@ -2,6 +2,13 @@ import {Link, Outlet} from "react-router-dom";
 import "./Layout.css"
 import useUser from "../hooks/useUser";
 
+/**
+ * Define the layout of the page
+ *
+ * The `<Outlet/>` component will be replaced with actual page content by React Router
+ *
+ * @constructor
+ */
 export function Layout() {
     const {user} = useUser();
 

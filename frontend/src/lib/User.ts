@@ -1,19 +1,12 @@
 import {decodeToken} from "react-jwt";
 
-export interface LoginRequest {
-    username: string,
-    password: string,
-}
-
-export interface User extends LoginRequest {
+export interface User {
     id: number,
+    username: string,
     email: string,
+    password: string,
     token: string,
     roles: string[],
-}
-
-export interface RegisterRequest extends LoginRequest {
-    email: string
 }
 
 interface AccessToken {
@@ -24,13 +17,30 @@ interface AccessToken {
     a: string[]
 }
 
+export interface LoginRequest {
+    username: string,
+    password: string,
+}
+
+export interface RegisterRequest {
+    username: string,
+    email: string,
+    password: string,
+}
+
+const defaultHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+};
+
+/**
+ * Log in user - acquire JWT token
+ * @param loginRequest - login credentials
+ */
 export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
     const response = await fetch(`${process.env.REACT_APP_API_ROOT}auth/login`, {
         method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
+        headers: defaultHeaders,
         body: JSON.stringify(loginRequest),
     });
     const json = await response.json();
@@ -45,27 +55,30 @@ export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
     };
 }
 
+/**
+ * Register new user
+ *
+ * @param request - credentials of new user
+ */
 export async function attemptRegister(request: RegisterRequest): Promise<User> {
     const response = await fetch(`${process.env.REACT_APP_API_ROOT}users`, {
         method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
+        headers: defaultHeaders,
         body: JSON.stringify(request),
     })
 
     return await response.json() as User;
 }
 
-export async function verifyEmail(token: string): Promise<User> {
+/**
+ * Confirm user's email address
+ * @param emailVerificationToken
+ */
+export async function verifyEmail(emailVerificationToken: string): Promise<User> {
     const response = await fetch(`${process.env.REACT_APP_API_ROOT}users/verify`, {
         method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({token: token})
+        headers: defaultHeaders,
+        body: JSON.stringify({token: emailVerificationToken})
     });
     return await response.json() as User;
 }

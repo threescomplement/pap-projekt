@@ -13,6 +13,13 @@ import pl.edu.pw.pap.PapApplication;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Integration tests for User-related functionality
+ * <p>
+ * The purpose of integration test is to verify that all components interact correctly.
+ * This test starts the entire Spring Application, connects to the database and performs network requests.
+ * </p>
+ */
 @SpringBootTest(classes = PapApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserIntegrationTest {
 

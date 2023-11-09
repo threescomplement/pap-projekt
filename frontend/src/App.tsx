@@ -6,16 +6,24 @@ import {Home} from "./pages/Home";
 import {Courses} from "./pages/Courses";
 import {Teachers} from "./pages/Teachers";
 import {NoPage} from "./pages/NoPage";
-import Login from "./pages/Login";
+import Login from "./pages/user/Login";
 import SingleCourse from "./pages/SingleCourse";
 import {User} from "./lib/User";
 import {CurrentUserContext} from "./hooks/useUser";
-import Register from "./pages/Register";
-import Profile from "./pages/Profile";
-import ConfirmEmail from "./pages/ConfirmEmail";
+import Register from "./pages/user/Register";
+import Profile from "./pages/user/Profile";
+import ConfirmEmail from "./pages/user/ConfirmEmail";
 
-
-function App() {
+/**
+ * Top level component for the entire application
+ *
+ * Provide context - variables available to all components via hooks like `useUser`
+ *
+ * Define routes - which components correspond to subpages with given URLs
+ *
+ * @constructor
+ */
+export default function App() {
     const [user, setUser] = useState<User | null>(null);
 
     return (
@@ -41,5 +49,3 @@ function App() {
 
     );
 }
-
-export default App;

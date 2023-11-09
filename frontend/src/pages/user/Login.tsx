@@ -1,8 +1,8 @@
 import {FormEvent, useReducer} from "react";
-import {attemptLogin, LoginRequest} from "../lib/User";
-import useUser from "../hooks/useUser";
+import {attemptLogin, LoginRequest} from "../../lib/User";
+import useUser from "../../hooks/useUser";
 import {useNavigate} from "react-router-dom";
-import {formReducer} from "../lib/utils";
+import {formReducer} from "../../lib/utils";
 
 const initialFormData: LoginRequest = {
     username: "",

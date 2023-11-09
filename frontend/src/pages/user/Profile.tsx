@@ -1,5 +1,5 @@
-import {User} from "../lib/User";
-import useUser from "../hooks/useUser";
+import {User} from "../../lib/User";
+import useUser from "../../hooks/useUser";
 import {useNavigate} from "react-router-dom";
 
 

@@ -1,4 +1,4 @@
-# Konfiguracja aplikacja
+# Konfiguracja aplikacji
 Aplikacja frontendowa i backendowa mogą potrzebować pewnych wartości, których z różnych względów lepiej nie hardcodować.
 
 Hasła, klucze i inne tajne wartości w ogóle nie powinny się znajdować w repozytorium git.

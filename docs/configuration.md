@@ -14,7 +14,7 @@ Spring wspiera podzielenie konfiguracji na profile, obecnie mamy 2 profile
 ### Pliki konfiguracyjne
 Konfiguracja aplikacji Spring Boot znajduje się w katalogu [resources](../src/main/resources/) w plikach
 * [application.yml](../src/main/resources/application.yml) - wspólna konfiguracja dla wszystkich profili
-* [application-dev.yml](../src/main/resources/application-dev.yml) - konfiguracja tylko dla profilu `dev`
+* [application-dev.yml](../src/main/resources/application-dev.yaml) - konfiguracja tylko dla profilu `dev`
 * [application-prod.yml](../src/main/resources/application-prod.yml) - konfiguracja tylko dla profilu `prod`
 
 

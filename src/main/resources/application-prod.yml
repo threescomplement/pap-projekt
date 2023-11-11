@@ -11,4 +11,4 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: admin
     password: admin
-    url: jdbc:postgresql://localhost:5432/pap
+    url: jdbc:postgresql://pap-database:5432/pap

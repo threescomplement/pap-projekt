@@ -1,12 +1,8 @@
 package pl.edu.pw.pap.teacher;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import pl.edu.pw.pap.course.Course;
 
 import java.util.Set;
@@ -14,20 +10,28 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-@ToString
-public class Teacher  {
+public class Teacher {
 
 
     @Id
     @GeneratedValue
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "teacher")
+    @OneToMany(mappedBy = "teacher", fetch = FetchType.EAGER)
     private Set<Course> courses;
 
-    public Teacher(String name) {this.name = name;}
+    public Teacher(String name) {
+        this.name = name;
+    }
 
     protected Teacher() {
     }
 
+    @Override
+    public String toString() {
+        return "Teacher{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

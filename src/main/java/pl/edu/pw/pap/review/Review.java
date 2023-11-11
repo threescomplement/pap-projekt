@@ -33,7 +33,7 @@ public class Review {
     private int likes;
     private int dislikes;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     public Review(User user, Course course, String opinion, int overallRating) {
@@ -48,7 +48,7 @@ public class Review {
     @Override
     public String toString() {
         return "Review{" +
-                "id=" + id.userId + // TODO: Improve review toString method
+                "id=" + id +
                 ", user=" + user.getUsername() +
                 ", course=" + course.getName() +
                 ", opinion='" + opinion + '\'' +

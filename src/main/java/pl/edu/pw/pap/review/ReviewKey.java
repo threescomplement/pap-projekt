@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Embeddable
 @EqualsAndHashCode
 @ToString
-class ReviewKey implements Serializable {
+public class ReviewKey implements Serializable {
 
 
     @Column(name = "user_id")

@@ -12,6 +12,7 @@ import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.Review;
+import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
@@ -84,6 +85,28 @@ public class PapApplication {
             var comments = commentRepository.findAll();
             log.info("Added comments:");
             comments.forEach(c -> log.info(c.toString()));
+        };
+    }
+
+    @Bean
+    @Profile("dev")
+    public CommandLineRunner performQueries(
+            CourseRepository courseRepository,
+            TeacherRepository teacherRepository,
+            UserRepository userRepository,
+            ReviewRepository reviewRepository,
+            CommentRepository commentRepository
+    ) {
+        return args -> {
+            var review = reviewRepository
+                    .findById(new ReviewKey(2L, 1L))
+                    .get();
+            log.info("Review for course 1 by user 2: " + review);
+
+            log.info(review.getComments().toString());  // This will be empty (why?)
+
+            var comments = commentRepository.findByReview_Id(review.getId());
+            log.info("Comments for this review: " + comments);
         };
     }
 }

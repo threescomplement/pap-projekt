@@ -1,6 +1,6 @@
 package pl.edu.pw.pap.teacher;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TeacherRepository extends CrudRepository<Teacher, Long> {
+public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 }

@@ -1,9 +1,6 @@
 package pl.edu.pw.pap.review;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.course.Course;
@@ -22,6 +19,15 @@ class CourseReviewKey implements Serializable {
     @Column(name = "course_id")
     Long courseId;
 
+    public CourseReviewKey(Long userId, Long courseId) {
+        this.userId = userId;
+        this.courseId = courseId;
+    }
+
+    protected CourseReviewKey() {
+
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -37,27 +43,31 @@ class CourseReviewKey implements Serializable {
 }
 
 
-
 @Entity
 @Getter
 @Setter
 public class Review {
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @EmbeddedId
+    CourseReviewKey id;
 
-    private User student;
+    @ManyToOne
+    @MapsId("userId")
+    @JoinColumn(name = "user_id") //currently ignoring the unresolved column, possibly caused by type of our database
+    private User user;
 
+    @ManyToOne
+    @MapsId("courseId")
+    @JoinColumn(name = "course_id") //currently ignoring the unresolved column, possibly caused by type of our database
     private Course course;
     private String opinion;
-    private int overallRating; // TODO: Decide which paramters should be included in the review
+    private int overallRating; // TODO: Decide which parameters should be included in the review
 
     private int likes;
     private int dislikes;
 
-    public Review(User student, Course course, String opinion, int overallRating) {
-        this.student = student;
+    public Review(User user, Course course, String opinion, int overallRating) {
+        this.user = user;
         this.course = course;
         this.opinion = opinion;
         this.overallRating = overallRating;

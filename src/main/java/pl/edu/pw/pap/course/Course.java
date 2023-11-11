@@ -1,14 +1,12 @@
 package pl.edu.pw.pap.course;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import pl.edu.pw.pap.review.Review;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,11 +20,13 @@ public class Course {
     private Long id;
     private String name;
 
-    @OneToMany(mappedBy = "course")
-    private Set<Review> reviews;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
+    private Set<Review> reviews = new HashSet<Review>();
 
     public Course(String name) {
         this.name = name;
+
     }
 
     protected Course() {

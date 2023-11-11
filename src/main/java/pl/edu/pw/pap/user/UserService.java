@@ -27,13 +27,13 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User registerNewUser(RegisterRequest request) throws EmailTakenException, UsernameTakenException {
+    public User registerNewUser(RegisterRequest request) {
         if (userRepository.existsUserByEmail(request.email())) {
-            throw new EmailTakenException();
+            throw new UserRegistrationException("Email address is already being used");
         }
 
         if (userRepository.existsUserByUsername(request.username())) {
-            throw new UsernameTakenException();
+            throw new UserRegistrationException("Username is already being used");
         }
 
         var user = new User(request.username(), request.email(), passwordEncoder.encode(request.password()), DEFAULT_ROLE, false);

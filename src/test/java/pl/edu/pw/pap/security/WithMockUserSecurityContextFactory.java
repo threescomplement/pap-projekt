@@ -7,6 +7,9 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 
 import java.util.Arrays;
 
+/**
+ * Make custom annotations work with the Spring Security and testing ecosystems
+ */
 public class WithMockUserSecurityContextFactory implements WithSecurityContextFactory<WithMockUser> {
     @Override
     public SecurityContext createSecurityContext(WithMockUser annotation) {

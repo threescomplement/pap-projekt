@@ -6,11 +6,14 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
+import pl.edu.pw.pap.review.Review;
+import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 
@@ -49,8 +52,27 @@ public class PapApplication {
     @Profile("dev")
     public CommandLineRunner addDummyUsers(UserRepository repository) {
         return (args) -> {
+            ;
             repository.save(new User("rdeckard", "rdeckard@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_ADMIN", true)); // password
             repository.save(new User("rbatty", "rbatty@example.com", "$2a$12$ytByi2pSlciOCNJHAf81K.p1YIqZYx7ATiBl/E.4EVlkBqD8k7Uu.", "ROLE_USER", true)); // password2
+            log.info("added 2 users");
         };
     }
+
+    @Bean()
+    @Profile("dev")
+    public CommandLineRunner addDummyReview(ReviewRepository reviewRepository, CourseRepository courseRepository, UserRepository userRepository){
+        return (args) -> {
+            User user = new User("rdeckard", "rdeckard@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_ADMIN", true); // password
+            Course course = new Course("Angielski C2");
+            userRepository.save(user);
+            log.info("added user");
+            courseRepository.save(course);
+            log.info("saved Course");
+            reviewRepository.save(new Review(user, course, "DObra", 5));
+            log.info("added review");
+        };
+    }
+
+
 }

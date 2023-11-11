@@ -9,7 +9,7 @@ import pl.edu.pw.pap.user.User;
 import java.io.Serializable;
 import java.util.Objects;
 
-
+@Embeddable
 class CourseReviewKey implements Serializable {
 
 
@@ -49,7 +49,7 @@ class CourseReviewKey implements Serializable {
 public class Review {
 
     @EmbeddedId
-    CourseReviewKey id;
+    CourseReviewKey id = new CourseReviewKey();
 
     @ManyToOne
     @MapsId("userId")

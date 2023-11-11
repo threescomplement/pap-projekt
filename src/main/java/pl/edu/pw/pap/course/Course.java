@@ -26,7 +26,7 @@ public class Course {
 
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
-    private Set<Review> reviews = new HashSet<Review>();
+    private Set<Review> reviews;
 
     public Course(String name) {
         this.name = name;

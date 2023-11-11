@@ -4,6 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.user.User;
 
@@ -37,6 +39,8 @@ class CourseReviewKey implements Serializable {
 
 
 @Entity
+@Getter
+@Setter
 public class Review {
 
     @Id

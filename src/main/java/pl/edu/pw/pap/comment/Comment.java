@@ -4,9 +4,13 @@ package pl.edu.pw.pap.comment;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 //Maybe it's possible to have one interface for reviews and comments that includes the text, likes and dislikes
 @Entity
+@Getter
+@Setter
 public class Comment {
     @Id
     @GeneratedValue

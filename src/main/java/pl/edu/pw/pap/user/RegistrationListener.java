@@ -28,7 +28,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         message.setFrom(senderEmail);
         message.setTo(user.getEmail());
         message.setSubject("Verify your email");
-        message.setText("Verification token is: " + token.getToken());  // TODO: link to appropriate frontend page
+        message.setText("Click here to confirm your email:  http://localhost:3000/user/verify/" + token.getToken());  // TODO: load url from properties
         emailSender.send(message);
         log.info("Sent email: " + message.toString());
     }

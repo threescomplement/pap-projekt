@@ -71,6 +71,9 @@ public class PapApplication {
             log.info("saved Course");
             reviewRepository.save(new Review(user, course, "DObra", 5));
             log.info("added review");
+            reviewRepository.findAll().forEach((rev -> {
+                log.info(rev.toString());
+            }));
         };
     }
 

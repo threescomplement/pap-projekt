@@ -75,6 +75,19 @@ public class Review {
         this.dislikes = 0;
     }
 
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id=" + id.userId + // TODO: Improve review toString method
+                ", user=" + user.getUsername() +
+                ", course=" + course.getName() +
+                ", opinion='" + opinion + '\'' +
+                ", overallRating=" + overallRating +
+                ", likes=" + likes +
+                ", dislikes=" + dislikes +
+                '}';
+    }
+
     protected Review() {
     }
 }

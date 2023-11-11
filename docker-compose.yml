@@ -1,6 +1,13 @@
 version: "3"
 
 services:
+  backend:
+    container_name: pap-backend
+    depends_on:
+      - database
+    image: "mgarbowski/pap-projekt-backend:latest"
+    ports:
+      - "8080:8080"
   database:
     image: "postgres:16"
     container_name: pap-database

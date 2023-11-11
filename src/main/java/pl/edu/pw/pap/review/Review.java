@@ -3,6 +3,7 @@ package pl.edu.pw.pap.review;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.user.User;
 
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 @Embeddable
+@ToString
 class CourseReviewKey implements Serializable {
 
 
@@ -78,7 +80,7 @@ public class Review {
     @Override
     public String toString() {
         return "Review{" +
-                "id=" + id.userId + // TODO: Improve review toString method
+                "id=" + id + // TODO: Improve review toString method
                 ", user=" + user.getUsername() +
                 ", course=" + course.getName() +
                 ", opinion='" + opinion + '\'' +

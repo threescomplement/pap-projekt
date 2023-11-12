@@ -1,7 +1,8 @@
 #!/bin/bash
 
 start=$(date +"%s")
-scp -i key.txt -P ${SERVER_PORT} ./docker-compose.yml ${SERVER_USER}@${SERVER_HOST}:/srv/pap/docker-compose.yml
+echo "Copying docker-compose.yml"
+scp -i key.txt -P ${SERVER_PORT} ./docker-compose.yml ${SERVER_USER}@${SERVER_HOST}:/srv/pap/
 
 ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_HOST} -i key.txt -t -t -o StrictHostKeyChecking=no << 'ENDSSH'
 

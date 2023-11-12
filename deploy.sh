@@ -8,7 +8,6 @@ ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_HOST} -i key.txt -t -t -o StrictHo
 
 cd /srv/pap
 
-echo $GMAIL_PASSWORD > gmail_pass.txt
 cat<<EOF > /srv/pap/docker-compose.deployment.yml
 services:
   backend:

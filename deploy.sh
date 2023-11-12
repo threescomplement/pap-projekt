@@ -1,19 +1,18 @@
 #!/bin/bash
 
 start=$(date +"%s")
+scp -i key.txt -P ${SERVER_PORT} ./docker-compose.yml ${SERVER_USER}@${SERVER_HOST}:/srv/pap/docker-compose.yml
 
 ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_HOST} -i key.txt -t -t -o StrictHostKeyChecking=no << 'ENDSSH'
-docker pull --platform linux/arm64/v8 mgarbowski/pap-projekt-backend:latest
 
-CONTAINER_NAME=pap-backend
-if [ "$(docker ps -qa -f name=$CONTAINER_NAME)" ]; then
-    if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-        echo "Container is running -> stopping it..."
-        docker stop $CONTAINER_NAME;
-    fi
-fi
+cd /srv/pap
+cat<<EOF > /srv/pap/docker-compose.deployment.yml
+services:
+  backend:
+    command: "--spring.mail.password=${GMAIL_PASSWORD}"
+EOF
 
-docker run -d --rm -p 8080:8080 --name $CONTAINER_NAME mgarbowski/pap-projekt-backend:latest
+docker compose -f docker-compose.yml -f docker-compose.deployment.yml up --pull=always -d
 
 exit
 ENDSSH

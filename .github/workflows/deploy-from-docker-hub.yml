@@ -1,0 +1,24 @@
+name: Deploy images from docker hub to server
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+#    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add Server key
+        run: |
+          touch key.txt && echo "${{ secrets.SERVER_KEY }}" > key.txt
+          chmod 600 key.txt
+      - name: Deploy the application
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+        run: |
+          chmod 755 ./deploy.sh
+          set -e
+          ./deploy.sh

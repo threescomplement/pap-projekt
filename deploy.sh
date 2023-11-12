@@ -7,12 +7,15 @@ scp -i key.txt -P ${SERVER_PORT} -o StrictHostKeyChecking=no ./docker-compose.ym
 ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_HOST} -i key.txt -t -t -o StrictHostKeyChecking=no << ENDSSH
 
 cd /srv/pap
+
+echo $GMAIL_PASSWORD > gmail_pass.txt
 cat<<EOF > /srv/pap/docker-compose.deployment.yml
 services:
   backend:
-    command: "--spring.mail.password=${GMAIL_PASSWORD}"
+    command: "--spring.mail.password=$GMAIL_PASSWORD"
 EOF
 
+docker compose down
 docker compose -f docker-compose.yml -f docker-compose.deployment.yml up --pull=always -d
 
 exit

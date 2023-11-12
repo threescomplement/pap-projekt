@@ -15,6 +15,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private final Logger log = LoggerFactory.getLogger(RegistrationListener.class);
     private final UserService userService;
     private final JavaMailSender emailSender;
+    private final EmailVerificationProperties properties;
     @Value("${spring.mail.username}")
     private String senderEmail;
 
@@ -28,7 +29,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         message.setFrom(senderEmail);
         message.setTo(user.getEmail());
         message.setSubject("Verify your email");
-        message.setText("Click here to confirm your email:  http://localhost:3000/user/verify/" + token.getToken());  // TODO: load url from properties
+        message.setText("Click here to confirm your email:  " + properties.getConfirmBaseUrl() + token.getToken());
         emailSender.send(message);
         log.info("Sent email: " + message.toString());
     }

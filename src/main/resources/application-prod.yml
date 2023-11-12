@@ -4,11 +4,13 @@ security:
 spring:
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     driver-class-name: org.postgresql.Driver
     username: admin
     password: admin
-    url: jdbc:postgresql://localhost:5432/pap
+    url: jdbc:postgresql://pap-database:5432/pap
+email-verification:
+  confirm-base-url: "https://pap.mgarbowski.pl/user/verify/"

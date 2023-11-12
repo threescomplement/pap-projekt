@@ -3,9 +3,9 @@ version: "3"
 services:
   frontend:
     container_name: pap-frontend
-    depends_on:
-      - backend
-    image: "mgarbowski/pap-projekt-frontend:latest"
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "3000:3000"
     environment:
@@ -14,7 +14,9 @@ services:
     container_name: pap-backend
     depends_on:
       - database
-    image: "mgarbowski/pap-projekt-backend:latest"
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
   database:
@@ -29,8 +31,3 @@ services:
       - "./.data:/var/lib/postgresql/data"
     ports:
       - "5432:5432"
-
-networks:
-  default:
-    external: true
-    name: mgarbowski-pl-network

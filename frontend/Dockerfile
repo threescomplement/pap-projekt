@@ -1,9 +1,11 @@
 # build environment
 FROM node:13.12.0-alpine as build
 WORKDIR /app
-COPY . .
+COPY ./package.json .
 RUN npm install
-RUN npm build
+
+COPY . .
+RUN npm run build
 
 # production environment
 FROM nginx:stable-alpine

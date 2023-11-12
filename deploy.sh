@@ -3,6 +3,7 @@
 start=$(date +"%s")
 echo "Copying docker-compose.yml"
 echo "${SERVER_USER}"
+cat docker-compose.yml
 scp -i key.txt -P ${SERVER_PORT} -o StrictHostKeyChecking=no ./docker-compose.yml ${SERVER_USER}@${SERVER_HOST}:/srv/pap/
 
 ssh -p ${SERVER_PORT} ${SERVER_USER}@${SERVER_HOST} -i key.txt -t -t -o StrictHostKeyChecking=no << 'ENDSSH'

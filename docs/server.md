@@ -35,4 +35,4 @@ Na własny użytek można to ominąć przez [tunelowanie SSH](https://linuxize.c
 gdybyście mieli taką potrzebę.
 
 ## Deployment
-TBA, obecna konfiguracja z GitHub Actions może nie działać, więcej instrukcji się pojawi kiedy coś zrobimy
+Sczegóły opisane w [deployment](./deployment.md)

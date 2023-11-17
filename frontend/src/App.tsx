@@ -12,6 +12,7 @@ import {CurrentUserContext} from "./hooks/useUser";
 import Register from "./pages/user/Register";
 import Profile from "./pages/user/Profile";
 import ConfirmEmail from "./pages/user/ConfirmEmail";
+import AdminPanel from "./pages/admin/AdminPanel";
 
 /**
  * Top level component for the entire application
@@ -40,11 +41,13 @@ export default function App() {
                             <Route path="register" element={<Register/>}/>
                             <Route path="verify/:token" element={<ConfirmEmail/>}/>
                         </Route>
+                        <Route path="admin">
+                            <Route index element={<AdminPanel />}/>
+                        </Route>
                         <Route path="*" element={<NoPage/>}/>
                     </Route>
                 </Routes>
             </BrowserRouter>
         </CurrentUserContext.Provider>
-
     );
 }

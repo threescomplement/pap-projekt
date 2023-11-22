@@ -24,7 +24,7 @@ Akcje uruchamiają się automatycznie lub na żądanie (przycisk Run workflow w 
 
 ### Uruchomienie testów
 * [GitHub](https://github.com/mGarbowski/pap-projekt/actions/workflows/gradle.yml)
-* [gradle.yml](../.github/workflows/gradle.yml)
+* [gradle.yml](../.github/workflows/backend-tests.yml)
 
 Działanie
 * Instaluje JDK

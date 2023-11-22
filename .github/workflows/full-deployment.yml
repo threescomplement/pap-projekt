@@ -7,87 +7,20 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-# TODO full implementation
+
 name: Full deployment
 
 on: workflow_dispatch
-
+# TODO run tests in a separate reusable workflow
 jobs:
-  docker-build-publish-backed:
-    name: Build and publish docker image of backend app
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      - name: Build with Gradle
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-        with:
-          arguments: build
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: mgarbowski/pap-projekt-backend
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: .
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: mgarbowski/pap-projekt-backend:latest
-          labels: ${{ steps.meta.outputs.labels }}
-
-  docker-build-publish-frontend:
-    name: Build and publish docker image of frontend app
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v4
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to Docker Hub
-        uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: mgarbowski/pap-projekt-frontend
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
-        with:
-          context: ./frontend
-          platforms: linux/amd64,linux/arm64
-          push: true
-          tags: mgarbowski/pap-projekt-frontend:latest
-          labels: ${{ steps.meta.outputs.labels }}
+  build-and-publish-backend:
+    uses: ./.github/workflows/build-and-publish-backend.yml
+    secrets: inherit
+  build-and-publish-frontend:
+    uses: ./.github/workflows/build-and-publish-frontend.yml
+    secrets: inherit
+  deploy:
+    needs:
+      - build-and-publish-backend
+      - build-and-publish-frontend
+    uses: ./.github/workflows/deploy-from-docker-hub.yml

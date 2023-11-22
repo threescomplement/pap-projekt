@@ -24,3 +24,4 @@ jobs:
       - build-and-publish-backend
       - build-and-publish-frontend
     uses: ./.github/workflows/deploy-from-docker-hub.yml
+    secrets: inherit

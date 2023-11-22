@@ -1,0 +1,12 @@
+name: Run all tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-backend-tests:
+    uses: ./.github/workflows/backend-tests.yml
+  # TODO frontend tests

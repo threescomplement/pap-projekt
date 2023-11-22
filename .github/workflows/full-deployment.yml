@@ -13,6 +13,8 @@ name: Full deployment
 on: workflow_dispatch
 # TODO run tests in a separate reusable workflow
 jobs:
+  run-backend-tests:
+    uses: ./.github/workflows/backend-tests.yml
   build-and-publish-backend:
     uses: ./.github/workflows/build-and-publish-backend.yml
     secrets: inherit

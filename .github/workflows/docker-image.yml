@@ -7,13 +7,14 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Publish do Docker Hub and deploy to mgarbowski.pl
+# TODO full implementation
+name: Full deployment
 
 on: workflow_dispatch
 
 jobs:
-  docker-build:
-    name: Push Docker image to Docker Hub
+  docker-build-publish-backed:
+    name: Build and publish docker image of backend app
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -28,7 +29,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
-          arguments: build
+          arguments: bootJar
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -57,24 +58,3 @@ jobs:
           push: true
           tags: mgarbowski/pap-projekt-backend:latest
           labels: ${{ steps.meta.outputs.labels }}
-
-  deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    needs:
-      - docker-build
-    steps:
-      - uses: actions/checkout@v3
-      - name: Add Server key
-        run: |
-          touch key.txt && echo "${{ secrets.SERVER_KEY }}" > key.txt
-          chmod 600 key.txt
-      - name: Deploy the application
-        env:
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_PORT: ${{ secrets.SERVER_PORT }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-        run: |
-          chmod 755 ./deploy.sh
-          set -e
-          ./deploy.sh

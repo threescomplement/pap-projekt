@@ -8,7 +8,7 @@ export function Teachers() {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/teachers")
+        fetch(`${process.env.REACT_APP_API_ROOT}teachers`)  // TODO: factor out as a separate function
             .then(response => response.json())
             .then(json => {
                 setTeachers(json._embedded.teachers);

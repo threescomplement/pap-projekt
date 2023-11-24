@@ -1,3 +1,30 @@
+import {useEffect, useState} from "react";
+import {ITeacher} from "../lib/Teacher";
+import TeacherList from "../components/TeacherList";
+
+
 export function Teachers() {
-    return <h1>Teachers</h1>
+    const [teachers, setTeachers] = useState<ITeacher[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        fetch("http://localhost:8080/api/teachers")
+            .then(response => response.json())
+            .then(json => {
+                setTeachers(json._embedded.teachers);
+                setIsLoaded(true);
+            })
+            .catch(e => console.error(e));
+    }, []);
+
+    const content = isLoaded
+    ?
+        <TeacherList teachers={teachers}/>
+        :<p>Loading...</p>
+
+
+    return <>
+        <h1>Teachers</h1>
+        {content}
+        </>
 }

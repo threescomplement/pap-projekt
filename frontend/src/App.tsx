@@ -7,6 +7,7 @@ import {Teachers} from "./pages/Teachers";
 import {NoPage} from "./pages/NoPage";
 import Login from "./pages/user/Login";
 import SingleCourse from "./pages/SingleCourse";
+import SingleTeacher from "./pages/SingleTeacher";
 import {User} from "./lib/User";
 import {CurrentUserContext} from "./hooks/useUser";
 import Register from "./pages/user/Register";
@@ -34,6 +35,7 @@ export default function App() {
                         <Route path="courses" element={<Courses/>}/>
                         <Route path="courses/:courseId" element={<SingleCourse/>}/>
                         <Route path="teachers" element={<Teachers/>}/>
+                        <Route path="teachers/:teacherId" element={<SingleTeacher/>}/>
                         <Route path="user">
                             <Route index element={<Profile user={user}/>}/>
                             <Route path="login" element={<Login/>}/>

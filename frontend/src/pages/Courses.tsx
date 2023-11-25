@@ -1,9 +1,9 @@
 import CourseList from "../components/CourseList";
 import {useEffect, useState} from "react";
-import {ICourse} from "../lib/Course";
+import {Course} from "../lib/Course";
 
 export function Courses() {
-    const [courses, setCourses] = useState<ICourse[]>([]);
+    const [courses, setCourses] = useState<Course[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {

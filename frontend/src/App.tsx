@@ -32,10 +32,14 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<Layout/>}>
                         <Route index element={<Home/>}/>
-                        <Route path="courses" element={<Courses/>}/>
-                        <Route path="courses/:courseId" element={<SingleCourse/>}/>
-                        <Route path="teachers" element={<Teachers/>}/>
-                        <Route path="teachers/:teacherId" element={<SingleTeacher/>}/>
+                        <Route path="courses">
+                            <Route index element={<Courses/>}/>
+                            <Route path=":courseId" element={<SingleCourse/>}/>
+                        </Route>
+                        <Route path="teachers">
+                            <Route index element={<Teachers/>}/>
+                            <Route path=":teacherId" element={<SingleTeacher/>}/>
+                        </Route>
                         <Route path="user">
                             <Route index element={<Profile user={user}/>}/>
                             <Route path="login" element={<Login/>}/>

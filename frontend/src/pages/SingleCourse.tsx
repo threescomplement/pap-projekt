@@ -1,15 +1,15 @@
-import {attemptCourseDataRequest, ICourse} from "../lib/Course";
+import {attemptCourseDataRequest, Course} from "../lib/Course";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import CourseData from "../components/CourseData";
+import CourseDetails from "../components/CourseDetails";
 
 interface SingleCourseProps {
-    course: ICourse
+    course: Course
 }
 
 export default function SingleCourse() {
     const {courseId} = useParams();
-    const [course, setCourse] = useState<ICourse | null>(null);
+    const [course, setCourse] = useState<Course | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
@@ -33,6 +33,6 @@ export default function SingleCourse() {
     }
 
     return <>
-        <CourseData {...course}/>
+        <CourseDetails {...course}/>
     </>
 }

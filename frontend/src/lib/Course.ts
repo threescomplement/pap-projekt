@@ -1,4 +1,4 @@
-export interface ICourse {
+export interface Course {
     id: string,
     name: string,
     language: string,
@@ -8,12 +8,11 @@ export interface ICourse {
     links: any
 }
 
-
+/**
+ * Request the data of a course
+ * @param courseId - id of the course
+ */
 export async function attemptCourseDataRequest(courseId: string) {
-    /**
-     * Request the data of a course
-     * @param courseId - id of the course
-     * */
     // TODO: courseId does not exist in the database
     return await fetch(`${process.env.REACT_APP_API_ROOT}courses/${Number(courseId)}`)
         .then(response => response.json())

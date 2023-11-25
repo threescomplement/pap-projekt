@@ -1,11 +1,11 @@
-import {ICourse} from "../lib/Course";
+import {Course} from "../lib/Course";
 
-interface CourseDataTableElementProps {
+interface CourseDetailsTableElementProps {
     label: string;
     value: string | null;
 }
 
-function CourseDataTableElement(element: CourseDataTableElementProps) {
+function CourseDetailsTableElement(element: CourseDetailsTableElementProps) {
     if (element.value == null || ["_links", "id"].includes(element.label)) {
         return null;
     }
@@ -14,9 +14,9 @@ function CourseDataTableElement(element: CourseDataTableElementProps) {
     </tr>
 }
 
-export default function CourseData(course: ICourse) {
+export default function CourseDetails(course: Course) {
     const tableEntries = Object.entries(course).map(([label, value]) =>
-        <CourseDataTableElement label={label} value={value}/>)
+        <CourseDetailsTableElement label={label} value={value}/>)
     return <>
         <h1>{course.name}</h1>
         <table>

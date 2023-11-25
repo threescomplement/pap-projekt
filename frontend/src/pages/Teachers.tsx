@@ -1,10 +1,10 @@
 import {useEffect, useState} from "react";
-import {ITeacher} from "../lib/Teacher";
+import {Teacher} from "../lib/Teacher";
 import TeacherList from "../components/TeacherList";
 
 
 export function Teachers() {
-    const [teachers, setTeachers] = useState<ITeacher[]>([]);
+    const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {

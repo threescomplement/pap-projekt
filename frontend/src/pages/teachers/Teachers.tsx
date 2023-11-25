@@ -1,17 +1,18 @@
 import {useEffect, useState} from "react";
-import {Teacher} from "../../lib/Teacher";
+import {fetchTeachers, Teacher} from "../../lib/Teacher";
 import TeacherList from "../../components/TeacherList";
+import useUser from "../../hooks/useUser";
 
 
 export function Teachers() {
+    const {user} = useUser();
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_API_ROOT}teachers`)
-            .then(response => response.json())
-            .then(json => {
-                setTeachers(json._embedded.teachers);
+        fetchTeachers(user!)
+            .then(ts => {
+                setTeachers(ts);
                 setIsLoaded(true);
             })
             .catch(e => console.error(e));

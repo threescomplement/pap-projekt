@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
 import {Course} from "../../lib/Course";
+import useUser from "../../hooks/useUser";
 
 
 interface SingleTeacherProps {
@@ -21,10 +22,11 @@ function TeacherData(props: SingleTeacherProps) {
 }
 
 function TeacherCourseList({teacherId}: TeacherCourseListProps) {
+    const {user} = useUser();
     const [courses, setCourses] = useState<Course[]>([])
 
     useEffect(() => {
-        getTeacherCourses(teacherId)
+        getTeacherCourses(teacherId, user!)
             .then(c => setCourses(c))
     }, []);
 
@@ -37,6 +39,7 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
 
 export default function SingleTeacher() {
     const {teacherId} = useParams();
+    const {user} = useUser();
     const [teacher, setTeacher] = useState<Teacher | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -45,7 +48,7 @@ export default function SingleTeacher() {
             console.error("teacherId is null");
             return;
         }
-        fetchTeacher(teacherId)
+        fetchTeacher(teacherId, user!)
             .then(t => {
                     setTeacher(t);
                     setIsLoaded(true);

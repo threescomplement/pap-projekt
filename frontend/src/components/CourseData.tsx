@@ -6,7 +6,7 @@ interface CourseDataTableElementProps {
 }
 
 function CourseDataTableElement(element: CourseDataTableElementProps) {
-    if (element.value == null || element.label == '_links') {
+    if (element.value == null || ["_links", "id"].includes(element.label)) {
         return null;
     }
     return <tr>

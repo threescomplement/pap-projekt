@@ -18,8 +18,7 @@ interface TeacherProps {
 }
 
 export function Teacher({teacher}: TeacherProps) {
-    // TODO: get teacher Id
     return <tr>
-        <td><Link to="1"> {teacher.name}</Link></td>
+        <td><Link to={"/teachers/" + teacher.id}> {teacher.name}</Link></td>
     </tr>
 }

@@ -20,6 +20,6 @@ interface CourseProps {
 
 export function Course({course}: CourseProps) {
     return <tr>
-    <td><Link to="1"> {course.name}</Link></td>
+    <td><Link to={"/courses/" + course.id}> {course.name}</Link></td>
     </tr>
 }

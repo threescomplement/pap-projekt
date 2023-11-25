@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
-import {Teacher} from "../lib/Teacher";
-import TeacherList from "../components/TeacherList";
+import {Teacher} from "../../lib/Teacher";
+import TeacherList from "../../components/TeacherList";
 
 
 export function Teachers() {

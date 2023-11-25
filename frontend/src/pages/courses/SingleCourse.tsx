@@ -1,7 +1,7 @@
-import {attemptCourseDataRequest, Course} from "../lib/Course";
+import {attemptCourseDataRequest, Course} from "../../lib/Course";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import CourseDetails from "../components/CourseDetails";
+import CourseDetails from "../../components/CourseDetails";
 
 interface SingleCourseProps {
     course: Course

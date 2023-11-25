@@ -1,8 +1,8 @@
-import {Teacher, fetchTeacher, getTeacherCourses} from "../lib/Teacher";
+import {Teacher, fetchTeacher, getTeacherCourses} from "../../lib/Teacher";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
-import CourseList from "../components/CourseList";
-import {Course} from "../lib/Course";
+import CourseList from "../../components/CourseList";
+import {Course} from "../../lib/Course";
 
 
 interface SingleTeacherProps {

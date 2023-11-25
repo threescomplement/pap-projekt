@@ -23,8 +23,8 @@ export async function fetchCourse(courseId: string, user: User): Promise<Course>
     return await response.json();
 }
 
-export async function fetchCourses(user: User): Promise<Course[]> {
-    const response = await fetch(`${process.env.REACT_APP_API_ROOT}courses`, {
+export async function fetchCoursesByName(name: string, user: User): Promise<Course[]> {
+    const response = await fetch(`${process.env.REACT_APP_API_ROOT}courses/search/findCoursesByNameContaining?name=${name}`, {
         headers: authHeader(user)
     });
     const json =  await response.json();

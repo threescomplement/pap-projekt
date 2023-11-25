@@ -1,6 +1,6 @@
 import CourseList from "../../components/CourseList";
 import {useEffect, useState} from "react";
-import {Course, fetchCourses} from "../../lib/Course";
+import {Course, fetchCoursesByName} from "../../lib/Course";
 import useUser from "../../hooks/useUser";
 
 export function Courses() {
@@ -10,7 +10,7 @@ export function Courses() {
     const [query, setQuery] = useState("");
 
     useEffect(() => {
-        fetchCourses(user!)
+        fetchCoursesByName(query, user!)
             .then(cs => {
                 setCourses(cs);
                 setIsLoaded(true);

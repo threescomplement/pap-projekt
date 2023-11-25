@@ -1,10 +1,16 @@
-import {ITeacher, attemptTeacherDataRequest} from "../lib/Teacher";
+import {ITeacher, attemptTeacherDataRequest, getTeacherCourses} from "../lib/Teacher";
 import {useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
+import CourseList from "../components/CourseList";
+import {ICourse} from "../lib/Course";
 
 
 interface SingleTeacherProps {
     teacher: ITeacher
+}
+
+interface TeacherCourseListProps {
+    teacherId: string
 }
 
 function TeacherData(props: SingleTeacherProps) {
@@ -12,8 +18,18 @@ function TeacherData(props: SingleTeacherProps) {
     return <>
         <h1>{teacher.name}</h1>
         <a href={teacher._links.courses.href}>courses</a>
+
     </>
 }
+
+function TeacherCourseList(props: TeacherCourseListProps) {
+    const [courses, setCourses] = useState<ICourse[]>([])
+    const teacherId = {...props}.teacherId
+    getTeacherCourses(teacherId)
+        .then(c => setCourses(c))
+    return <CourseList courses={courses}/>
+}
+
 
 export default function SingleTeacher() {
     const {teacherId} = useParams();
@@ -31,9 +47,9 @@ export default function SingleTeacher() {
                     setIsLoaded(true);
                 }
             )
-    }, []);
+    }, [teacherId]);
 
-    if (teacher == null) {
+    if (teacher == null || teacherId == null) {
         return <>
             <h1>{teacherId}</h1>
             <p>Loading...</p>
@@ -43,5 +59,6 @@ export default function SingleTeacher() {
 
     return <>
         <TeacherData teacher={teacher}/>
+        <TeacherCourseList teacherId={teacherId}/>
     </>
 }

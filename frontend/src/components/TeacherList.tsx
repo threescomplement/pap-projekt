@@ -18,6 +18,5 @@ interface TeacherProps {
 export function Teacher({teacher}: TeacherProps) {
     return <tr>
         <td>{teacher.name}</td>
-        <td><a href={teacher._links.self.href}>Link</a></td>
     </tr>
 }

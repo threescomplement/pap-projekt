@@ -19,6 +19,5 @@ interface CourseProps {
 export function Course({course}: CourseProps) {
     return <tr>
         <td>{course.name}</td>
-        <td><a href={course._links.self.href}>Link</a></td>
     </tr>
 }

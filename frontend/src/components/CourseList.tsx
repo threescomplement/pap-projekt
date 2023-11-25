@@ -1,4 +1,6 @@
 import {ICourse} from "../lib/Course";
+import React from "react";
+import {Link} from "react-router-dom";
 
 interface CourseListProps {
     courses: ICourse[]
@@ -18,6 +20,6 @@ interface CourseProps {
 
 export function Course({course}: CourseProps) {
     return <tr>
-        <td>{course.name}</td>
+    <td><Link to="1"> {course.name}</Link></td>
     </tr>
 }

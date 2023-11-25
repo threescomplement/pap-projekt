@@ -25,8 +25,12 @@ function TeacherData(props: SingleTeacherProps) {
 function TeacherCourseList(props: TeacherCourseListProps) {
     const [courses, setCourses] = useState<ICourse[]>([])
     const teacherId = {...props}.teacherId
-    getTeacherCourses(teacherId)
-        .then(c => setCourses(c))
+
+    useEffect(() => {
+        getTeacherCourses(teacherId)
+            .then(c => setCourses(c))
+    }, []);
+
     return <CourseList courses={courses}/>
 }
 

@@ -17,8 +17,6 @@ function TeacherData(props: SingleTeacherProps) {
     const teacher = {...props}.teacher
     return <>
         <h1>{teacher.name}</h1>
-        <a href={teacher._links.courses.href}>courses</a>
-
     </>
 }
 
@@ -31,7 +29,10 @@ function TeacherCourseList(props: TeacherCourseListProps) {
             .then(c => setCourses(c))
     }, []);
 
-    return <CourseList courses={courses}/>
+    return <>
+        <h3>Courses</h3>
+        <CourseList courses={courses}/>
+    </>
 }
 
 

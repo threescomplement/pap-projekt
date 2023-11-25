@@ -1,4 +1,6 @@
 import {ITeacher} from "../lib/Teacher";
+import React from "react";
+import {Link} from "react-router-dom";
 
 interface TeacherListProps {
     teachers: ITeacher[]
@@ -16,7 +18,8 @@ interface TeacherProps {
 }
 
 export function Teacher({teacher}: TeacherProps) {
+    // TODO: get teacher Id
     return <tr>
-        <td>{teacher.name}</td>
+        <td><Link to="1"> {teacher.name}</Link></td>
     </tr>
 }

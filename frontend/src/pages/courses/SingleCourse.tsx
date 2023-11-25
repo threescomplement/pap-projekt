@@ -1,7 +1,8 @@
-import {attemptCourseDataRequest, Course} from "../../lib/Course";
+import {fetchCourse, Course} from "../../lib/Course";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseDetails from "../../components/CourseDetails";
+import useUser from "../../hooks/useUser";
 
 interface SingleCourseProps {
     course: Course
@@ -9,6 +10,7 @@ interface SingleCourseProps {
 
 export default function SingleCourse() {
     const {courseId} = useParams();
+    const {user} = useUser();
     const [course, setCourse] = useState<Course | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
@@ -17,7 +19,7 @@ export default function SingleCourse() {
             console.error("courseId is null");
             return;
         }
-        attemptCourseDataRequest(courseId)
+        fetchCourse(courseId, user!)
             .then(c => {
                     setCourse(c);
                     setIsLoaded(true);

@@ -14,7 +14,7 @@ interface TeacherCourseListProps {
 }
 
 function TeacherData(props: SingleTeacherProps) {
-    const teacher = {...props}.teacher
+    const teacher = props.teacher
     return <>
         <h1>{teacher.name}</h1>
     </>
@@ -22,7 +22,7 @@ function TeacherData(props: SingleTeacherProps) {
 
 function TeacherCourseList(props: TeacherCourseListProps) {
     const [courses, setCourses] = useState<ICourse[]>([])
-    const teacherId = {...props}.teacherId
+    const teacherId = props.teacherId
 
     useEffect(() => {
         getTeacherCourses(teacherId)
@@ -54,7 +54,7 @@ export default function SingleTeacher() {
             )
     }, [teacherId]);
 
-    if (teacher == null || teacherId == null) {
+    if (teacher == null || teacherId == null || !isLoaded) {
         return <>
             <h1>{teacherId}</h1>
             <p>Loading...</p>

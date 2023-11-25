@@ -7,7 +7,7 @@ export function Courses() {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/courses")
+        fetch(`${process.env.REACT_APP_API_ROOT}courses`)
             .then(response => response.json())
             .then(json => {
                 setCourses(json._embedded.courses);

@@ -1,6 +1,7 @@
 import {ICourse} from "./Course";
 
 export interface ITeacher {
+    id: string,
     name: string,
     _links: any
 }

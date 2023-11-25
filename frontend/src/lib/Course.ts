@@ -1,4 +1,5 @@
 export interface ICourse {
+    id: string,
     name: string,
     language: string,
     type: string | null, // TODO: can type be null?

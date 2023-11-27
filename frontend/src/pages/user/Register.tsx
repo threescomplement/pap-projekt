@@ -1,4 +1,4 @@
-import {ChangeEvent, FormEvent, useReducer, useState} from "react";
+import {FormEvent, useReducer, useState} from "react";
 import {attemptRegister, RegisterRequest} from "../../lib/User";
 import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
@@ -11,7 +11,6 @@ const initialFormData: RegisterRequest = {
 
 export default function Register() {
     const [formData, setFormData] = useReducer(formReducer<RegisterRequest>, initialFormData);
-    const navigate = useNavigate();
     const [isRegistered, setIsRegistered] = useState(false);
 
     function handleFormSubmit(event: FormEvent) {

@@ -1,19 +1,11 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
+name: Build and publish Backend app
 
-# GitHub recommends pinning actions to a commit SHA.
-# To get a newer version, you will need to update the SHA.
-# You can also reference a tag or branch, but the action may change without warning.
-
-name: Publish do Docker Hub and deploy to mgarbowski.pl
-
-on: workflow_dispatch
+on:
+  workflow_call:
 
 jobs:
-  docker-build:
-    name: Push Docker image to Docker Hub
+  docker-build-publish-backed:
+    name: Build and publish docker image of backend app
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
@@ -28,7 +20,7 @@ jobs:
       - name: Build with Gradle
         uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
         with:
-          arguments: build
+          arguments: bootJar
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -52,29 +44,7 @@ jobs:
         uses: docker/build-push-action@3b5e8027fcad23fda98b2e3ac259d8d67585f671
         with:
           context: .
-          file: ./Dockerfile
           platforms: linux/amd64,linux/arm64
           push: true
           tags: mgarbowski/pap-projekt-backend:latest
           labels: ${{ steps.meta.outputs.labels }}
-
-  deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    needs:
-      - docker-build
-    steps:
-      - uses: actions/checkout@v3
-      - name: Add Server key
-        run: |
-          touch key.txt && echo "${{ secrets.SERVER_KEY }}" > key.txt
-          chmod 600 key.txt
-      - name: Deploy the application
-        env:
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_PORT: ${{ secrets.SERVER_PORT }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-        run: |
-          chmod 755 ./deploy.sh
-          set -e
-          ./deploy.sh

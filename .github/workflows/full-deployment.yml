@@ -1,0 +1,38 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# GitHub recommends pinning actions to a commit SHA.
+# To get a newer version, you will need to update the SHA.
+# You can also reference a tag or branch, but the action may change without warning.
+
+
+name: Full deployment
+
+on: workflow_dispatch
+jobs:
+  run-backend-tests:
+    uses: ./.github/workflows/backend-tests.yml
+
+  run-frontend-tests:
+    uses: ./.github/workflows/frontend-tests.yml
+
+  build-and-publish-backend:
+    needs:
+      - run-backend-tests
+    uses: ./.github/workflows/build-and-publish-backend.yml
+    secrets: inherit
+
+  build-and-publish-frontend:
+    needs:
+      - run-frontend-tests
+    uses: ./.github/workflows/build-and-publish-frontend.yml
+    secrets: inherit
+
+  deploy:
+    needs:
+      - build-and-publish-backend
+      - build-and-publish-frontend
+    uses: ./.github/workflows/deploy-from-docker-hub.yml
+    secrets: inherit

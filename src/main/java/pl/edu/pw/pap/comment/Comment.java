@@ -1,6 +1,7 @@
 package pl.edu.pw.pap.comment;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -22,8 +23,10 @@ public class Comment {
     private String text;
     private int likes;
     private int dislikes;
+    @JsonIgnore
     @ManyToOne
     private Review review;
+    @JsonIgnore
     @ManyToOne
     private User user;
 

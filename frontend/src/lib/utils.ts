@@ -15,3 +15,10 @@ export function formReducer<T>(state: T, event: ChangeEvent<HTMLInputElement>): 
         [event.target.name]: event.target.value
     }
 }
+
+
+export const defaultHeaders = {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json'
+};
+

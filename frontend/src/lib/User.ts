@@ -1,4 +1,5 @@
 import {decodeToken} from "react-jwt";
+import {defaultHeaders} from "./utils";
 
 export interface User {
     id: number,
@@ -27,11 +28,6 @@ export interface RegisterRequest {
     email: string,
     password: string,
 }
-
-const defaultHeaders = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-};
 
 /**
  * Log in user - acquire JWT token

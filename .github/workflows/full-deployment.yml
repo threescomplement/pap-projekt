@@ -14,18 +14,22 @@ on: workflow_dispatch
 jobs:
   run-backend-tests:
     uses: ./.github/workflows/backend-tests.yml
+
   run-frontend-tests:
-    uses: ./github/workflows/frontend-tests.yml
+    uses: ./.github/workflows/frontend-tests.yml
+
   build-and-publish-backend:
     needs:
       - run-backend-tests
     uses: ./.github/workflows/build-and-publish-backend.yml
     secrets: inherit
+
   build-and-publish-frontend:
     needs:
       - run-frontend-tests
     uses: ./.github/workflows/build-and-publish-frontend.yml
     secrets: inherit
+
   deploy:
     needs:
       - build-and-publish-backend

@@ -11,6 +11,13 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v4
 
+      - name: Setup node
+        uses: actions/setup-node@v4
+
+      - run: cd frontend
+      - run: npm install
+      - run: npm run build
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 

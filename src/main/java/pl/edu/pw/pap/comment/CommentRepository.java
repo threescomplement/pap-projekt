@@ -9,7 +9,5 @@ import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    List<Comment> findByReview_Id(ReviewKey id);
-
-    Optional<Comment> findByReview_IdAndUser_Id(ReviewKey reviewKey, Long userId);
+    List<Comment> findByReview_Id(ReviewKey reviewKey);
 }

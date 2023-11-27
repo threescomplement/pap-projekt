@@ -21,21 +21,39 @@ public class ImporterService {
     private final TeacherRepository teacherRepository;
 
     public void importData(List<ImporterRecord> records) throws ImporterException {
-        var teachers = records.stream()
-                .map(ImporterRecord::teacher)
-                .map(Teacher::new)
-                .toList();
-
+        var teachers = extractTeachers(records);
         teacherRepository.saveAll(teachers);
 
         var courses = records.stream()
-                .map(r -> {
-                    var teacher = teachers.stream()
-                            .filter(t -> t.getName().equals(r.teacher()))
-                            .findFirst()
-                            .get(); // TODO throw proper exception
-                    return new Course(r.title().substring(0, min(r.title().length(), 200)), r.language(), r.type(), r.level(), r.module(), teacher);
-                }).toList();
+                .map(r -> courseFromRecord(r, teachers))
+                .toList();
         courseRepository.saveAll(courses);
+        log.info("Import complete, saved " + teachers.size() + " teachers and " + courses.size() + " courses");
+    }
+
+    private Course courseFromRecord(ImporterRecord record, List<Teacher> teachers) {
+        return new Course(
+                record.title().substring(0, min(record.title().length(), 200)),
+                record.language(),
+                record.type(),
+                record.level(),
+                record.module(),
+                getTeacherByName(teachers, record.teacher())
+        );
+    }
+
+    private Teacher getTeacherByName(List<Teacher> teachers, String name) {
+        return teachers.stream()
+                .filter(t -> t.getName().equals(name))
+                .findFirst()
+                .orElseThrow(() -> new ImporterException("Import failed"));
+    }
+
+    private List<Teacher> extractTeachers(List<ImporterRecord> records) {
+        return records.stream()
+                .map(ImporterRecord::teacher)
+                .map(Teacher::new)
+                .distinct()
+                .toList();
     }
 }

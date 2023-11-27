@@ -4,14 +4,14 @@ import postImport, {ImporterRecord} from "./PostImport";
 
 export default function AdminPanel() {
     const [message, setMessage] = useState<string>("");
-    const [fData, setFData] = useState<ImporterRecord[]>([]);
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const [fileData, setFileData] = useState<ImporterRecord[]>([]);
+    const handleSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const reader = new FileReader();
         reader.onload = async () => {
             const data = JSON.parse(reader.result as string);
             console.log(data)
-            setFData(data)
+            setFileData(data)
         }
         reader.readAsText(e.target.files![0]);
     }
@@ -23,7 +23,7 @@ export default function AdminPanel() {
                 setMessage("Import successful");
             } else {
                 console.error(response)
-                setMessage(`Import failed with error code ${response.status}`);
+                setMessage(`Import failed with status code ${response.status}`);
             }
         } else {
             setMessage("Nothing to import");
@@ -33,9 +33,9 @@ export default function AdminPanel() {
 
     return <>
         <h1>Admin panel</h1>
-        <input type="file" onChange={(e) => onChange(e)}/>
+        <input type="file" onChange={(e) => handleSelectFile(e)}/>
         <p>{message}</p>
-        <button onClick={() => handleClick(fData)}>
+        <button onClick={() => handleClick(fileData)}>
             Import data
         </button>
 

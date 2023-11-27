@@ -10,4 +10,4 @@ jobs:
   run-backend-tests:
     uses: ./.github/workflows/backend-tests.yml
   run-frontend-tests:
-    uses: ./github/workflows/frontend-tests.yml
+    uses: ./.github/workflows/frontend-tests.yml

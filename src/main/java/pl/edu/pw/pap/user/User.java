@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.review.Review;
 
 import java.util.Set;
@@ -26,6 +27,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Review> reviews;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    private Set<Comment> comments;
 
     public User(String username, String email, String password, String role, Boolean enabled) {
         this.username = username;

@@ -8,4 +8,7 @@ import java.util.Optional;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findCoursesByNameContaining(String name);
+    List<Course> findCoursesByLanguage(String language);
+    List<Course> findCoursesByType(String type);
+    List<Course> findCoursesByLevel(String level);
 }

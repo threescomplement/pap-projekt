@@ -1,6 +1,6 @@
 import CourseList from "../../components/CourseList";
 import {useEffect, useState} from "react";
-import {Course, fetchCoursesByName} from "../../lib/Course";
+import {Course, CourseService} from "../../lib/Course";
 
 export function Courses() {
     const [courses, setCourses] = useState<Course[]>([]);
@@ -8,7 +8,7 @@ export function Courses() {
     const [query, setQuery] = useState("");
 
     useEffect(() => {
-        fetchCoursesByName(query)
+        CourseService.fetchCoursesByName(query)
             .then(cs => {
                 setCourses(cs);
                 setIsLoaded(true);

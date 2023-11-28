@@ -1,4 +1,4 @@
-import {Course, fetchCourse} from "../../lib/Course";
+import {Course, CourseService} from "../../lib/Course";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseDetails from "../../components/CourseDetails";
@@ -14,7 +14,7 @@ export default function SingleCourse() {
             console.error("courseId is null");
             return;
         }
-        fetchCourse(courseId)
+        CourseService.fetchCourse(courseId)
             .then(c => {
                     setCourse(c);
                     setIsLoaded(true);

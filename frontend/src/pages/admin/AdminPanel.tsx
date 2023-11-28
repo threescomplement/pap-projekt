@@ -40,6 +40,5 @@ export default function AdminPanel() {
         <button onClick={() => handleClick(fileData)}>
             Importuj dane
         </button>
-
     </>;
 }

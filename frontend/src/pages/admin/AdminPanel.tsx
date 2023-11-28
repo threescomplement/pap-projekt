@@ -20,23 +20,23 @@ export default function AdminPanel() {
         if (data.length > 0) {
             const response = await postImport(data);
             if (response.ok) {
-                setMessage("Import successful");
+                setMessage("Import udany");
             } else {
                 console.error(response)
-                setMessage(`Import failed with status code ${response.status}`);
+                setMessage(`Import nieudany (${response.status})`);
             }
         } else {
-            setMessage("Nothing to import");
+            setMessage("Wybierz plik z danymi");
         }
 
     }
 
     return <>
-        <h1>Admin panel</h1>
+        <h1>Panel administratora</h1>
         <input type="file" onChange={(e) => handleSelectFile(e)}/>
         <p>{message}</p>
         <button onClick={() => handleClick(fileData)}>
-            Import data
+            Importuj dane
         </button>
 
     </>;

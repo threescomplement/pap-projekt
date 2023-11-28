@@ -4,9 +4,6 @@ import React, {useEffect, useState} from "react";
 import CourseDetails from "../../components/CourseDetails";
 import useUser from "../../hooks/useUser";
 
-interface SingleCourseProps {
-    course: Course
-}
 
 export default function SingleCourse() {
     const {courseId} = useParams();

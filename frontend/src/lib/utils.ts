@@ -21,7 +21,6 @@ export function authHeader(user: User) {
     return {Authorization: `Bearer ${user.token}`}
 }
 
-
 export const defaultHeaders = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'

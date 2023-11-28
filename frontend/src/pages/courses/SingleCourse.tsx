@@ -12,7 +12,7 @@ export default function SingleCourse() {
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        if (courseId == undefined) {
+        if (courseId == null) {
             console.error("courseId is null");
             return;
         }

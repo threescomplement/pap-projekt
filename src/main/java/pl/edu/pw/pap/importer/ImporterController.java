@@ -16,7 +16,7 @@ public class ImporterController {
     private static final Logger log = LoggerFactory.getLogger(ImporterController.class);
     private final ImporterService importerService;
 
-    @PostMapping("/api/importer/data")
+    @PostMapping("/api/admin/importer/data")
     public ResponseEntity<String> importData(@RequestBody List<ImporterRecord> data) {
         importerService.importData(data);
         log.info("Import complete");

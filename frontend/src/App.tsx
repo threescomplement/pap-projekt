@@ -8,7 +8,7 @@ import {NoPage} from "./pages/NoPage";
 import Login from "./pages/user/Login";
 import SingleCourse from "./pages/courses/SingleCourse";
 import SingleTeacher from "./pages/teachers/SingleTeacher";
-import {User} from "./lib/User";
+import {getStoredUser, storeUser, User} from "./lib/User";
 import {CurrentUserContext} from "./hooks/useUser";
 import Register from "./pages/user/Register";
 import Profile from "./pages/user/Profile";
@@ -25,10 +25,15 @@ import AdminPanel from "./pages/admin/AdminPanel";
  * @constructor
  */
 export default function App() {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(getStoredUser());
+
+    function setAndStoreUser(user: User | null) {
+        setUser(user);
+        storeUser(user);
+    }
 
     return (
-        <CurrentUserContext.Provider value={{user, setUser}}>
+        <CurrentUserContext.Provider value={{user, setUser: setAndStoreUser}}>
             <BrowserRouter>
                 <Routes>
                     <Route path="/" element={<Layout/>}>

@@ -1,9 +1,8 @@
-import {Teacher, fetchTeacher, getTeacherCourses} from "../../lib/Teacher";
+import {fetchTeacher, getTeacherCourses, Teacher} from "../../lib/Teacher";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
 import {Course} from "../../lib/Course";
-import useUser from "../../hooks/useUser";
 
 
 interface SingleTeacherProps {
@@ -22,13 +21,12 @@ function TeacherData(props: SingleTeacherProps) {
 }
 
 function TeacherCourseList({teacherId}: TeacherCourseListProps) {
-    const {user} = useUser();
     const [courses, setCourses] = useState<Course[]>([])
 
     useEffect(() => {
-        getTeacherCourses(teacherId, user!)
+        getTeacherCourses(teacherId)
             .then(c => setCourses(c))
-    }, []);
+    }, [teacherId]);
 
     return <>
         <h3>Courses</h3>
@@ -39,16 +37,15 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
 
 export default function SingleTeacher() {
     const {teacherId} = useParams();
-    const {user} = useUser();
     const [teacher, setTeacher] = useState<Teacher | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        if (teacherId == undefined) {
+        if (teacherId == null) {
             console.error("teacherId is null");
             return;
         }
-        fetchTeacher(teacherId, user!)
+        fetchTeacher(teacherId)
             .then(t => {
                     setTeacher(t);
                     setIsLoaded(true);

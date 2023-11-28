@@ -1,5 +1,4 @@
-import {User} from "./User";
-import {authHeader} from "./utils";
+import api from "./api";
 
 export interface Course {
     id: string,
@@ -15,19 +14,15 @@ export interface Course {
  * Request the data of a course
  * @param courseId - id of the course
  */
-export async function fetchCourse(courseId: string, user: User): Promise<Course> {
+export async function fetchCourse(courseId: string): Promise<Course> {
     // TODO: courseId does not exist in the database
-    const response = await fetch(`${process.env.REACT_APP_API_ROOT}courses/${Number(courseId)}`, {
-        headers: authHeader(user)
-    });
+    const response = await api.get(`/courses/${Number(courseId)}`);
     return await response.json();
 }
 
-export async function fetchCoursesByName(name: string, user: User): Promise<Course[]> {
-    const response = await fetch(`${process.env.REACT_APP_API_ROOT}courses/search/findCoursesByNameContaining?name=${name}`, {
-        headers: authHeader(user)
-    });
-    const json =  await response.json();
+export async function fetchCoursesByName(name: string): Promise<Course[]> {
+    const response = await api.get(`/courses/search/findCoursesByNameContaining?name=${name}`);
+    const json = await response.json();
     return json._embedded.courses;
 
 }

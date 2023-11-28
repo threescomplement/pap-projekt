@@ -1,10 +1,8 @@
 import {ChangeEvent, useState} from "react";
 import postImport, {ImporterRecord} from "./PostImport";
-import useUser from "../../hooks/useUser";
 
 
 export default function AdminPanel() {
-    const {user} = useUser();
     const [message, setMessage] = useState<string>("");
     const [fileData, setFileData] = useState<ImporterRecord[]>([]);
     const handleSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +18,7 @@ export default function AdminPanel() {
 
     async function handleClick(data: ImporterRecord[]) {
         if (data.length > 0) {
-            const response = await postImport(data, user!);
+            const response = await postImport(data);
             if (response.ok) {
                 setMessage("Import udany");
             } else {

@@ -23,7 +23,7 @@ export function Courses() {
         : <p>Loading...</p>
 
     return <>
-        <h1>Courses</h1>
+        <h1>Kursy</h1>
         <input type="text" onChange={e => setQuery(e.target.value)}/>
         {content}
     </>

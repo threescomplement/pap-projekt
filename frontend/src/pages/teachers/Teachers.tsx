@@ -25,7 +25,7 @@ export function Teachers() {
 
 
     return <>
-        <h1>Teachers</h1>
+        <h1>Lektorzy</h1>
         {content}
         </>
 }

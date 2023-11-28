@@ -1,0 +1,39 @@
+POST http://localhost:8080/api/importer/data
+Content-Type: application/json
+Accept: application/json
+
+[
+  {
+    "usos_code": "6420-00H30-0SA-0197",
+    "symbol": "013/Z/23/24",
+    "language": "angielski",
+    "level": "B2+",
+    "module": "",
+    "type": "Biznesowy",
+    "title": "J\u0119zyk angielski w biznesie - umiej\u0119tno\u015bci j\u0119zykowe potrzebne do efektywnego funkcjonowania w pracy\nEnglish at work - developing language skills necessary to function effectively at work\n\n\nRekomendowany dla student\u00f3w z ocen\u0105 z egzaminu B2: 3,5 - 5\nRECOMMENDATION related to the B2 ACERT examination grade 3,5 - 5\nwi\u0119cej/details",
+    "teacher": "mgr Paw\u0142owska Anita",
+    "time": "poniedzia\u0142ek/Monday\n10:15-11:45"
+  },
+  {
+    "usos_code": "6420-00H30-0SA-0196",
+    "symbol": "012/Z/23/24",
+    "language": "angielski",
+    "level": "B2+",
+    "module": "",
+    "type": "Biznesowy",
+    "title": "Jezyk angielski w \u015brodowisku zawodowym\nEnglish in professional environment\n\nwi\u0119cej/details",
+    "teacher": "mgr Socz\u00f3wka Anna",
+    "time": "poniedzia\u0142ek/Monday\n10:15-11:45"
+  },
+  {
+    "usos_code": "6420-00H30-0SA-0020",
+    "symbol": "064/Z/23/24",
+    "language": "angielski",
+    "level": "C1",
+    "module": "M14",
+    "type": "Og\u00f3lny",
+    "title": "J\u0119zyk angielski, poziom C1, cz\u0119\u015b\u0107 A (M14)\nGeneral English Course, Level C1, part A (Module M14)\n\n\nRekomendowany dla student\u00f3w z ocen\u0105 z egzaminu B2: 4,0 - 5\nRECOMMENDATION related to the B2 ACERT examination grade 4,0 - 5\nwi\u0119cej/details",
+    "teacher": "mgr Stankiewicz Adam",
+    "time": "poniedzia\u0142ek/Monday\n10:15-11:45"
+  }
+]

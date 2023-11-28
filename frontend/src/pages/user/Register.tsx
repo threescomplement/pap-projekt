@@ -1,6 +1,6 @@
-import {ChangeEvent, FormEvent, useReducer, useState} from "react";
+import {FormEvent, useReducer, useState} from "react";
 import {attemptRegister, RegisterRequest} from "../../lib/User";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
 
 const initialFormData: RegisterRequest = {
@@ -11,7 +11,6 @@ const initialFormData: RegisterRequest = {
 
 export default function Register() {
     const [formData, setFormData] = useReducer(formReducer<RegisterRequest>, initialFormData);
-    const navigate = useNavigate();
     const [isRegistered, setIsRegistered] = useState(false);
 
     function handleFormSubmit(event: FormEvent) {
@@ -23,9 +22,9 @@ export default function Register() {
 
     if (isRegistered) {
         return <>
-            <h1>Registration complete</h1>
-            <p>Confirm your email before logging in</p>
-            <Link to="/user/login">Log in</Link>
+            <h1>Rejestracja ukończona</h1>
+            <p>Potwierdź adres mailowy przed zalogowaniem</p>
+            <Link to="/user/login">Login</Link>
         </>;
     }
 
@@ -34,18 +33,18 @@ export default function Register() {
 
         <form onSubmit={handleFormSubmit}>
             <label>
-                <p>Username:</p>
-                <input name="username" type="text" onChange={setFormData} />
+                <p>Nazwa użytkownika:</p>
+                <input name="username" type="text" onChange={setFormData}/>
             </label>
             <label>
                 <p>Email:</p>
-                <input name="email" type="email" onChange={setFormData} />
+                <input name="email" type="email" onChange={setFormData}/>
             </label>
             <label>
-                <p>Password:</p>
-                <input name="password" type="password" onChange={setFormData} />
+                <p>Hasło:</p>
+                <input name="password" type="password" onChange={setFormData}/>
             </label>
-            <input type="submit" value="Register"/>
+            <input type="submit" value="Rejestracja"/>
         </form>
     </>
 }

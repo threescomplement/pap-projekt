@@ -1,16 +1,14 @@
 import {useEffect, useState} from "react";
 import {fetchTeachers, Teacher} from "../../lib/Teacher";
 import TeacherList from "../../components/TeacherList";
-import useUser from "../../hooks/useUser";
 
 
 export function Teachers() {
-    const {user} = useUser();
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        fetchTeachers(user!)
+        fetchTeachers()
             .then(ts => {
                 setTeachers(ts);
                 setIsLoaded(true);
@@ -19,13 +17,13 @@ export function Teachers() {
     }, []);
 
     const content = isLoaded
-    ?
+        ?
         <TeacherList teachers={teachers}/>
-        :<p>Loading...</p>
+        : <p>Loading...</p>
 
 
     return <>
         <h1>Lektorzy</h1>
         {content}
-        </>
+    </>
 }

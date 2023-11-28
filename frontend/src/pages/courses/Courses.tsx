@@ -1,17 +1,15 @@
 import CourseList from "../../components/CourseList";
-import React, {useEffect, useState} from "react";
-import {Course, fetchCoursesByName} from "../../lib/Course";
-import useUser from "../../hooks/useUser";
+import {useEffect, useState} from "react";
+import {Course, CourseService} from "../../lib/Course";
 
 export function Courses() {
-    const {user} = useUser();
     const [courses, setCourses] = useState<Course[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [query, setQuery] = useState("");
     const [language, setLanguage] = useState("");
 
     useEffect(() => {
-        fetchCoursesByName(query, user!)
+        CourseService.fetchCoursesByName(query)
             .then(cs => {
                 setCourses(cs);
                 setIsLoaded(true);

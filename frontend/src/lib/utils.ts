@@ -1,7 +1,6 @@
 // Miscellaneous utilities
 
 import {ChangeEvent} from "react";
-import {User} from "./User";
 
 
 /**
@@ -17,11 +16,3 @@ export function formReducer<T>(state: T, event: ChangeEvent<HTMLInputElement>): 
     }
 }
 
-export function authHeader(user: User) {
-    return {Authorization: `Bearer ${user.token}`}
-}
-
-export const defaultHeaders = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-};

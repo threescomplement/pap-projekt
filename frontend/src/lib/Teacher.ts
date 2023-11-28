@@ -1,6 +1,5 @@
 import {Course} from "./Course";
-import {User} from "./User";
-import {authHeader} from "./utils";
+import api from "./api";
 
 export interface Teacher {
     id: string,
@@ -12,9 +11,9 @@ export interface Teacher {
  * Request the data of a teacher
  * @param teacherId - teacher's id
  */
-export async function fetchTeacher(teacherId: string, user: User): Promise<Teacher> {
+export async function fetchTeacher(teacherId: string): Promise<Teacher> {
     // TODO: teacherId does not exist in the database
-    return await fetch(`${process.env.REACT_APP_API_ROOT}teachers/${Number(teacherId)}`, {headers: authHeader(user)})
+    return await api.get(`/teachers/${Number(teacherId)}`)
         .then(response => response.json())
         .catch(e => console.error(e));
 }
@@ -22,14 +21,14 @@ export async function fetchTeacher(teacherId: string, user: User): Promise<Teach
 /**
  * Get the data of all teacher's courses
  */
-export async function getTeacherCourses(teacherId: string, user: User): Promise<Course[]> {
-    const response = await fetch(`${process.env.REACT_APP_API_ROOT}teachers/${Number(teacherId)}/courses`, {headers: authHeader(user)});
+export async function getTeacherCourses(teacherId: string): Promise<Course[]> {
+    const response = await api.get(`/teachers/${Number(teacherId)}/courses`);
     const json = await response.json();
     return json._embedded.courses;
 }
 
-export async function fetchTeachers(user: User): Promise<Teacher[]> {
-    const response = await fetch(`${process.env.REACT_APP_API_ROOT}teachers`, {headers: authHeader(user)});
+export async function fetchTeachers(): Promise<Teacher[]> {
+    const response = await api.get("/teachers");
     const json = await response.json();
     return json._embedded.teachers;
 }

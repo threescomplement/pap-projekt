@@ -1,10 +1,13 @@
-import {authHeader} from "./utils";
-import {getStoredUser} from "./User";
+import {getStoredUser, User} from "./User";
 
 const defaultHeaders = {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
 };
+
+function authHeader(user: User) {
+    return {Authorization: `Bearer ${user.token}`}
+}
 
 function myFetch(endpoint: string, headers: any, body: any, method: string, withAuth = true): Promise<any> {
     const user = getStoredUser();

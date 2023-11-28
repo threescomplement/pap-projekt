@@ -1,6 +1,6 @@
-import {ChangeEvent, FormEvent, useReducer, useState} from "react";
+import {FormEvent, useReducer, useState} from "react";
 import {attemptRegister, RegisterRequest} from "../../lib/User";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
 
 const initialFormData: RegisterRequest = {
@@ -11,7 +11,6 @@ const initialFormData: RegisterRequest = {
 
 export default function Register() {
     const [formData, setFormData] = useReducer(formReducer<RegisterRequest>, initialFormData);
-    const navigate = useNavigate();
     const [isRegistered, setIsRegistered] = useState(false);
 
     function handleFormSubmit(event: FormEvent) {
@@ -35,15 +34,15 @@ export default function Register() {
         <form onSubmit={handleFormSubmit}>
             <label>
                 <p>Username:</p>
-                <input name="username" type="text" onChange={setFormData} />
+                <input name="username" type="text" onChange={setFormData}/>
             </label>
             <label>
                 <p>Email:</p>
-                <input name="email" type="email" onChange={setFormData} />
+                <input name="email" type="email" onChange={setFormData}/>
             </label>
             <label>
                 <p>Password:</p>
-                <input name="password" type="password" onChange={setFormData} />
+                <input name="password" type="password" onChange={setFormData}/>
             </label>
             <input type="submit" value="Register"/>
         </form>

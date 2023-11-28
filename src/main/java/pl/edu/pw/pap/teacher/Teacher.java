@@ -1,6 +1,7 @@
 package pl.edu.pw.pap.teacher;
 
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.course.Course;
@@ -10,6 +11,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Teacher {
 
 

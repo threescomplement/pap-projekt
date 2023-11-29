@@ -25,5 +25,5 @@ oba kontenery muszą być w tej samej sieci `mgarbowski-pl-network`
 
 
 ## Uruchomienie lokalne kontenerów
-Gdyby zaszła potrzeba lokalnego uruchomienia kontenerów, jest dostępny plik [docker-compose-dev.yml](../docker-compose-dev.yml).
+Gdyby zaszła potrzeba lokalnego uruchomienia kontenerów, jest dostępny plik [docker-compose-dev.yml](../deployment/docker-compose-dev.yml).
 Pozwala na zbudowanie obrazów zgodnie z Dockerfiles

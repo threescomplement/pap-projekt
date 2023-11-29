@@ -8,7 +8,7 @@ Obrazy kontenerów są publikowane w rejestrze [Docker Hub](https://hub.docker.c
 Do publikowania kontenerów jest wymagane hasło. Są publicznie dostępne do pobrania.
 
 ## Ręczne uruchamianie
-W katalogu `/srv/pap` umieszczamy plik [docker-compose.yml](../docker-compose.yml) zawierający konfigurację uruchomienia
+W katalogu `/srv/pap` umieszczamy plik [docker-compose.yml](../deployment/docker-compose.yml) zawierający konfigurację uruchomienia
 kontenerów oraz drugi plik nazwany np. `docker-compose.deployment.yml` zawierający hasła lub inne tajne informacje, 
 których nie zawieramy w repozytorium git.
 
@@ -35,7 +35,7 @@ TODO: Uruchamianie wszystkich testów i mądrzejsze nazwy
 ### Wdrożenie obrazów z Docker Hub
 * [GitHub](https://github.com/mGarbowski/pap-projekt/actions/workflows/deploy-from-docker-hub.yml)
 * [deploy-from-docker-hub.yml](../.github/workflows/deploy-from-docker-hub.yml)
-* [deploy.sh](../deploy.sh)
+* [deploy.sh](../deployment/deploy.sh)
 
 Działanie
 * Wczytuje hasła, klucze i konfigurację połączenia z serwerem z GitHub Secrets

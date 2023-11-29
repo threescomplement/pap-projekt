@@ -4,8 +4,8 @@ services:
   frontend:
     container_name: pap-frontend
     build:
-      context: ./frontend
-      dockerfile: Dockerfile
+      context: ../frontend
+      dockerfile: ../frontend/Dockerfile
     ports:
       - "3000:3000"
     environment:
@@ -15,8 +15,8 @@ services:
     depends_on:
       - database
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ..
+      dockerfile: ../Dockerfile
     ports:
       - "8080:8080"
   database:

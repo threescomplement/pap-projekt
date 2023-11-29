@@ -1,3 +1,0 @@
-security:
-  jwt:
-    secret-key: "dupa"

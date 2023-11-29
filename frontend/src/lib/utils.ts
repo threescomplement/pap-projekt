@@ -15,3 +15,14 @@ export function formReducer<T>(state: T, event: ChangeEvent<HTMLInputElement>): 
         [event.target.name]: event.target.value
     }
 }
+
+export function commonElements<T>(arrays: T[][]): T[] {
+    if (arrays.length === 0) {
+        return [];
+    }
+    const baseArray = arrays[0];
+
+    return baseArray.filter(element =>
+        arrays.every(array => array.some(item => JSON.stringify(item) === JSON.stringify(element)))
+    );
+}

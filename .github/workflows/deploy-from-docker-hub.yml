@@ -9,10 +9,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Add Server key
+        working-directory: ./deployment
         run: |
           touch key.txt && echo "${{ secrets.SERVER_KEY }}" > key.txt
           chmod 600 key.txt
       - name: Deploy the application
+        working-directory: ./deployment
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_PORT: ${{ secrets.SERVER_PORT }}

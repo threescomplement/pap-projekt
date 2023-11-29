@@ -3,11 +3,10 @@ package pl.edu.pw.pap.user;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 
 @RestController
@@ -25,6 +24,13 @@ public class UserController {
     public User verifyEmail(@RequestBody VerificationRequest request) {
         log.info("Attempting to verify email with token " + request.token());
         return userService.verifyEmailWithToken(request.token());
+    }
+
+    @GetMapping("/api/users/{username}")
+    public EntityModel<User> getUser(@PathVariable String username){
+//         TODO: musi zwracać linki do: getUserReviews, getUserComments
+//        Link[] links = {};
+        return EntityModel.of(userService.findByUsername(username).orElseThrow());
     }
 
     @ExceptionHandler(value = UserRegistrationException.class)

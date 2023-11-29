@@ -15,8 +15,7 @@ services:
     depends_on:
       - database
     build:
-      context: ..
-      dockerfile: ../Dockerfile
+      context: ../backend
     ports:
       - "8080:8080"
   database:

@@ -4,17 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
+import pl.edu.pw.pap.review.reviewNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.UserController;
+import pl.edu.pw.pap.user.userNotFoundException;
 
-import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +25,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CommentController {
     private final CommentService commentService;
 
+    // TODO: change using id to using username
     @GetMapping("/api/courses/{courseId}/reviews/{reviewerId}/comments")
     public CollectionModel<Comment> getCommentsForReview(@PathVariable Long courseId, @PathVariable Long reviewerId) {
         var comments = commentService.getCommentsForReview(courseId, reviewerId);
@@ -65,6 +64,12 @@ public class CommentController {
     }
 
 
+    @PostMapping("/api/courses/{courseId}/reviews/{username}/comments")
+    public Comment addComment(@RequestBody AddCommentRequest request){
+        return commentService.addNewComment(request);
+    }
+
+
 
     @DeleteMapping("/api/comments/{commentId}")
     public ResponseEntity<Comment> deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal principal) {
@@ -72,6 +77,6 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler(value = commentNotFoundException.class)
-    public ResponseEntity<Exception> handleCommentNotFound(Exception e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);}
+    @ExceptionHandler({commentNotFoundException.class, userNotFoundException.class, reviewNotFoundException.class})
+    public ResponseEntity<Exception> handleEntityNotFound(Exception e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);}
 }

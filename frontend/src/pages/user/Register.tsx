@@ -22,9 +22,9 @@ export default function Register() {
 
     if (isRegistered) {
         return <>
-            <h1>Registration complete</h1>
-            <p>Confirm your email before logging in</p>
-            <Link to="/user/login">Log in</Link>
+            <h1>Rejestracja ukończona</h1>
+            <p>Potwierdź adres mailowy przed zalogowaniem</p>
+            <Link to="/user/login">Login</Link>
         </>;
     }
 
@@ -33,7 +33,7 @@ export default function Register() {
 
         <form onSubmit={handleFormSubmit}>
             <label>
-                <p>Username:</p>
+                <p>Nazwa użytkownika:</p>
                 <input name="username" type="text" onChange={setFormData}/>
             </label>
             <label>
@@ -41,10 +41,10 @@ export default function Register() {
                 <input name="email" type="email" onChange={setFormData}/>
             </label>
             <label>
-                <p>Password:</p>
+                <p>Hasło:</p>
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
-            <input type="submit" value="Register"/>
+            <input type="submit" value="Rejestracja"/>
         </form>
     </>
 }

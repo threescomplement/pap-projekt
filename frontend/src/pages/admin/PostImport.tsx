@@ -1,4 +1,4 @@
-import {defaultHeaders} from "../../lib/utils";
+import api from "../../lib/api";
 
 export interface ImporterRecord {
     usos_code: string,
@@ -13,9 +13,5 @@ export interface ImporterRecord {
 }
 
 export default function postImport(payload: ImporterRecord[]) {
-    return fetch(`${process.env.REACT_APP_API_ROOT}importer/data`, {
-        method: "POST",
-        headers: defaultHeaders,
-        body: JSON.stringify(payload),
-    });
+    return api.post("/admin/importer/data", payload);
 }

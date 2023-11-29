@@ -16,9 +16,13 @@ export function formReducer<T>(state: T, event: ChangeEvent<HTMLInputElement>): 
     }
 }
 
+export function commonElements<T>(arrays: T[][]): T[] {
+    if (arrays.length === 0) {
+        return [];
+    }
+    const baseArray = arrays[0];
 
-export const defaultHeaders = {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-};
-
+    return baseArray.filter(element =>
+        arrays.every(array => array.some(item => JSON.stringify(item) === JSON.stringify(element)))
+    );
+}

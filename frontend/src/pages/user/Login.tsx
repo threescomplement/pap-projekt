@@ -25,15 +25,15 @@ export default function Login() {
     }
 
     return <>
-        <h1>Log In</h1>
+        <h1>Login</h1>
 
         <form onSubmit={handleFormSubmit}>
             <label>
-                <p>Username:</p>
+                <p>Nazwa użytkownika:</p>
                 <input name="username" type="text" onChange={setFormData}/>
             </label>
             <label>
-                <p>Password:</p>
+                <p>Hasło:</p>
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
             <input type="submit" value="Log In"/>

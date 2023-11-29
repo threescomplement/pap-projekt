@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.Optional;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
+    //todo: resolve lower/uppercase difference when fetching by name
     List<Course> findCoursesByNameContaining(String name);
-    List<Course> findCoursesByLanguage(String language);
-    List<Course> findCoursesByType(String type);
-    List<Course> findCoursesByLevel(String level);
+    List<Course> findCoursesByLanguageContaining(String language);
+    List<Course> findCoursesByTypeContaining(String type);
+    List<Course> findCoursesByLevelContaining(String level);
 }

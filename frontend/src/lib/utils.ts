@@ -16,3 +16,13 @@ export function formReducer<T>(state: T, event: ChangeEvent<HTMLInputElement>): 
     }
 }
 
+export function commonElements<T>(arrays: T[][]): T[] {
+    if (arrays.length === 0) {
+        return [];
+    }
+    const baseArray = arrays[0];
+
+    return baseArray.filter(element =>
+        arrays.every(array => array.includes(element))
+    );
+}

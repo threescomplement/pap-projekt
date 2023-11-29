@@ -1,6 +1,6 @@
 import CourseList from "../../components/CourseList";
 import React, {useEffect, useState} from "react";
-import {Course, CourseService} from "../../lib/Course";
+import {Course, CourseService, } from "../../lib/Course";
 import Filter, {languages, levels, modules, types} from "../../components/Filter";
 
 
@@ -14,13 +14,13 @@ export function Courses() {
     const [type, setType] = useState("");
 
     useEffect(() => {
-        CourseService.fetchCoursesByName(query)
+        CourseService.fetchCourseByFilters({query, type, module, level, language})
             .then(cs => {
                 setCourses(cs);
                 setIsLoaded(true);
             })
             .catch(e => console.error(e));
-    }, [query]);
+    }, [query, language, type, level, module]);
 
     const content = isLoaded
         ? <CourseList courses={courses}/>
@@ -34,7 +34,7 @@ export function Courses() {
         <Filter
             name={"Język"}
             options={languages}
-            onSelect={(e) => setLanguage(e.target.value.toLowerCase())}
+            onSelect={(e) => setLanguage(e.target.value)}
         />
         <Filter name={"Poziom"}
                 options={levels}

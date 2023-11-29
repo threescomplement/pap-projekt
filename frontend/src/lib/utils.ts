@@ -23,6 +23,6 @@ export function commonElements<T>(arrays: T[][]): T[] {
     const baseArray = arrays[0];
 
     return baseArray.filter(element =>
-        arrays.every(array => array.includes(element))
+        arrays.every(array => array.some(item => JSON.stringify(item) === JSON.stringify(element)))
     );
 }

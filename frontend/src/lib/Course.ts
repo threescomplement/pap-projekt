@@ -63,6 +63,7 @@ async function fetchCourseByFilters({query, type, module, level, language}: Cour
     return commonElements([
         await fetchCoursesByName(query),
         await fetchCoursesByType(type),
+        // todo: think about nulls as they don't get returned since they don't contain any string
         await fetchCoursesByModule(module),
         await fetchCoursesByLevel(level),
         await fetchCoursesByLanguage(language)])

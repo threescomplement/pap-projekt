@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 
 export const languages = [
-    "Angielski",
-    "Hiszpański",
-    "Niemiecki",
-    "Włoski",
-    "Francuski",
-    "Rosyjski",
-    "Polski",
-    "Japoński",
-    "Chiński",
-    "Koreański",
-    "Niderlandzki"
+    "angielski",
+    "hiszpański",
+    "niemiecki",
+    "włoski",
+    "francuski",
+    "rosyjski",
+    "polski",
+    "japoński",
+    "chiński",
+    "koreański",
+    "niderlandzki"
 ]
 
 export const levels = ["A1", "A2", "B1", "B2", "B2+", "C1", "C1+", "C2"];
@@ -52,7 +52,7 @@ interface FilterProps {
 
 
 export default function Filter(props: FilterProps) {
-    const [chosen, setChosen] = useState<string|null>(null)
+    const [chosen, setChosen] = useState("")
     // TODO better handling of null values
     const optionObjects = props.options.map(o => <option value={o}>{o}</option>)
     return <select onChange={e => {

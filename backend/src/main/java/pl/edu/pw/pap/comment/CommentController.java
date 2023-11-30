@@ -27,10 +27,14 @@ public class CommentController {
 
     // TODO: change using id to using username
     @GetMapping("/api/courses/{courseId}/reviews/{reviewerId}/comments")
-    public CollectionModel<Comment> getCommentsForReview(@PathVariable Long courseId, @PathVariable Long reviewerId) {
+    public CollectionModel<EntityModel<Comment>> getCommentsForReview(@PathVariable Long courseId, @PathVariable Long reviewerId) {
         var comments = commentService.getCommentsForReview(courseId, reviewerId);
+        List<EntityModel<Comment>> commentModelList = new ArrayList<>();
+        for (Comment comment: comments) {
+            commentModelList.add(getCommentById(comment.getId()));
+        }
         return CollectionModel.of(
-                comments,
+                commentModelList,
                 linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, reviewerId)).withSelfRel()
         );
     }
@@ -39,7 +43,7 @@ public class CommentController {
     public EntityModel<Comment> getCommentById(@PathVariable Long commentId) {
         Optional<Comment> maybecomment = commentService.findCommentById(commentId);
         if (maybecomment.isEmpty()) {
-            return null; // TODO: learn how the fuck to handle exceptions properly
+            throw new commentNotFoundException("no comment with ID: " + commentId);
         }
         Comment comment = maybecomment.get();
         Link selfLink = linkTo(methodOn(CommentController.class).getCommentById(commentId)).withSelfRel();

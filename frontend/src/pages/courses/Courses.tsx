@@ -14,7 +14,13 @@ export function Courses() {
     const [type, setType] = useState("");
 
     useEffect(() => {
-        CourseService.fetchCourseByFilters({query, type, module, level, language})
+        CourseService.fetchCourseByFilters({
+            name: query,  // TODO cleanup
+            type: (type === "" ? null : type),
+            module: (module === "" ? null : module),
+            level: (level === "" ? null : level),
+            language: (language === "" ? null : language)
+        })
             .then(cs => {
                 setCourses(cs);
                 setIsLoaded(true);

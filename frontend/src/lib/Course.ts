@@ -12,11 +12,11 @@ export interface Course {
 }
 
 export interface CourseFilters {
-    query: string,
-    language: string,
-    type: string,
-    level: string,
-    module: string
+    name: string,
+    language: string | null,
+    type: string | null,
+    level: string | null,
+    module: string | null
 }
 
 /**
@@ -29,48 +29,15 @@ async function fetchCourse(courseId: string): Promise<Course> {
     return await response.json();
 }
 
-async function fetchCoursesByName(name: string): Promise<Course[]> {
-    const response = await api.get(`/courses/search/findCoursesByNameContaining?name=${name}`);
+async function fetchCoursesByFilters(filters: CourseFilters): Promise<Course[]> {
+    const response = await api.get("/courses", null, filters);
     const json = await response.json();
+    console.log(json);
     return json._embedded.courses;
-}
-
-async function fetchCoursesByLanguage(language: string): Promise<Course[]> {
-    const response = await api.get(`/courses/search/findCoursesByLanguageContaining?language=${language}`);
-    const json = await response.json();
-    return json._embedded.courses;
-}
-
-async function fetchCoursesByType(type: string): Promise<Course[]> {
-    const response = await api.get(`/courses/search/findCoursesByTypeContaining?type=${type}`);
-    const json = await response.json();
-    return json._embedded.courses;
-}
-
-async function fetchCoursesByModule(module: string): Promise<Course[]> {
-    const response = await api.get(`/courses/search/findCoursesByModuleContaining?module=${module}`);
-    const json = await response.json();
-    return json._embedded.courses;
-}
-
-async function fetchCoursesByLevel(level: string): Promise<Course[]> {
-    const response = await api.get(`/courses/search/findCoursesByLevelContaining?level=${level}`);
-    const json = await response.json();
-    return json._embedded.courses;
-}
-
-async function fetchCourseByFilters({query, type, module, level, language}: CourseFilters) {
-    return commonElements([
-        await fetchCoursesByName(query),
-        await fetchCoursesByType(type),
-        // todo: think about nulls as they don't get returned since they don't contain any string
-        await fetchCoursesByModule(module),
-        await fetchCoursesByLevel(level),
-        await fetchCoursesByLanguage(language)])
 }
 
 export const CourseService = {
     fetchCourse,
-    fetchCourseByFilters
+    fetchCourseByFilters: fetchCoursesByFilters
 };
 

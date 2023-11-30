@@ -11,10 +11,10 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT c FROM Course c WHERE " +
             "(:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
-            "(:language IS NULL OR LOWER(c.language) LIKE LOWER(CONCAT('%', :language, '%'))) AND " +
-            "(:module IS NULL OR LOWER(c.module) LIKE LOWER(CONCAT('%', :module, '%'))) AND " +
-            "(:type IS NULL OR LOWER(c.type) LIKE LOWER(CONCAT('%', :type, '%'))) AND " +
-            "(:level IS NULL OR LOWER(c.level) LIKE LOWER(CONCAT('%', :level, '%')))")
+            "(:language IS NULL OR c.language = :language) AND " +
+            "(:module IS NULL OR (c.module IS NULL AND :module IS NULL) OR c.module = :module) AND " +
+            "(:type IS NULL OR c.type = :type) AND " +
+            "(:level IS NULL OR c.level = :level)")
     List<Course> findCoursesByAttributes(
             @Param("name") String name,
             @Param("language") String language,

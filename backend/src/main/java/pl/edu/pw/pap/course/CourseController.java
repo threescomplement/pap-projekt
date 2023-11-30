@@ -1,5 +1,6 @@
 package pl.edu.pw.pap.course;
 
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -31,10 +32,10 @@ public class CourseController {
     @GetMapping("/api/courses")
     public CollectionModel<Course> getAllCourses(
             @RequestParam(required = false, defaultValue = "") String name,
-            @RequestParam(required = false, defaultValue = "") String language,
-            @RequestParam(required = false, defaultValue = "") String module,
-            @RequestParam(required = false, defaultValue = "") String type,
-            @RequestParam(required = false, defaultValue = "") String level
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) String module,
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String level
     ) {
         var courses = courseService.getAllMatchingFilters(name, language, module, type, level).stream()
                 .map(this::courseWithLinks)

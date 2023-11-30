@@ -3,6 +3,7 @@ package pl.edu.pw.pap.course;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.teacher.Teacher;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-public class Course {
+public class Course extends RepresentationModel<Course> {
 
     @Id
     @GeneratedValue

@@ -153,6 +153,7 @@ class CourseIntegrationTest {
 
         JSONArray courses = json.read("$._embedded.courses");
         assertEquals(4, courses.size());
+        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses"));
     }
 
     @Test
@@ -185,7 +186,7 @@ class CourseIntegrationTest {
 
 //    @Test
 //    public void getAllCoursesEmpty() {
-//         TODO find a way to include empty list in JSON even if it is empty
+////         TODO find a way to include empty list in JSON even if it is empty
 //        var response = restTemplate.exchange(
 //                buildUrl("/api/courses", port),
 //                HttpMethod.GET,

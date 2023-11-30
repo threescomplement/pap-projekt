@@ -28,23 +28,22 @@ public class CourseController {
     }
 
     @GetMapping("/api/courses")
-    public CollectionModel<EntityModel<Course>> getAllCourses() {
+    public CollectionModel<Course> getAllCourses() {
         var courses = courseService.getAll().stream()
                 .map(this::courseWithLinks)
                 .toList();
-
         return CollectionModel.of(
                 courses,
                 linkTo(methodOn(CourseController.class).getAllCourses()).withSelfRel()
         );
     }
 
-    private EntityModel<Course> courseWithLinks(Course course) {
-        return EntityModel.of(
-                course,
+    private Course courseWithLinks(Course course) {
+        course.add(
                 linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel(),
                 linkTo(methodOn(CourseController.class).getAllCourses()).withRel("all")
         );
+        return course;
     }
 
     // TODO add links to associated resources (teachers, reviews)

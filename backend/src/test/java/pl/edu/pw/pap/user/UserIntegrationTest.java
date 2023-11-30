@@ -12,6 +12,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import pl.edu.pw.pap.PapApplication;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
 
 /**
  * Integration tests for User-related functionality
@@ -94,9 +95,5 @@ public class UserIntegrationTest {
         assertTrue(verifyResponse.getBody().getEnabled());
         assertTrue(userRepository.findByUsername(registerRequest.username()).get().getEnabled());
 
-    }
-
-    private static String buildUrl(String endpoint, int port) {
-        return "http://localhost:" + port + endpoint;
     }
 }

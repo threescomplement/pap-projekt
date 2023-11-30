@@ -1,9 +1,11 @@
-package pl.edu.pw.pap.security;
+package pl.edu.pw.pap.utils;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
+import pl.edu.pw.pap.security.UserPrincipal;
+import pl.edu.pw.pap.security.UserPrincipalAuthenticationToken;
 
 import java.util.Arrays;
 

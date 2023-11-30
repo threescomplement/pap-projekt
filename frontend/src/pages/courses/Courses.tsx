@@ -8,18 +8,18 @@ export function Courses() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [query, setQuery] = useState("");
-    const [language, setLanguage] = useState("");
-    const [level, setLevel] = useState("");
-    const [module, setModule] = useState("");
-    const [type, setType] = useState("");
+    const [language, setLanguage] = useState<string|null>(null);
+    const [level, setLevel] = useState<string|null>(null);
+    const [module, setModule] = useState<string|null>(null);
+    const [type, setType] = useState<string|null>(null);
 
     useEffect(() => {
         CourseService.fetchCourseByFilters({
-            name: query,  // TODO cleanup
-            type: (type === "" ? null : type),
-            module: (module === "" ? null : module),
-            level: (level === "" ? null : level),
-            language: (language === "" ? null : language)
+            name: query,
+            type,
+            module,
+            level,
+            language,
         })
             .then(cs => {
                 setCourses(cs);
@@ -40,21 +40,21 @@ export function Courses() {
         <Filter
             name={"Język"}
             options={languages}
-            onSelect={(e) => setLanguage(e.target.value)}
+            onSelect={(e) => setLanguage(e.target.value || null)}
         />
         <Filter name={"Poziom"}
                 options={levels}
-                onSelect={(e) => setLevel(e.target.value)}
+                onSelect={(e) => setLevel(e.target.value || null)}
         />
         <Filter
             name={"Typ"}
             options={types}
-            onSelect={(e) => setType(e.target.value)}
+            onSelect={(e) => setType(e.target.value || null)}
         />
         <Filter
             name={"Moduł"}
             options={modules}
-            onSelect={(e) => setModule(e.target.value)}/>
+            onSelect={(e) => setModule(e.target.value || null)}/>
         {content}
     </>
 }

@@ -16,6 +16,6 @@ public class CourseService {
     }
 
     public List<Course> getAllMatchingFilters(String name, String language, String module, String type, String level) {
-        return courseRepository.findCoursesByNameContainingAndLanguageContainingAndModuleContainingAndTypeContainingAndLevelContaining(name, language, module, type, level);
+        return courseRepository.findCoursesByAttributes(name, language, module, type, level);
     }
 }

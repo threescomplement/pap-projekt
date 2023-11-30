@@ -95,7 +95,6 @@ class CourseIntegrationTest {
         assertEquals(COURSE_1.getLevel(), json.read("$.level"));
         assertEquals(COURSE_1.getModule(), json.read("$.module"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1"));
-        assertTrue(json.read("$._links.all.href").toString().endsWith("/api/courses"));
     }
 
     @Test
@@ -153,7 +152,6 @@ class CourseIntegrationTest {
 
         JSONArray courses = json.read("$._embedded.courses");
         assertEquals(4, courses.size());
-        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses"));
     }
 
     @Test

@@ -1,10 +1,10 @@
 package pl.edu.pw.pap.course;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
@@ -18,4 +18,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     List<Course> findCoursesByModuleContaining(String module);
 
     List<Course> findCoursesByLevelContaining(String level);
+
+    List<Course> findCoursesByNameContainingAndLanguageContainingAndModuleContainingAndTypeContainingAndLevelContaining(
+            String name,
+            String language,
+            String module,
+            String type,
+            String level
+    );
 }

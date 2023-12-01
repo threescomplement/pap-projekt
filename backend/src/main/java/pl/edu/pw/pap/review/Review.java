@@ -33,7 +33,7 @@ public class Review {
     private int likes;
     private int dislikes;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     public Review(User user, Course course, String opinion, int overallRating) {
@@ -43,6 +43,16 @@ public class Review {
         this.overallRating = overallRating;
         this.likes = 0;
         this.dislikes = 0;
+    }
+// TODO: add like and dislike methods and parameters which track which users liked and disliked a review
+    @PreRemove
+    public void clearCommentsAndUser(){
+//        this.comments.clear();
+        this.user.removeReview(this);
+        this.course.removeReview(this);
+    }
+    public void removeComment(Comment comment){
+        this.comments.remove(comment);
     }
 
     @Override

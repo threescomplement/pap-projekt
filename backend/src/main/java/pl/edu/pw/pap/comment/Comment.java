@@ -2,10 +2,7 @@ package pl.edu.pw.pap.comment;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.review.Review;
@@ -39,6 +36,14 @@ public class Comment {
     }
 
     protected Comment() {
+    }
+
+    @PreRemove
+    public void removeFromUser(){
+        this.user.removeComment(this);
+        System.out.println("removed comment " + this.id + " from user");
+        this.review.removeComment(this);
+        System.out.println("Also Removed from review ");
     }
 
     @Override

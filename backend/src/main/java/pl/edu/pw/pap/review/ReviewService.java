@@ -41,16 +41,18 @@ public class ReviewService {
 
     public void deleteReview ( Long courseId, String username){
 
+        System.out.println("Asked for deletion of review by " + username + " of course " + courseId);
         Optional<User> maybeUser = userRepository.findByUsername(username);
         if (maybeUser.isPresent()){
+            System.out.println("Found user of review being deleted");
             User user = maybeUser.get();
             Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey( maybeUser.get().getId(), courseId));
             if (maybeReview.isPresent()){
 //                synchronize the entities. Remove comments from Review to allow deletion of comments
-
+                System.out.println("Trying to remove review");
                 Review review = maybeReview.get();
-                var comments = review.getComments();
-                commentRepository.deleteAll(comments);
+//                var comments = review.getComments();
+//                commentRepository.deleteAll(comments);
 //                remove review from user to allow deletion of review
                 // safely delete comments
 

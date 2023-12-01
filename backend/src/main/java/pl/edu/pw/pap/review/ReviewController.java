@@ -51,6 +51,7 @@ public class ReviewController {
         // TODO: Add link from CourseController
 //        Link courseLink = linkTo(method)
         Link[] links = {selfLink, userLink, commentsLink};
+        System.out.println("returning review with id " + review.id.courseId + " " + review.id.userId);
         return EntityModel.of(review, links);
     }
 
@@ -96,9 +97,12 @@ public class ReviewController {
 
     }
 
+    // TODO: Add post mapping for adding a new review
 
+
+//    TODO: ADD AUTHORISATION CHECK WHEN DELETING COMMENT
     @DeleteMapping("/api/courses/{courseId}/users/{username}/reviews")
-    public ResponseEntity<Review> deleteReview(Long courseId, String username) {
+    public ResponseEntity<Review> deleteReview(@PathVariable Long courseId, @PathVariable String username) {
         reviewService.deleteReview(courseId, username);
         return ResponseEntity.noContent().build();
     }

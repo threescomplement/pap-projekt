@@ -38,6 +38,10 @@ public class Course {
         this.teacher = teacher;
     }
 
+
+    public void removeReview (Review review){
+        this.reviews.remove(review);
+    }
     protected Course() {
 
     }

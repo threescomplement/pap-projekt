@@ -47,6 +47,13 @@ public class User {
 
     }
 
+    public void removeReview ( Review review){
+        this.reviews.remove(review);
+    }
+    public void removeComment(Comment comment){
+        this.comments.remove(comment);
+    }
+
     @Override
     public String toString() {
         return "User{" +

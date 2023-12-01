@@ -1,17 +1,17 @@
 import React, {useState} from "react";
 
 export const languages = [
-    "angielski",
-    "hiszpański",
-    "niemiecki",
-    "włoski",
-    "francuski",
-    "rosyjski",
-    "polski",
-    "japoński",
-    "chiński",
-    "koreański",
-    "niderlandzki"
+    "Angielski",
+    "Hiszpański",
+    "Niemiecki",
+    "Włoski",
+    "Francuski",
+    "Rosyjski",
+    "Polski",
+    "Japoński",
+    "Chiński",
+    "Koreański",
+    "Niderlandzki"
 ]
 
 export const levels = ["A1", "A2", "B1", "B2", "B2+", "C1", "C1+", "C2"];

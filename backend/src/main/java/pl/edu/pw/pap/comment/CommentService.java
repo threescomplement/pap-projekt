@@ -29,8 +29,8 @@ public class CommentService {
         var comment = commentRepository.findById(commentId).orElseThrow();
         var user = userRepository.findByUsername(principal.getUsername()).orElseThrow();
         if (!comment.getUser().getId().equals(user.getId())) {
-            // TODO: handle exception in CommentController
-            throw new commentNotFoundException("User can only delete his own comments");
+            // TODO: change exception to something anauthorised
+            throw new UnauthorizedException("User can only delete his own comments");
         }
 
         commentRepository.delete(comment);

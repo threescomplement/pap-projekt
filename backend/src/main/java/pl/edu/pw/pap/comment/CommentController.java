@@ -30,7 +30,7 @@ public class CommentController {
     public CollectionModel<EntityModel<Comment>> getCommentsForReview(@PathVariable Long courseId, @PathVariable Long reviewerId) {
         var comments = commentService.getCommentsForReview(courseId, reviewerId);
         List<EntityModel<Comment>> commentModelList = new ArrayList<>();
-        for (Comment comment: comments) {
+        for (Comment comment : comments) {
             commentModelList.add(getCommentById(comment.getId()));
         }
         return CollectionModel.of(
@@ -55,10 +55,10 @@ public class CommentController {
     }
 
     @GetMapping("/api/users/{username}/comments")
-    public CollectionModel<EntityModel<Comment>> getUserComments(@PathVariable String username){
+    public CollectionModel<EntityModel<Comment>> getUserComments(@PathVariable String username) {
         List<Comment> comments = commentService.getCommentsByUsername(username);
         List<EntityModel<Comment>> commentModelList = new ArrayList<>();
-        for (Comment comment: comments) {
+        for (Comment comment : comments) {
             commentModelList.add(getCommentById(comment.getId()));
         }
         return CollectionModel.of(
@@ -67,12 +67,11 @@ public class CommentController {
         );
     }
 
-
+    // TODO: autorisation
     @PostMapping("/api/courses/{courseId}/reviews/{username}/comments")
-    public Comment addComment(@RequestBody AddCommentRequest request){
+    public Comment addComment(@RequestBody AddCommentRequest request) {
         return commentService.addNewComment(request);
     }
-
 
 
     @DeleteMapping("/api/comments/{commentId}")
@@ -82,5 +81,13 @@ public class CommentController {
     }
 
     @ExceptionHandler({commentNotFoundException.class, userNotFoundException.class, reviewNotFoundException.class})
-    public ResponseEntity<Exception> handleEntityNotFound(Exception e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);}
+    public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Exception> handleUnauthorized(Exception e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
+    }
+
 }

@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-public class Course extends RepresentationModel<Course> {
+public class Course {
 
     @Id
     @GeneratedValue

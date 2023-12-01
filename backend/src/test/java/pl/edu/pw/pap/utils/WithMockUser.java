@@ -1,4 +1,4 @@
-package pl.edu.pw.pap.security;
+package pl.edu.pw.pap.utils;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
 

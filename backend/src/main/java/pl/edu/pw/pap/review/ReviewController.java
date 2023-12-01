@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentController;
+import pl.edu.pw.pap.comment.UnauthorizedException;
 import pl.edu.pw.pap.comment.commentNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
@@ -99,17 +100,29 @@ public class ReviewController {
 
     // TODO: Add post mapping for adding a new review
 
+    @PostMapping("/api/courses/{courseId}/users/{username}/reviews")
+    public Review addReview(@RequestBody AddReviewRequest request, UserPrincipal userPrincipal){
+        return reviewService.addReview(request, userPrincipal);
+    }
+
 
 //    TODO: ADD AUTHORISATION CHECK WHEN DELETING COMMENT
     @DeleteMapping("/api/courses/{courseId}/users/{username}/reviews")
-    public ResponseEntity<Review> deleteReview(@PathVariable Long courseId, @PathVariable String username) {
-        reviewService.deleteReview(courseId, username);
+    public ResponseEntity<Review> deleteReview(@PathVariable Long courseId, @PathVariable String username, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        reviewService.deleteReview(courseId, username, userPrincipal);
         return ResponseEntity.noContent().build();
     }
 
 
+
     @ExceptionHandler({commentNotFoundException.class, userNotFoundException.class, reviewNotFoundException.class})
     public ResponseEntity<Exception> handleEntityNotFound(Exception e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);}
+
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Exception> handleUnauthorized(Exception e) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
+    }
 }
 
 

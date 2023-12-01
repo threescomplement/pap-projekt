@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.comment.CommentRepository;
+import pl.edu.pw.pap.comment.UnauthorizedException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.courseNotFoundException;
+import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
+import pl.edu.pw.pap.user.userNotFoundException;
 
 import javax.sound.sampled.ReverbType;
 import java.util.ArrayList;
@@ -39,26 +42,44 @@ public class ReviewService {
         return new ArrayList<Review>(course.getReviews());
     }
 
-    public void deleteReview ( Long courseId, String username){
+    public void deleteReview (Long courseId, String username, UserPrincipal userPrincipal){
 
         System.out.println("Asked for deletion of review by " + username + " of course " + courseId);
         Optional<User> maybeUser = userRepository.findByUsername(username);
         if (maybeUser.isPresent()){
             System.out.println("Found user of review being deleted");
             User user = maybeUser.get();
+            if (!user.getId().equals(userPrincipal.getUserId())){
+                throw new UnauthorizedException("Only the owner of the review can delete it.");
+            }
             Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey( maybeUser.get().getId(), courseId));
             if (maybeReview.isPresent()){
-//                synchronize the entities. Remove comments from Review to allow deletion of comments
                 System.out.println("Trying to remove review");
                 Review review = maybeReview.get();
-//                var comments = review.getComments();
-//                commentRepository.deleteAll(comments);
-//                remove review from user to allow deletion of review
-                // safely delete comments
 
                 reviewRepository.delete(review);
             }
         }
 
     }
+
+    public Review addReview(AddReviewRequest request, UserPrincipal userPrincipal) {
+
+        Optional<User> maybeUser = userRepository.findByUsername(request.username());
+        if (maybeUser.isEmpty()){
+            throw new userNotFoundException("No user with given username: " + request.username());
+        }
+        System.out.println("Found user of review being deleted");
+        Optional<Course> maybeCourse = courseRepository.findById(request.courseId());
+        if (maybeCourse.isEmpty()){
+            throw new courseNotFoundException("No course with id: " + request.courseId());
+        }
+        User user = maybeUser.get();
+        if (!user.getId().equals(userPrincipal.getUserId())){
+            throw new UnauthorizedException("User can only add reviews in his own name.");
+        }
+        Course course = maybeCourse.get();
+        return reviewRepository.save(new Review(user, course, request.text(), request.rating()));
+    }
+
 }

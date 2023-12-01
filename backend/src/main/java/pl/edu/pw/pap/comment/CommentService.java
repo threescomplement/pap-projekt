@@ -35,6 +35,7 @@ public class CommentService {
         if (maybeComment.isEmpty()){
             throw new commentNotFoundException("No comment with Id" + commentId);
         }
+        System.out.println("Trying to get user with username: " + principal.getUsername());
         var maybeUser = userRepository.findByUsername(principal.getUsername());
         if (maybeUser.isEmpty()){
             throw new userNotFoundException("No user with username" + principal.getUsername());

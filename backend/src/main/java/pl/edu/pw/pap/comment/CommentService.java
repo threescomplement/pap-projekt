@@ -21,15 +21,18 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
-    public List<Comment> getCommentsForReview(Long courseId, Long reviewerId) {
-        return commentRepository.findByReview_Id(new ReviewKey(reviewerId, courseId));
+    public List<Comment> getCommentsForReview(Long courseId, String username) {
+        Optional<User> maybeUser = userRepository.findByUsername(username);
+        if (maybeUser.isEmpty()){
+            throw new userNotFoundException("No user with username " + username);
+        }
+        return commentRepository.findByReview_Id(new ReviewKey(maybeUser.get().getId(), courseId));
     }
 
     public void deleteComment(Long commentId, UserPrincipal principal) {
         var comment = commentRepository.findById(commentId).orElseThrow();
         var user = userRepository.findByUsername(principal.getUsername()).orElseThrow();
         if (!comment.getUser().getId().equals(user.getId())) {
-            // TODO: change exception to something anauthorised
             throw new UnauthorizedException("User can only delete his own comments");
         }
 

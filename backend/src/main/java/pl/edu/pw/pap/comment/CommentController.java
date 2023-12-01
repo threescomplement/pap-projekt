@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.review.reviewNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.UserController;
@@ -25,17 +26,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CommentController {
     private final CommentService commentService;
 
-    // TODO: change using id to using username
-    @GetMapping("/api/courses/{courseId}/reviews/{reviewerId}/comments")
-    public CollectionModel<EntityModel<Comment>> getCommentsForReview(@PathVariable Long courseId, @PathVariable Long reviewerId) {
-        var comments = commentService.getCommentsForReview(courseId, reviewerId);
+    @GetMapping("/api/courses/{courseId}/reviews/{username}/comments")
+    public CollectionModel<EntityModel<Comment>> getCommentsForReview(@PathVariable Long courseId, @PathVariable String username) {
+        var comments = commentService.getCommentsForReview(courseId, username);
         List<EntityModel<Comment>> commentModelList = new ArrayList<>();
         for (Comment comment : comments) {
             commentModelList.add(getCommentById(comment.getId()));
         }
         return CollectionModel.of(
                 commentModelList,
-                linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, reviewerId)).withSelfRel()
+                linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, username)).withSelfRel()
         );
     }
 
@@ -46,11 +46,11 @@ public class CommentController {
             throw new commentNotFoundException("no comment with ID: " + commentId);
         }
         Comment comment = maybecomment.get();
+
         Link selfLink = linkTo(methodOn(CommentController.class).getCommentById(commentId)).withSelfRel();
-        // Todo: create a link to a getReview action
-//        Link reviewLink = linkTo ReviewController.getReview(comment.getReview
+        Link reviewLink = linkTo(methodOn(ReviewController.class).getReview(comment.getReview().getCourse().getId(), comment.getUser().getUsername())).withRel("review");
         Link userLink = linkTo(methodOn(UserController.class).getUser(comment.getUser().getUsername())).withRel("user");
-        Link[] links = {selfLink, userLink};
+        Link[] links = {selfLink, userLink, reviewLink};
         return EntityModel.of(comment, links);
     }
 

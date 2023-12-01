@@ -48,7 +48,7 @@ public class ReviewController {
         Review review = maybeReview.get();
         Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
-        Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, user.getId())).withRel("comments");
+        Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, user.getUsername())).withRel("comments");
         // TODO: Add link from CourseController
 //        Link courseLink = linkTo(method)
         Link[] links = {selfLink, userLink, commentsLink};
@@ -98,7 +98,6 @@ public class ReviewController {
 
     }
 
-    // TODO: Add post mapping for adding a new review
 
     @PostMapping("/api/courses/{courseId}/users/{username}/reviews")
     public Review addReview(@RequestBody AddReviewRequest request, UserPrincipal userPrincipal){
@@ -106,7 +105,6 @@ public class ReviewController {
     }
 
 
-//    TODO: ADD AUTHORISATION CHECK WHEN DELETING COMMENT
     @DeleteMapping("/api/courses/{courseId}/users/{username}/reviews")
     public ResponseEntity<Review> deleteReview(@PathVariable Long courseId, @PathVariable String username, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         reviewService.deleteReview(courseId, username, userPrincipal);

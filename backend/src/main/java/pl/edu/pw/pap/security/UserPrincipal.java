@@ -28,6 +28,7 @@ public class UserPrincipal implements UserDetails {
         return password;
     }
 
+    // TODO: Fix getUsername returning a string surrounded by quotation marks ("rdeckard" instead of rdeckard)
     @Override
     public String getUsername() {
         return username;

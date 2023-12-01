@@ -28,10 +28,11 @@ public class User {
     private String role;
     private Boolean enabled;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    // TODO: figure out how to cascade reviews and comments without repository.deleteAll throwing Cocurrent Modification (if needed)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Review> reviews;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<Comment> comments;
 
     public User(String username, String email, String password, String role, Boolean enabled) {

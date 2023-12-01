@@ -53,7 +53,7 @@ interface FilterProps {
 
 export default function Filter(props: FilterProps) {
     const [chosen, setChosen] = useState("")
-
+    // TODO better handling of null values
     const optionObjects = props.options.map(o => <option value={o}>{o}</option>)
     return <select onChange={e => {
         props.onSelect(e);

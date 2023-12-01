@@ -8,6 +8,11 @@ import org.springframework.hateoas.Link;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import pl.edu.pw.pap.comment.CommentController;
+import pl.edu.pw.pap.review.ReviewController;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,9 +33,14 @@ public class UserController {
 
     @GetMapping("/api/users/{username}")
     public EntityModel<User> getUser(@PathVariable String username){
-//         TODO: musi zwracać linki do: getUserReviews, getUserComments
-//        Link[] links = {};
-        return EntityModel.of(userService.findByUsername(username).orElseThrow());
+        Link selfLink = linkTo(methodOn(UserController.class).getUser(username)).withSelfRel();
+        Link reviewsLink = linkTo(methodOn(ReviewController.class).getUserReviews(username)).withRel("reviews");
+        Link commentsLink = linkTo(methodOn(CommentController.class).getUserComments(username)).withRel("comments");
+        Link[] links = {selfLink, reviewsLink, commentsLink};
+        return EntityModel.of(
+                userService.findByUsername(username).orElseThrow(),
+                links
+        );
     }
 
     @ExceptionHandler(value = UserRegistrationException.class)

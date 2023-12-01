@@ -67,10 +67,9 @@ public class CommentController {
         );
     }
 
-    // TODO: autorisation
     @PostMapping("/api/courses/{courseId}/reviews/{username}/comments")
-    public Comment addComment(@RequestBody AddCommentRequest request) {
-        return commentService.addNewComment(request);
+    public Comment addComment(@RequestBody AddCommentRequest request, @AuthenticationPrincipal UserPrincipal principal) {
+        return commentService.addNewComment(request, principal);
     }
 
 

@@ -45,7 +45,7 @@ public class CommentService {
         return commentRepository.findCommentsByUser_Username(username);
     }
 
-    public Comment addNewComment(AddCommentRequest request) {
+    public Comment addNewComment(AddCommentRequest request, UserPrincipal principal) {
         String text = request.text();
         Long courseId = request.courseId();
         String username = request.username();
@@ -54,11 +54,15 @@ public class CommentService {
             throw new userNotFoundException("No user found with username: " + username);
         }
         User user = getUser.get();
+
         Optional<Review> getReview = reviewRepository.findById(new ReviewKey(user.getId(), courseId));
         if (getReview.isEmpty()){
             throw new reviewNotFoundException("No existing review of course " + courseId + "by " + username);
         }
         Review review = getReview.get();
+        if (!user.getUsername().equals(principal.getUsername())){
+            throw new UnauthorizedException("Cannot add comment as someone else");
+        }
 
         Comment comment = new Comment(text, review, user);
         return commentRepository.save(comment);

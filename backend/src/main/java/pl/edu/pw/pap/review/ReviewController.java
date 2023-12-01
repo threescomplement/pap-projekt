@@ -7,9 +7,11 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentController;
 import pl.edu.pw.pap.comment.commentNotFoundException;
+import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserController;
 import pl.edu.pw.pap.user.UserRepository;
@@ -95,6 +97,11 @@ public class ReviewController {
     }
 
 
+    @DeleteMapping("/api/courses/{courseId}/users/{username}/reviews")
+    public ResponseEntity<Review> deleteReview(Long courseId, String username) {
+        reviewService.deleteReview(courseId, username);
+        return ResponseEntity.noContent().build();
+    }
 
 
     @ExceptionHandler({commentNotFoundException.class, userNotFoundException.class, reviewNotFoundException.class})

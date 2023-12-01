@@ -30,8 +30,17 @@ public class CommentService {
     }
 
     public void deleteComment(Long commentId, UserPrincipal principal) {
-        var comment = commentRepository.findById(commentId).orElseThrow();
-        var user = userRepository.findByUsername(principal.getUsername()).orElseThrow();
+
+        var maybeComment = commentRepository.findById(commentId);
+        if (maybeComment.isEmpty()){
+            throw new commentNotFoundException("No comment with Id" + commentId);
+        }
+        var maybeUser = userRepository.findByUsername(principal.getUsername());
+        if (maybeUser.isEmpty()){
+            throw new userNotFoundException("No user with username" + principal.getUsername());
+        }
+        var comment = maybeComment.get();
+        var user = maybeUser.get();
         if (!comment.getUser().getId().equals(user.getId())) {
             throw new UnauthorizedException("User can only delete his own comments");
         }

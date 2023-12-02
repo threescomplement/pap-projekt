@@ -13,20 +13,12 @@ import static pl.edu.pw.pap.common.Constants.ALL;
 public class CourseService {
     private final CourseRepository courseRepository;
 
-    public Optional<CourseDTO> getByIdWithRating(Long courseId) {
+    public Optional<CourseDTO> getById(Long courseId) {
         return courseRepository.findByIdWithRating(courseId);
     }
 
-    public List<CourseDTO> getAllWithRatings() {
-        return courseRepository.findAllWithRatings();
-    }
-
-    public Optional<Course> getById(Long courseId) {
-        return courseRepository.findById(courseId);
-    }
-
-    public List<Course> getAllMatchingFilters(String name, String language, String module, String type, String level, String teacherName) {
-        return courseRepository.findCoursesByAttributes(
+    public List<CourseDTO> getAllMatchingFilters(String name, String language, String module, String type, String level, String teacherName) {
+        return courseRepository.findCoursesByAttributesWithRatings(
                 name,
                 language.equals(ALL) ? null : language,
                 module.equals(ALL) ? null : module,

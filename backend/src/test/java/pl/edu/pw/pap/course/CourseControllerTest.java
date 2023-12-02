@@ -35,8 +35,7 @@ class CourseControllerTest {
     @Test
     @WithMockUser
     public void getCourseByIdExists() throws Exception {
-        var teacher = new Teacher("mgr Jan Kowalski");
-        var course = new Course("Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, teacher);
+        var course = new CourseDTO(1L, "Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, 5.5, 1L);
 
         Mockito.doReturn(Optional.of(course)).when(courseService).getById(1L);
 
@@ -48,7 +47,9 @@ class CourseControllerTest {
                 .andExpect(jsonPath("$.language").value(course.getLanguage()))
                 .andExpect(jsonPath("$.type").value(course.getType()))
                 .andExpect(jsonPath("$.level").value(course.getLevel()))
-                .andExpect(jsonPath("$.module").value(course.getModule()));
+                .andExpect(jsonPath("$.module").value(course.getModule()))
+                .andExpect(jsonPath("$.averageRating").value(course.getAverageRating()))
+                .andExpect(jsonPath("$.teacherId").doesNotExist());
 
         // TODO Find way to check links
     }

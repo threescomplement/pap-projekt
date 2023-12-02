@@ -4,6 +4,7 @@ import api from "./api";
 export interface Teacher {
     id: string,
     name: string,
+    averageRating: string,
     _links: any
 }
 
@@ -16,7 +17,7 @@ export interface TeacherFilters {
  * Request the data of a teacher
  * @param teacherId - teacher's id
  */
-export async function fetchTeacher(teacherId: string): Promise<Teacher> {
+async function fetchTeacher(teacherId: string): Promise<Teacher> {
     // TODO: teacherId does not exist in the database
     return await api.get(`/teachers/${Number(teacherId)}`)
         .then(response => response.json())
@@ -26,13 +27,13 @@ export async function fetchTeacher(teacherId: string): Promise<Teacher> {
 /**
  * Get the data of all teacher's courses
  */
-export async function fetchTeacherCourses(teacherId: string): Promise<Course[]> {
+async function fetchTeacherCourses(teacherId: string): Promise<Course[]> {
     const response = await api.get(`/teachers/${Number(teacherId)}/courses`);
     const json = await response.json();
     return json._embedded.courses;
 }
 
-export async function fetchTeachersByFilters(filters: TeacherFilters): Promise<Teacher[]> {
+async function fetchTeachersByFilters(filters: TeacherFilters): Promise<Teacher[]> {
     const response = await api.get("/teachers", null, filters);
     const json = await response.json();
     console.log(json);

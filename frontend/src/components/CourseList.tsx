@@ -9,6 +9,13 @@ interface CourseListProps {
 export default function CourseList({courses}: CourseListProps) {
 
     return <table>
+        <tbody>
+        <tr>
+            <td>Nazwa</td>
+            <td>Średnia ocena</td>
+            <td>Liczba opinii</td>
+        </tr>
+        </tbody>
         {courses.map(c => <CourseRow course={c}/>)}
     </table>;
 }
@@ -20,6 +27,8 @@ interface CourseProps {
 
 export function CourseRow({course}: CourseProps) {
     return <tr>
-    <td><Link to={"/courses/" + course.id}> {course.name}</Link></td>
+        <td><Link to={"/courses/" + course.id}> {course.name}</Link></td>
+        <td style={{textAlign: 'right'}}>{course.averageRating}</td>
+        <td style={{textAlign: 'right'}}>x</td>
     </tr>
 }

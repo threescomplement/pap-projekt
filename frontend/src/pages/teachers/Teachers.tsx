@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {TeacherService, TeacherFilters, Teacher} from "../../lib/Teacher";
+import {TeacherService, Teacher} from "../../lib/Teacher";
 import TeacherList from "../../components/TeacherList";
 import Filter, {all, languages} from "../../components/Filter";
 
@@ -26,7 +26,7 @@ export function Teachers() {
 
     return <>
         <h1>Lektorzy</h1>
-        <input type="text" onChange={e => setQuery(e.target.value)}/>
+        <input type="text" placeholder="Szukaj po nazwisku" onChange={e => setQuery(e.target.value)}/>
         <Filter name="Nauczany język"
                 options={languages}
                 onSelect={e => setLanguage(e.target.value)}

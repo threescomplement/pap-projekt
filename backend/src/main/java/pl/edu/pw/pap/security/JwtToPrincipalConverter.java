@@ -11,8 +11,8 @@ public class JwtToPrincipalConverter {
     public UserPrincipal convert(DecodedJWT jwt) {
         return UserPrincipal.builder()
                 .userId(Long.valueOf(jwt.getSubject()))
-                .username(String.valueOf(jwt.getClaim("u")))
-                .email(String.valueOf(jwt.getClaim("e")))
+                .username(stripQuotationMarks(String.valueOf(jwt.getClaim("u"))))
+                .email(stripQuotationMarks(String.valueOf(jwt.getClaim("e"))))
                 .authorities(extractAuthoritiesFromClaim(jwt))
                 .build();
     }
@@ -24,5 +24,9 @@ public class JwtToPrincipalConverter {
         }
 
         return claim.asList(SimpleGrantedAuthority.class);
+    }
+
+    private String stripQuotationMarks(String text) {
+        return text.replace("\"", "");
     }
 }

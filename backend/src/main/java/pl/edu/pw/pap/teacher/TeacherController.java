@@ -46,7 +46,7 @@ public class TeacherController {
                 teacher,
                 linkTo(methodOn(TeacherController.class).getTeacherById(teacher.getId())).withSelfRel(),
                 linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, teacher.getName())).withRel("courses"),
-                linkTo(methodOn(TeacherController.class).getAllTeachers("")).withRel("all")
+                linkTo(methodOn(TeacherController.class).getAllTeachers("")).withRel("all")  // TODO review links
         );
     }
 }

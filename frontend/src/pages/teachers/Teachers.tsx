@@ -1,20 +1,22 @@
 import {useEffect, useState} from "react";
-import {fetchTeachers, Teacher} from "../../lib/Teacher";
+import {TeacherService, TeacherFilters, Teacher} from "../../lib/Teacher";
 import TeacherList from "../../components/TeacherList";
-
+import Filter, {all, languages} from "../../components/Filter";
 
 export function Teachers() {
     const [teachers, setTeachers] = useState<Teacher[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [query, setQuery] = useState("");
+    const [language, setLanguage] = useState(all);
 
     useEffect(() => {
-        fetchTeachers()
+        TeacherService.fetchTeacherByFilters({name: query, language: language})
             .then(ts => {
                 setTeachers(ts);
                 setIsLoaded(true);
             })
             .catch(e => console.error(e));
-    }, []);
+    }, [query, language]);
 
     const content = isLoaded
         ?
@@ -24,6 +26,11 @@ export function Teachers() {
 
     return <>
         <h1>Lektorzy</h1>
+        <input type="text" onChange={e => setQuery(e.target.value)}/>
+        <Filter name="Nauczany język"
+                options={languages}
+                onSelect={e => setLanguage(e.target.value)}
+        />
         {content}
     </>
 }

@@ -27,17 +27,17 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             @Param("teacherName") String teacherName
     );
 
-    @Query("SELECT new pl.edu.pw.pap.course.CourseDTO(c.id, c.name, c.language, c.type, c.level, c.module, AVG(r.overallRating))" +
-            "FROM Course c LEFT JOIN Review r ON c.id = r.course.id " +
-            "GROUP BY c.id, c.name, c.language, c.level, c.module " +
+    @Query("SELECT new pl.edu.pw.pap.course.CourseDTO(c.id, c.name, c.language, c.type, c.level, c.module, AVG(r.overallRating), t.id)" +
+            "FROM Course c LEFT JOIN Review r ON c.id = r.course.id JOIN Teacher t ON c.teacher.id = t.id " +
+            "GROUP BY c.id, c.name, c.language, c.level, c.module, t.id " +
             "HAVING c.id = :id "
     )
     Optional<CourseDTO> findByIdWithRating(@Param("id") Long id);
 
 
-    @Query("SELECT new pl.edu.pw.pap.course.CourseDTO(c.id, c.name, c.language, c.type, c.level, c.module, AVG(r.overallRating))" +
-            "FROM Course c LEFT JOIN Review r ON c.id = r.course.id " +
-            "GROUP BY c.id, c.name, c.language, c.level, c.module"
+    @Query("SELECT new pl.edu.pw.pap.course.CourseDTO(c.id, c.name, c.language, c.type, c.level, c.module, AVG(r.overallRating), t.id)" +
+            "FROM Course c LEFT JOIN Review r ON c.id = r.course.id JOIN Teacher t ON c.teacher.id = t.id " +
+            "GROUP BY c.id, c.name, c.language, c.level, c.module, t.id"
     )
     List<CourseDTO> findAllWithRatings();
 

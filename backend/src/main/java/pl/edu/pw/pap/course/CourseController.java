@@ -27,10 +27,7 @@ public class CourseController {
     @GetMapping("/api/courses/{courseId}")
     public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long courseId) {
         var course = courseService.getByIdWithRating(courseId);
-        return course.map(c -> {
-                    c.add(linkTo(methodOn(CourseController.class).getCourseById(c.getId())).withSelfRel());
-                    return ResponseEntity.ok(c);
-                })
+        return course.map(c -> ResponseEntity.ok(addLinks(c)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -55,7 +52,7 @@ public class CourseController {
     @GetMapping("/api/courses/all")
     public RepresentationModel<CourseDTO> getAllWithRatings() {
         var courses = courseService.getAllWithRatings().stream()
-                .map(c -> c.add(linkTo(methodOn(CourseController.class).getCourseById(c.getId())).withSelfRel()))
+                .map(this::addLinks)
                 .toList();
 
         if (courses.isEmpty()) {
@@ -66,6 +63,7 @@ public class CourseController {
 
         return HalModelBuilder.emptyHalModel()
                 .embed(courses, LinkRelation.of("courses"))
+                .link(linkTo(methodOn(CourseController.class).getAllWithRatings()).withSelfRel())
                 .build();
     }
 
@@ -75,6 +73,14 @@ public class CourseController {
                 course,
                 linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel(),
                 linkTo(methodOn(TeacherController.class).getTeacherById(course.getTeacher().getId())).withRel("teacher"),
+                linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, "")).withRel("all")
+        );
+    }
+
+    private CourseDTO addLinks(CourseDTO course) {
+        return course.add(
+                linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel(),
+                linkTo(methodOn(TeacherController.class).getTeacherById(course.getTeacherId())).withRel("teacher"),
                 linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, "")).withRel("all")
         );
     }

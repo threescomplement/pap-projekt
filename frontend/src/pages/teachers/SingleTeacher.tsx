@@ -1,4 +1,4 @@
-import {fetchTeacher, getTeacherCourses, Teacher} from "../../lib/Teacher";
+import {fetchTeacher, fetchTeacherCourses, Teacher} from "../../lib/Teacher";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
@@ -24,7 +24,7 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
     const [courses, setCourses] = useState<Course[]>([])
 
     useEffect(() => {
-        getTeacherCourses(teacherId)
+        fetchTeacherCourses(teacherId)
             .then(c => setCourses(c))
     }, [teacherId]);
 

@@ -1,7 +1,6 @@
 package pl.edu.pw.pap.teacher;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
@@ -36,14 +35,14 @@ public class TeacherController {
             @RequestParam(required = false, defaultValue = "") String name,
             @RequestParam(required = false, defaultValue = ALL) String language
     ) {
-       var teachers = teacherService.getTeachersMatchingFilters(name, language).stream()
-               .map(this::addLinks)
-               .toList();
+        var teachers = teacherService.getTeachersMatchingFilters(name, language).stream()
+                .map(this::addLinks)
+                .toList();
 
-       return HalModelBuilder.emptyHalModel()
-               .embed(teachers.isEmpty() ? Collections.emptyList() : teachers, LinkRelation.of("teachers"))
-               .link(linkTo(methodOn(TeacherController.class).getAllTeachers(name, language)).withSelfRel())
-               .build();
+        return HalModelBuilder.emptyHalModel()
+                .embed(teachers.isEmpty() ? Collections.emptyList() : teachers, LinkRelation.of("teachers"))
+                .link(linkTo(methodOn(TeacherController.class).getAllTeachers(name, language)).withSelfRel())
+                .build();
     }
 
     private TeacherDTO addLinks(TeacherDTO teacher) {

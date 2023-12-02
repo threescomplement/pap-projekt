@@ -27,7 +27,6 @@ import pl.edu.pw.pap.user.UserRepository;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.fail;
 import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
 
 @SpringBootTest(classes = PapApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -88,17 +87,11 @@ public class TeacherIntegrationTests {
         headers.add("Authorization", "Bearer " + token);
     }
 
-    // TODO
     @Test
     public void getTeacherByIdExists() {
         addDummyData();
 
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers/1", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers/1", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         assertEquals(1, (int) json.read("$.id"));
@@ -112,12 +105,7 @@ public class TeacherIntegrationTests {
 
     @Test
     public void getTeacherByIdNotExists() {
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers/1", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers/1", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
     }
 
@@ -125,22 +113,12 @@ public class TeacherIntegrationTests {
     public void getTeacherByIdFollowSelfLink() {
         addDummyData();
 
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers/1", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers/1", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         var selfLink = json.read("$._links.self.href").toString();
 
-        var selfResponse = restTemplate.exchange(
-                selfLink,
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var selfResponse = restTemplate.exchange(selfLink, HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), selfResponse.getStatusCode());
         assertEquals(response.getBody(), selfResponse.getBody());
     }
@@ -149,12 +127,7 @@ public class TeacherIntegrationTests {
     public void getAllTeachersDefaultFilter() {
         addDummyData();
 
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         assertEquals(2, ((JSONArray) json.read("$._embedded.teachers")).size());
@@ -164,12 +137,7 @@ public class TeacherIntegrationTests {
 
     @Test
     public void getAllTeachersEmptyResult() {
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         assertEquals(0, ((JSONArray) json.read("$._embedded.teachers")).size());
@@ -179,12 +147,7 @@ public class TeacherIntegrationTests {
     public void getAllTeachersFilterByLanguage() {
         addDummyData();
 
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers?language=Włoski", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers?language=Włoski", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         assertEquals(1, ((JSONArray) json.read("$._embedded.teachers")).size());
@@ -195,12 +158,7 @@ public class TeacherIntegrationTests {
     public void getAllTeachersFilterByName() {
         addDummyData();
 
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers?name=jan", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers?name=jan", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         assertEquals(1, ((JSONArray) json.read("$._embedded.teachers")).size());
@@ -211,12 +169,7 @@ public class TeacherIntegrationTests {
     public void getAllTeachersFilterByNameAndLanguage() {
         addDummyData();
 
-        var response = restTemplate.exchange(
-                buildUrl("/api/teachers?name=jan&language=Angielski", port),
-                HttpMethod.GET,
-                new HttpEntity<>(headers),
-                String.class
-        );
+        var response = restTemplate.exchange(buildUrl("/api/teachers?name=jan&language=Angielski", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         assertEquals(1, ((JSONArray) json.read("$._embedded.teachers")).size());

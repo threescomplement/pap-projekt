@@ -1,4 +1,4 @@
-import {fetchTeacher, fetchTeacherCourses, Teacher} from "../../lib/Teacher";
+import {TeacherService, Teacher} from "../../lib/Teacher";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
@@ -24,7 +24,7 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
     const [courses, setCourses] = useState<Course[]>([])
 
     useEffect(() => {
-        fetchTeacherCourses(teacherId)
+        TeacherService.fetchTeacherCourses(teacherId)
             .then(c => setCourses(c))
     }, [teacherId]);
 
@@ -45,7 +45,7 @@ export default function SingleTeacher() {
             console.error("teacherId is null");
             return;
         }
-        fetchTeacher(teacherId)
+        TeacherService.fetchTeacher(teacherId)
             .then(t => {
                     setTeacher(t);
                     setIsLoaded(true);

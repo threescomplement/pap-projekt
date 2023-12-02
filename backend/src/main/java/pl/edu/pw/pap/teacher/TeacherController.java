@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.edu.pw.pap.course.CourseController;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+import static pl.edu.pw.pap.common.Constants.ALL;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,6 +45,7 @@ public class TeacherController {
         return EntityModel.of(
                 teacher,
                 linkTo(methodOn(TeacherController.class).getTeacherById(teacher.getId())).withSelfRel(),
+                linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, teacher.getName())).withRel("courses"),
                 linkTo(methodOn(TeacherController.class).getAllTeachers("")).withRel("all")
         );
     }

@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CourseRepository extends JpaRepository<Course, Long> {
@@ -25,4 +26,19 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
             @Param("level") String level,
             @Param("teacherName") String teacherName
     );
+
+    @Query("SELECT new pl.edu.pw.pap.course.CourseDTO(c.id, c.name, c.language, c.type, c.level, c.module, AVG(r.overallRating))" +
+            "FROM Course c LEFT JOIN Review r ON c.id = r.course.id " +
+            "GROUP BY c.id, c.name, c.language, c.level, c.module " +
+            "HAVING c.id = :id "
+    )
+    Optional<CourseDTO> findByIdWithRating(@Param("id") Long id);
+
+
+    @Query("SELECT new pl.edu.pw.pap.course.CourseDTO(c.id, c.name, c.language, c.type, c.level, c.module, AVG(r.overallRating))" +
+            "FROM Course c LEFT JOIN Review r ON c.id = r.course.id " +
+            "GROUP BY c.id, c.name, c.language, c.level, c.module"
+    )
+    List<CourseDTO> findAllWithRatings();
+
 }

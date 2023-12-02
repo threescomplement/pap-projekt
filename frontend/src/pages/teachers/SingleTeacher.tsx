@@ -17,6 +17,7 @@ function TeacherData(props: SingleTeacherProps) {
     const teacher = props.teacher
     return <>
         <h1>{teacher.name}</h1>
+        <h2>Średnia ocena {teacher.averageRating}</h2>
     </>
 }
 
@@ -29,9 +30,9 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
     }, [teacherId]);
 
     return <>
-        <h3>Courses</h3>
+        <h2>Kursy</h2>
         <CourseList courses={courses}/>
-    </>
+        </>
 }
 
 

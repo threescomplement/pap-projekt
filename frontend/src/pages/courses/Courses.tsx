@@ -1,17 +1,17 @@
 import CourseList from "../../components/CourseList";
 import React, {useEffect, useState} from "react";
 import {Course, CourseService, } from "../../lib/Course";
-import Filter, {languages, levels, modules, types} from "../../components/Filter";
+import Filter, {all, languages, levels, modules, types} from "../../components/Filter";
 
 
 export function Courses() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [query, setQuery] = useState("");
-    const [language, setLanguage] = useState<string|null>(null);
-    const [level, setLevel] = useState<string|null>(null);
-    const [module, setModule] = useState<string|null>(null);
-    const [type, setType] = useState<string|null>(null);
+    const [language, setLanguage] = useState<string>(all);
+    const [level, setLevel] = useState<string>(all);
+    const [module, setModule] = useState<string>(all);
+    const [type, setType] = useState<string>(all);
 
     useEffect(() => {
         CourseService.fetchCourseByFilters({
@@ -40,21 +40,21 @@ export function Courses() {
         <Filter
             name={"Język"}
             options={languages}
-            onSelect={(e) => setLanguage(e.target.value || null)}
+            onSelect={(e) => setLanguage(e.target.value)}
         />
         <Filter name={"Poziom"}
                 options={levels}
-                onSelect={(e) => setLevel(e.target.value || null)}
+                onSelect={(e) => setLevel(e.target.value)}
         />
         <Filter
             name={"Typ"}
             options={types}
-            onSelect={(e) => setType(e.target.value || null)}
+            onSelect={(e) => setType(e.target.value)}
         />
         <Filter
             name={"Moduł"}
             options={modules}
-            onSelect={(e) => setModule(e.target.value || null)}/>
+            onSelect={(e) => setModule(e.target.value)}/>
         {content}
     </>
 }

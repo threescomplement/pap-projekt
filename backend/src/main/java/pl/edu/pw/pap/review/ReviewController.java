@@ -34,7 +34,7 @@ public class ReviewController {
 
 
 
-    @GetMapping("/api/courses/{courseId}/users/{username}/reviews")
+    @GetMapping("/api/courses/{courseId}/reviews/{username}")
     public EntityModel<Review> getReview(@PathVariable Long courseId, @PathVariable String username) {
         var maybeUser = userRepository.findByUsername(username);
         if (maybeUser.isEmpty()) {
@@ -73,7 +73,7 @@ public class ReviewController {
     }
 
 
-    @GetMapping("/api/users/{username}/reviews")
+    @GetMapping("/api/reviews/{username}")
     public CollectionModel<EntityModel<Review>> getUserReviews(@PathVariable String username){
 
         var maybeUser = userRepository.findByUsername(username);
@@ -99,13 +99,13 @@ public class ReviewController {
     }
 
 
-    @PostMapping("/api/courses/{courseId}/users/{username}/reviews")
+    @PostMapping("/api/courses/{courseId}/reviews/{username}") // TODO: change request to take username from principal
     public Review addReview(@RequestBody AddReviewRequest request, UserPrincipal userPrincipal){
         return reviewService.addReview(request, userPrincipal);
     }
 
 
-    @DeleteMapping("/api/courses/{courseId}/users/{username}/reviews")
+    @DeleteMapping("/api/courses/{courseId}/reviews/{username}")
     public ResponseEntity<Review> deleteReview(@PathVariable Long courseId, @PathVariable String username, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         reviewService.deleteReview(courseId, username, userPrincipal);
         return ResponseEntity.noContent().build();

@@ -1,4 +1,4 @@
-package pl.edu.pw.pap.security;
+package pl.edu.pw.pap.utils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

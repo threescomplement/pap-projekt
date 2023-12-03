@@ -1,20 +1,26 @@
 import CourseList from "../../components/CourseList";
 import React, {useEffect, useState} from "react";
 import {Course, CourseService, } from "../../lib/Course";
-import Filter, {languages, levels, modules, types} from "../../components/Filter";
+import Filter, {all, languages, levels, modules, types} from "../../components/Filter";
 
 
 export function Courses() {
     const [courses, setCourses] = useState<Course[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [query, setQuery] = useState("");
-    const [language, setLanguage] = useState("");
-    const [level, setLevel] = useState("");
-    const [module, setModule] = useState("");
-    const [type, setType] = useState("");
+    const [language, setLanguage] = useState<string>(all);
+    const [level, setLevel] = useState<string>(all);
+    const [module, setModule] = useState<string>(all);
+    const [type, setType] = useState<string>(all);
 
     useEffect(() => {
-        CourseService.fetchCourseByFilters({query, type, module, level, language})
+        CourseService.fetchCourseByFilters({
+            name: query,
+            type,
+            module,
+            level,
+            language,
+        })
             .then(cs => {
                 setCourses(cs);
                 setIsLoaded(true);

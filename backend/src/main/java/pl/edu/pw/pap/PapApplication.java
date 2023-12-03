@@ -30,7 +30,7 @@ public class PapApplication {
         SpringApplication.run(PapApplication.class, args);
     }
 
-    @Bean
+//    @Bean
     @Profile("dev")
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,
@@ -88,7 +88,7 @@ public class PapApplication {
         };
     }
 
-    @Bean
+//    @Bean
     @Profile("dev")
     public CommandLineRunner performQueries(
             CourseRepository courseRepository,

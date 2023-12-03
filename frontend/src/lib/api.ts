@@ -9,12 +9,26 @@ function authHeader(user: User) {
     return {Authorization: `Bearer ${user.token}`}
 }
 
-function myFetch(endpoint: string, headers: any, body: any, method: string, withAuth = true): Promise<any> {
+export function buildParamsString(queryParams: any): string {
+    let pairs: string[] = [];
+
+    for (const key in queryParams) {
+        const value = queryParams[key]
+        if (value != null) {
+            pairs.push(`${key}=${value}`);
+        }
+    }
+
+    return "?" + pairs.join("&");
+}
+
+function myFetch(endpoint: string, headers: any, body: any, method: string, queryParams: any = null, withAuth = true): Promise<any> {
     const user = getStoredUser();
     const auth = (withAuth && user != null) ? authHeader(user) : null;
     const requestBody = (body == null) ? null : JSON.stringify(body);
+    const params = (queryParams != null) ? buildParamsString(queryParams) : ""
 
-    return fetch(`${process.env.REACT_APP_API_ROOT}${endpoint}`, {
+    return fetch(`${process.env.REACT_APP_API_ROOT}${endpoint}${params}`, {
         method: method,
         headers: {
             ...defaultHeaders,
@@ -25,8 +39,8 @@ function myFetch(endpoint: string, headers: any, body: any, method: string, with
     });
 }
 
-function apiGet(endpoint: string, headers: any = null): Promise<any> {
-    return myFetch(endpoint, headers, null, "GET");
+function apiGet(endpoint: string, headers: any = null, queryParams: any = null): Promise<any> {
+    return myFetch(endpoint, headers, null, "GET", queryParams);
 }
 
 function apiPost(endpoint: string, body: any, headers: any = null): Promise<any> {

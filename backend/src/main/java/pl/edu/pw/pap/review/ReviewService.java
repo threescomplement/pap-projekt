@@ -1,6 +1,8 @@
 package pl.edu.pw.pap.review;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.comment.CommentRepository;
@@ -23,10 +25,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+    private final Logger log = LoggerFactory.getLogger(ReviewService.class);
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
 
     public Optional<Review> getReviewById(Long userId, Long courseId ){
         ReviewKey reviewKey = new ReviewKey(userId, courseId);
@@ -39,22 +41,24 @@ public class ReviewService {
             throw new courseNotFoundException("No course with id " + courseId);
         }
         Course course = getCourse.get();
-        return new ArrayList<Review>(course.getReviews());
+
+        return course.getReviews().stream()
+                .toList();
     }
 
     public void deleteReview (Long courseId, String username, UserPrincipal userPrincipal){
 
-        System.out.println("Asked for deletion of review by " + username + " of course " + courseId);
+        log.info("Asked for deletion of review by " + username + " of course " + courseId);
         Optional<User> maybeUser = userRepository.findByUsername(username);
         if (maybeUser.isPresent()){
-            System.out.println("Found user of review being deleted");
+            log.info("Found user of review being deleted");
             User user = maybeUser.get();
             if (!user.getId().equals(userPrincipal.getUserId())){
                 throw new UnauthorizedException("Only the owner of the review can delete it.");
             }
             Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey( maybeUser.get().getId(), courseId));
             if (maybeReview.isPresent()){
-                System.out.println("Trying to remove review");
+                log.info("Trying to remove review");
                 Review review = maybeReview.get();
 
                 reviewRepository.delete(review);
@@ -64,21 +68,16 @@ public class ReviewService {
     }
 
     public Review addReview(AddReviewRequest request, UserPrincipal userPrincipal) {
+        var user = userRepository.findByUsername(request.username())
+                .orElseThrow(() -> new userNotFoundException("No user with given username: " + request.username()));
 
-        Optional<User> maybeUser = userRepository.findByUsername(request.username());
-        if (maybeUser.isEmpty()){
-            throw new userNotFoundException("No user with given username: " + request.username());
-        }
-        System.out.println("Found user of review being deleted");
-        Optional<Course> maybeCourse = courseRepository.findById(request.courseId());
-        if (maybeCourse.isEmpty()){
-            throw new courseNotFoundException("No course with id: " + request.courseId());
-        }
-        User user = maybeUser.get();
+        var course = courseRepository.findById(request.courseId())
+                .orElseThrow(() -> new courseNotFoundException("No course with id: " + request.courseId()));
+
         if (!user.getId().equals(userPrincipal.getUserId())){
             throw new UnauthorizedException("User can only add reviews in his own name.");
         }
-        Course course = maybeCourse.get();
+
         return reviewRepository.save(new Review(user, course, request.text(), request.rating()));
     }
 

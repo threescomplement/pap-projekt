@@ -1,6 +1,8 @@
 package pl.edu.pw.pap.comment;
 
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
@@ -17,6 +19,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CommentService {
+    private final Logger log = LoggerFactory.getLogger(CommentService.class);
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
@@ -35,7 +38,7 @@ public class CommentService {
         if (maybeComment.isEmpty()){
             throw new commentNotFoundException("No comment with Id" + commentId);
         }
-        System.out.println("Trying to get user with username: " + principal.getUsername());
+        log.info("Trying to get user with username: " + principal.getUsername());
         var maybeUser = userRepository.findByUsername(principal.getUsername());
         if (maybeUser.isEmpty()){
             throw new userNotFoundException("No user with username" + principal.getUsername());

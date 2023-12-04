@@ -11,12 +11,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentController;
 import pl.edu.pw.pap.comment.UnauthorizedException;
-import pl.edu.pw.pap.comment.commentNotFoundException;
+import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserController;
 import pl.edu.pw.pap.user.UserRepository;
-import pl.edu.pw.pap.user.userNotFoundException;
+import pl.edu.pw.pap.user.UserNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +38,12 @@ public class ReviewController {
     public EntityModel<Review> getReview(@PathVariable Long courseId, @PathVariable String username) {
         var maybeUser = userRepository.findByUsername(username);
         if (maybeUser.isEmpty()) {
-            throw new userNotFoundException("No user with username " + username);
+            throw new UserNotFoundException("No user with username " + username);
         }
         User user = maybeUser.get();
         Optional<Review> maybeReview = reviewService.getReviewById(user.getId(), courseId);
         if (maybeReview.isEmpty()) {
-            throw new reviewNotFoundException("No review of course " + courseId + " by " + username);
+            throw new ReviewNotFoundException("No review of course " + courseId + " by " + username);
         }
         Review review = maybeReview.get();
         Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
@@ -77,7 +77,7 @@ public class ReviewController {
 
         var maybeUser = userRepository.findByUsername(username);
         if (maybeUser.isEmpty()){
-            throw new userNotFoundException("No user with username " + username);
+            throw new UserNotFoundException("No user with username " + username);
 
         }
         User user = maybeUser.get();
@@ -112,7 +112,7 @@ public class ReviewController {
 
 
 
-    @ExceptionHandler({commentNotFoundException.class, userNotFoundException.class, reviewNotFoundException.class})
+    @ExceptionHandler({CommentNotFoundException.class, UserNotFoundException.class, ReviewNotFoundException.class})
     public ResponseEntity<Exception> handleEntityNotFound(Exception e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);}
 
 

@@ -4,19 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.comment.Comment;
-import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.UnauthorizedException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
-import pl.edu.pw.pap.course.courseNotFoundException;
+import pl.edu.pw.pap.course.CourseNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
-import pl.edu.pw.pap.user.userNotFoundException;
+import pl.edu.pw.pap.user.UserNotFoundException;
 
-import javax.sound.sampled.ReverbType;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +33,7 @@ public class ReviewService {
 
     public List<Review> getCourseReviews(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(
-                () -> new courseNotFoundException("No course with id " + courseId));
+                () -> new CourseNotFoundException("No course with id " + courseId));
 
         return course.getReviews()
                 .stream()
@@ -71,10 +67,10 @@ public class ReviewService {
 
     public Review addReview(AddReviewRequest request, UserPrincipal userPrincipal) {
         var user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new userNotFoundException("No user with given username: " + request.username()));
+                .orElseThrow(() -> new UserNotFoundException("No user with given username: " + request.username()));
 
         var course = courseRepository.findById(request.courseId())
-                .orElseThrow(() -> new courseNotFoundException("No course with id: " + request.courseId()));
+                .orElseThrow(() -> new CourseNotFoundException("No course with id: " + request.courseId()));
 
         // TODO: Use only the userPrincipal to determine the user, skipping this check
         if (!user.getId().equals(userPrincipal.getUserId())){

@@ -7,14 +7,13 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewRepository;
-import pl.edu.pw.pap.review.reviewNotFoundException;
+import pl.edu.pw.pap.review.ReviewNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
-import pl.edu.pw.pap.user.userNotFoundException;
+import pl.edu.pw.pap.user.UserNotFoundException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -27,7 +26,7 @@ public class CommentService {
 
     public List<Comment> getCommentsForReview(Long courseId, String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new userNotFoundException("No user with username " + username) );
+                () -> new UserNotFoundException("No user with username " + username) );
         return commentRepository.findByReview_Id(new ReviewKey(user.getId(), courseId));
     }
 
@@ -65,10 +64,10 @@ public class CommentService {
         Long courseId = request.courseId();
         String username = request.username();
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new userNotFoundException("No user found with username: " + username));
+                () -> new UserNotFoundException("No user found with username: " + username));
 
         Review review = reviewRepository.findById(new ReviewKey(user.getId(), courseId)).orElseThrow(
-                () -> new reviewNotFoundException("No existing review of course " + courseId + "by " + username));
+                () -> new ReviewNotFoundException("No existing review of course " + courseId + "by " + username));
         // TODO: Use the user directly from principal to avoid this check entirely
         if (!user.getUsername().equals(principal.getUsername())){
             throw new UnauthorizedException("Cannot add comment as someone else");

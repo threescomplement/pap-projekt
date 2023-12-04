@@ -8,16 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.review.ReviewController;
-import pl.edu.pw.pap.review.reviewNotFoundException;
+import pl.edu.pw.pap.review.ReviewNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.UserController;
-import pl.edu.pw.pap.user.userNotFoundException;
+import pl.edu.pw.pap.user.UserNotFoundException;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -44,7 +41,7 @@ public class CommentController {
     @GetMapping("/api/comments/{commentId}")
     public EntityModel<Comment> getCommentById(@PathVariable Long commentId) {
         var comment = commentService.findCommentById(commentId)
-                .orElseThrow(() -> new commentNotFoundException("no comment with ID: " + commentId));
+                .orElseThrow(() -> new CommentNotFoundException("no comment with ID: " + commentId));
         return addLinks(comment);
     }
 
@@ -76,7 +73,7 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @ExceptionHandler({commentNotFoundException.class, userNotFoundException.class, reviewNotFoundException.class})
+    @ExceptionHandler({CommentNotFoundException.class, UserNotFoundException.class, ReviewNotFoundException.class})
     public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
     }

@@ -2,9 +2,8 @@ package pl.edu.pw.pap.review;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.*;
+import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +18,7 @@ import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,20 +47,25 @@ public class ReviewController {
 
 
     @GetMapping("/api/courses/{courseId}/reviews")
-    public CollectionModel<EntityModel<Review>> getCourseReviews(@PathVariable Long courseId) {
+    public RepresentationModel<EntityModel<Review>> getCourseReviews(@PathVariable Long courseId) {
         var reviews = reviewService.getCourseReviews(courseId);
+
         List<EntityModel<Review>> reviewModelList = reviews
                 .stream()
                 .map(this::reviewWithLinks)
                 .toList();
-        return CollectionModel.of(
-                reviewModelList
-        );
+
+
+        // TODO: Add course link to representation model of reviews
+        return HalModelBuilder.emptyHalModel()
+                .embed(reviewModelList.isEmpty() ? Collections.emptyList() : reviewModelList, LinkRelation.of("reviews"))
+                .link(linkTo(methodOn(ReviewController.class).getCourseReviews(courseId)).withSelfRel())
+                .build();
     }
 
 
     @GetMapping("/api/reviews/{username}")
-    public CollectionModel<EntityModel<Review>> getUserReviews(@PathVariable String username){
+    public RepresentationModel<EntityModel<Review>> getUserReviews(@PathVariable String username){
 
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("No user with username " + username));
@@ -74,12 +79,14 @@ public class ReviewController {
         Link selfLink = linkTo(methodOn(ReviewController.class).getUserReviews(username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
         Link[] linkList = {selfLink, userLink};
-        return CollectionModel.of(
-                reviewModelList,
-                linkList
-        );
 
-    }
+        // TODO: check if this returns a proper list of links
+        return HalModelBuilder.emptyHalModel()
+                .embed(reviewModelList.isEmpty() ? Collections.emptyList() : reviewModelList, LinkRelation.of("reviews"))
+                .links(List.of(linkList))
+                .build();
+    };
+
 
 
 
@@ -114,7 +121,7 @@ public class ReviewController {
         Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
         Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, username)).withRel("comments");
-        // TODO: Add course link to collection model of reviews of a course
+        // TODO: Add course link to entity model of review
 //        Link courseLink = linkTo(methodOn())
 
         return EntityModel.of(

@@ -26,11 +26,9 @@ public class CommentService {
     private final ReviewRepository reviewRepository;
 
     public List<Comment> getCommentsForReview(Long courseId, String username) {
-        Optional<User> maybeUser = userRepository.findByUsername(username);
-        if (maybeUser.isEmpty()){
-            throw new userNotFoundException("No user with username " + username);
-        }
-        return commentRepository.findByReview_Id(new ReviewKey(maybeUser.get().getId(), courseId));
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new userNotFoundException("No user with username " + username) );
+        return commentRepository.findByReview_Id(new ReviewKey(user.getId(), courseId));
     }
 
     public void deleteComment(Long commentId, UserPrincipal principal) {
@@ -46,7 +44,7 @@ public class CommentService {
         }
         var comment = maybeComment.get();
         var user = maybeUser.get();
-        if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ADMIN") ))) {
+        if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN") ))) {
             return;
         }
 
@@ -66,17 +64,12 @@ public class CommentService {
         String text = request.text();
         Long courseId = request.courseId();
         String username = request.username();
-        Optional<User> getUser = userRepository.findByUsername(username);
-        if (getUser.isEmpty()) {
-            throw new userNotFoundException("No user found with username: " + username);
-        }
-        User user = getUser.get();
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new userNotFoundException("No user found with username: " + username));
 
-        Optional<Review> getReview = reviewRepository.findById(new ReviewKey(user.getId(), courseId));
-        if (getReview.isEmpty()){
-            throw new reviewNotFoundException("No existing review of course " + courseId + "by " + username);
-        }
-        Review review = getReview.get();
+        Review review = reviewRepository.findById(new ReviewKey(user.getId(), courseId)).orElseThrow(
+                () -> new reviewNotFoundException("No existing review of course " + courseId + "by " + username));
+        // TODO: Use the user directly from principal to avoid this check entirely
         if (!user.getUsername().equals(principal.getUsername())){
             throw new UnauthorizedException("Cannot add comment as someone else");
         }

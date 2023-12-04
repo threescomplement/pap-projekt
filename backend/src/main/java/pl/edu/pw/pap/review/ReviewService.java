@@ -36,34 +36,36 @@ public class ReviewService {
     }
 
     public List<Review> getCourseReviews(Long courseId) {
-        Optional<Course> getCourse = courseRepository.findById(courseId);
-        if (getCourse.isEmpty()){
-            throw new courseNotFoundException("No course with id " + courseId);
-        }
-        Course course = getCourse.get();
+        Course course = courseRepository.findById(courseId).orElseThrow(
+                () -> new courseNotFoundException("No course with id " + courseId));
 
-        return course.getReviews().stream()
+        return course.getReviews()
+                .stream()
                 .toList();
     }
 
     public void deleteReview (Long courseId, String username, UserPrincipal userPrincipal){
 
         log.info("Asked for deletion of review by " + username + " of course " + courseId);
+        // Not sure if this can be simplified any more than this
+        // It has to check if the parameters exist before it takes the review (I think?)
+        // I could throw exceptions and ignore them but that sounds like bad practise
+        // might try with nulls everywhere after tests are done
         Optional<User> maybeUser = userRepository.findByUsername(username);
-        if (maybeUser.isPresent()){
-            log.info("Found user of review being deleted");
-            User user = maybeUser.get();
-            if (!user.getId().equals(userPrincipal.getUserId())){
-                throw new UnauthorizedException("Only the owner of the review can delete it.");
-            }
-            Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey( maybeUser.get().getId(), courseId));
-            if (maybeReview.isPresent()){
-                log.info("Trying to remove review");
-                Review review = maybeReview.get();
+        if (maybeUser.isEmpty()){ return;}
 
-                reviewRepository.delete(review);
-            }
-        }
+        log.info("Found user of review being deleted");
+        User user = maybeUser.get();
+        if (!user.getId().equals(userPrincipal.getUserId())) { return; }
+
+        Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey( maybeUser.get().getId(), courseId));
+        if (maybeReview.isEmpty()){ return; }
+
+        log.info("Trying to remove review");
+        Review review = maybeReview.get();
+
+        reviewRepository.delete(review);
+
 
     }
 
@@ -74,6 +76,7 @@ public class ReviewService {
         var course = courseRepository.findById(request.courseId())
                 .orElseThrow(() -> new courseNotFoundException("No course with id: " + request.courseId()));
 
+        // TODO: Use only the userPrincipal to determine the user, skipping this check
         if (!user.getId().equals(userPrincipal.getUserId())){
             throw new UnauthorizedException("User can only add reviews in his own name.");
         }

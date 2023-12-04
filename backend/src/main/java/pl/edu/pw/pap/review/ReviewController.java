@@ -52,7 +52,6 @@ public class ReviewController {
         // TODO: Add link from CourseController
 //        Link courseLink = linkTo(method)
         Link[] links = {selfLink, userLink, commentsLink};
-        System.out.println("returning review with id " + review.id.courseId + " " + review.id.userId);
         return EntityModel.of(review, links);
     }
 

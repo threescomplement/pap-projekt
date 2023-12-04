@@ -41,9 +41,7 @@ public class Comment {
     @PreRemove
     public void removeFromUser(){
         this.user.removeComment(this);
-        System.out.println("removed comment " + this.id + " from user");
         this.review.removeComment(this);
-        System.out.println("Also Removed from review ");
     }
 
     @Override

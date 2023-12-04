@@ -29,7 +29,7 @@ public class CommentController {
         var comments = commentService.getCommentsForReview(courseId, username);
 
         List<EntityModel<Comment>> commentModelList = comments.stream()
-                .map(this::addLinks)
+                .map(this::commentWithLinks)
                 .toList();
 
         return HalModelBuilder.emptyHalModel()
@@ -42,14 +42,14 @@ public class CommentController {
     public EntityModel<Comment> getCommentById(@PathVariable Long commentId) {
         var comment = commentService.findCommentById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("no comment with ID: " + commentId));
-        return addLinks(comment);
+        return commentWithLinks(comment);
     }
 
     @GetMapping("/api/users/{username}/comments")
     public CollectionModel<EntityModel<Comment>> getUserComments(@PathVariable String username) {
         List<Comment> comments = commentService.getCommentsByUsername(username);
         List<EntityModel<Comment>> commentModelList = comments.stream()
-                .map(this::addLinks)
+                .map(this::commentWithLinks)
                 .toList();
 //        List<EntityModel<Comment>> commentModelList = new ArrayList<>();
 //        for (Comment comment : comments) {
@@ -83,7 +83,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
     }
 
-    private EntityModel<Comment> addLinks(Comment comment) {
+    private EntityModel<Comment> commentWithLinks(Comment comment) {
         return EntityModel.of(
                 comment,
                 linkTo(methodOn(CommentController.class).getCommentById(comment.getId())).withSelfRel(),

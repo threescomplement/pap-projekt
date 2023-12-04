@@ -1,6 +1,7 @@
 import {Teacher} from "../lib/Teacher";
 import React from "react";
 import {Link} from "react-router-dom";
+import {NUM_REVIEWS_PLACEHOLDER} from "../lib/utils";
 
 interface TeacherListProps {
     teachers: Teacher[]
@@ -33,7 +34,7 @@ export function TeacherRow({teacher}: TeacherProps) {
             {teacher.averageRating}
         </td>
         <td style={{textAlign: 'right'}}>
-            x
+            {NUM_REVIEWS_PLACEHOLDER}
         </td>
     </tr>
 }

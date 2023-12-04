@@ -26,3 +26,5 @@ export function commonElements<T>(arrays: T[][]): T[] {
         arrays.every(array => array.some(item => JSON.stringify(item) === JSON.stringify(element)))
     );
 }
+
+export const NUM_REVIEWS_PLACEHOLDER = 0;

@@ -1,6 +1,7 @@
 import {Course} from "../lib/Course";
 import React from "react";
 import {Link} from "react-router-dom";
+import {NUM_REVIEWS_PLACEHOLDER} from "../lib/utils";
 
 interface CourseListProps {
     courses: Course[]
@@ -29,6 +30,6 @@ export function CourseRow({course}: CourseProps) {
     return <tr>
         <td><Link to={"/courses/" + course.id}> {course.name}</Link></td>
         <td style={{textAlign: 'right'}}>{course.averageRating}</td>
-        <td style={{textAlign: 'right'}}>x</td>
+        <td style={{textAlign: 'right'}}>{NUM_REVIEWS_PLACEHOLDER}</td>
     </tr>
 }

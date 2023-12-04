@@ -42,26 +42,17 @@ public class ReviewController {
         Review review = reviewService.getReviewById(user.getId(), courseId).orElseThrow(
                 () -> new ReviewNotFoundException("No review of course " + courseId + " by " + username) );
 
-        Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
-        Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
-        Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, user.getUsername())).withRel("comments");
-        // TODO: Add link from CourseController
-//        Link courseLink = linkTo(method)
-        Link[] links = {selfLink, userLink, commentsLink};
-        return EntityModel.of(review, links);
+        return reviewWithLinks(review);
     }
 
 
     @GetMapping("/api/courses/{courseId}/reviews")
     public CollectionModel<EntityModel<Review>> getCourseReviews(@PathVariable Long courseId) {
         var reviews = reviewService.getCourseReviews(courseId);
-        List<EntityModel<Review>> reviewModelList = new ArrayList<>();
-        for (Review review: reviews) {
-            reviewModelList.add(getReview(review.getId().courseId, review.getUser().getUsername()));
-        }
-        // TODO: Add course link to collection model of reviews of a course
-//        Link courseLink = linkTo(methodOn())
-
+        List<EntityModel<Review>> reviewModelList = reviews
+                .stream()
+                .map(this::reviewWithLinks)
+                .toList();
         return CollectionModel.of(
                 reviewModelList
         );
@@ -74,10 +65,11 @@ public class ReviewController {
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("No user with username " + username));
 
-        List<EntityModel<Review>> reviewModelList = new ArrayList<>();
-        for (Review review: user.getReviews()) {
-            reviewModelList.add(getReview(review.getCourse().getId(), review.getUser().getUsername()));
-        }
+        List<EntityModel<Review>> reviewModelList = user
+                .getReviews()
+                .stream()
+                .map(this::reviewWithLinks)
+                .toList();
 
         Link selfLink = linkTo(methodOn(ReviewController.class).getUserReviews(username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
@@ -88,6 +80,8 @@ public class ReviewController {
         );
 
     }
+
+
 
 
     @PostMapping("/api/courses/{courseId}/reviews/{username}") // TODO: change request to take username from principal
@@ -112,6 +106,26 @@ public class ReviewController {
     public ResponseEntity<Exception> handleUnauthorized(Exception e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
     }
+
+    private EntityModel<Review> reviewWithLinks( Review review){
+        var courseId = review.getCourse().getId();
+        var username = review.getUser().getUsername();
+
+        Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
+        Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
+        Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, username)).withRel("comments");
+        // TODO: Add course link to collection model of reviews of a course
+//        Link courseLink = linkTo(methodOn())
+
+        return EntityModel.of(
+                review,
+                selfLink,
+                userLink,
+                commentsLink
+        );
+    }
+
+
 }
 
 

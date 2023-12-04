@@ -36,16 +36,12 @@ public class ReviewController {
 
     @GetMapping("/api/courses/{courseId}/reviews/{username}")
     public EntityModel<Review> getReview(@PathVariable Long courseId, @PathVariable String username) {
-        var maybeUser = userRepository.findByUsername(username);
-        if (maybeUser.isEmpty()) {
-            throw new UserNotFoundException("No user with username " + username);
-        }
-        User user = maybeUser.get();
-        Optional<Review> maybeReview = reviewService.getReviewById(user.getId(), courseId);
-        if (maybeReview.isEmpty()) {
-            throw new ReviewNotFoundException("No review of course " + courseId + " by " + username);
-        }
-        Review review = maybeReview.get();
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UserNotFoundException("No user with username " + username) );
+
+        Review review = reviewService.getReviewById(user.getId(), courseId).orElseThrow(
+                () -> new ReviewNotFoundException("No review of course " + courseId + " by " + username) );
+
         Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
         Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, user.getUsername())).withRel("comments");
@@ -75,20 +71,16 @@ public class ReviewController {
     @GetMapping("/api/reviews/{username}")
     public CollectionModel<EntityModel<Review>> getUserReviews(@PathVariable String username){
 
-        var maybeUser = userRepository.findByUsername(username);
-        if (maybeUser.isEmpty()){
-            throw new UserNotFoundException("No user with username " + username);
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UserNotFoundException("No user with username " + username));
 
-        }
-        User user = maybeUser.get();
         List<EntityModel<Review>> reviewModelList = new ArrayList<>();
         for (Review review: user.getReviews()) {
             reviewModelList.add(getReview(review.getCourse().getId(), review.getUser().getUsername()));
         }
+
         Link selfLink = linkTo(methodOn(ReviewController.class).getUserReviews(username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
-
-
         Link[] linkList = {selfLink, userLink};
         return CollectionModel.of(
                 reviewModelList,

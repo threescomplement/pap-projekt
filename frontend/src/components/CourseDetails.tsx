@@ -4,11 +4,6 @@ import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {COURSE_TEACHER_PLACEHOLDER} from "../lib/utils";
 
-interface CourseDetailsTableElementProps {
-    label: string;
-    value: string | null;
-}
-
 
 export default function CourseDetails(course: Course) {
     const [teacher, setTeacher] = useState<Teacher | null>(null);

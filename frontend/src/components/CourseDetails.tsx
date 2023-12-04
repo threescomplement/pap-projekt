@@ -1,26 +1,34 @@
 import {Course} from "../lib/Course";
+import {Teacher, TeacherService} from "../lib/Teacher";
+import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import {COURSE_TEACHER_PLACEHOLDER} from "../lib/utils";
 
 interface CourseDetailsTableElementProps {
     label: string;
     value: string | null;
 }
 
-function CourseDetailsTableElement(element: CourseDetailsTableElementProps) {
-    if (element.value == null || ["_links", "id"].includes(element.label)) {
-        return null;
-    }
-    return <tr>
-        <td>{element.label}: {element.value}</td>
-    </tr>
-}
 
 export default function CourseDetails(course: Course) {
-    const tableEntries = Object.entries(course).map(([label, value]) =>
-        <CourseDetailsTableElement label={label} value={value}/>)
+    const [teacher, setTeacher] = useState<Teacher | null>(null);
+    const [teacherLoaded, setTeacherLoaded] = useState(false);
+
+    useEffect(() => {
+        TeacherService.fetchTeacher(course.teacherId)
+            .then(t => {
+                setTeacher(t);
+                setTeacherLoaded(true);
+            })
+
+    }, []);
+
+    const teacherContent = (teacher != null && teacherLoaded) ? <Link to={"/teachers/" + course.teacherId}>
+        {teacher.name}
+    </Link> : COURSE_TEACHER_PLACEHOLDER;
+
     return <>
         <h1>{course.name}</h1>
-        <table>
-            {tableEntries}
-        </table>
+        <h2>Lektor: {teacherContent}</h2>
     </>
 }

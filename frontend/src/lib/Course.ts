@@ -8,6 +8,7 @@ export interface Course {
     level: string | null, // TODO: can level be null?
     module: string | null, //TODO: make api return teacher id
     averageRating: string,
+    teacherId: string,
     links: any
 }
 

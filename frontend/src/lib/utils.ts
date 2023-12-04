@@ -28,3 +28,4 @@ export function commonElements<T>(arrays: T[][]): T[] {
 }
 
 export const NUM_REVIEWS_PLACEHOLDER = 0;
+export const COURSE_TEACHER_PLACEHOLDER = "dr. Andrzej Sysy";

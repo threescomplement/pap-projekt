@@ -14,6 +14,7 @@ import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.userNotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -36,17 +37,17 @@ public class CommentService {
 
         var maybeComment = commentRepository.findById(commentId);
         if (maybeComment.isEmpty()){
-            throw new commentNotFoundException("No comment with Id" + commentId);
+            return;
         }
         log.info("Trying to get user with username: " + principal.getUsername());
         var maybeUser = userRepository.findByUsername(principal.getUsername());
         if (maybeUser.isEmpty()){
-            throw new userNotFoundException("No user with username" + principal.getUsername());
+            return;
         }
         var comment = maybeComment.get();
         var user = maybeUser.get();
-        if (!comment.getUser().getId().equals(user.getId())) {
-            throw new UnauthorizedException("User can only delete his own comments");
+        if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ADMIN") ))) {
+            return;
         }
 
         commentRepository.delete(comment);

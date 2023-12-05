@@ -18,7 +18,7 @@ export default function CourseDetails(course: Course) {
 
     const teacherContent = (teacher != null && teacherLoaded)
         ? <Link className="TeacherLink" to={"/teachers/" + course.teacherId}> {teacher.name} </Link>
-        : <span className="TeacherLink">COURSE_TEACHER_PLACEHOLDER </span>;
+        : <span className="TeacherLink">COURSE_TEACHER_PLACEHOLDER</span>;
 
     const moduleContent = course.module !== null
         ? <p className="CourseInfo">Moduł: {course.module}</p>
@@ -29,7 +29,7 @@ export default function CourseDetails(course: Course) {
 
     return <>
         <h1>{course.name}</h1>
-        <p>Lektor: {teacherContent}</p>
+        <p className="TeacherHeader">Lektor: {teacherContent}</p>
         <h3>Informacje o kursie:</h3>
         {moduleContent}
         {levelContent}

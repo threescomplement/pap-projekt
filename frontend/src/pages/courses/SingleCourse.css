@@ -39,9 +39,15 @@
     margin-top: 20px;
 }
 
+.TeacherHeader {
+    font-size: 20px;
+    font-weight: bold;
+}
+
 .TeacherLink {
     text-decoration: none;
     color: #3498db;
+    font-size: 18px;
     font-weight: bold;
     margin-top: 10px;
     display: block;

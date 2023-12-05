@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentController;
 import pl.edu.pw.pap.comment.UnauthorizedException;
 import pl.edu.pw.pap.comment.CommentNotFoundException;
+import pl.edu.pw.pap.course.CourseController;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserController;
@@ -53,10 +54,12 @@ public class ReviewController {
                 .toList();
 
 
-        // TODO: Add course link to representation model of reviews
         return HalModelBuilder.emptyHalModel()
                 .embed(reviewModelList.isEmpty() ? Collections.emptyList() : reviewModelList, LinkRelation.of("reviews"))
-                .link(linkTo(methodOn(ReviewController.class).getCourseReviews(courseId)).withSelfRel())
+                .links(List.of(
+                        linkTo(methodOn(ReviewController.class).getCourseReviews(courseId)).withSelfRel(),
+                        linkTo(methodOn(CourseController.class).getCourseById(courseId)).withRel("course"))
+                )
                 .build();
     }
 
@@ -118,14 +121,13 @@ public class ReviewController {
         Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
         Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, username)).withRel("comments");
-        // TODO: Add course link to entity model of review
-//        Link courseLink = linkTo(methodOn())
-
+        Link courseLink = linkTo(methodOn(CourseController.class).getCourseById(review.getCourse().getId())).withRel("course");
         return EntityModel.of(
                 review,
                 selfLink,
                 userLink,
-                commentsLink
+                commentsLink,
+                courseLink
         );
     }
 

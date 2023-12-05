@@ -4,7 +4,7 @@ export interface Review {
     id: string;
     username: string;
     opinion: string;
-    overallRagin: string;
+    overallRating: string;
     _links: any;
 }
 

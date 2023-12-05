@@ -59,21 +59,22 @@ public class CommentService {
         return commentRepository.findCommentsByUser_Username(username);
     }
 
-    public Comment addNewComment(AddCommentRequest request, UserPrincipal principal) {
+    public Comment addNewComment(Long courseId, String reviewUsername, AddCommentRequest request, UserPrincipal principal) {
         String text = request.text();
-        Long courseId = request.courseId();
-        String username = request.username();
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("No user found with username: " + username));
+        User reviewUser = userRepository.findByUsername(reviewUsername).orElseThrow(
+                () -> new UserNotFoundException("No user found with username: " + principal.getUsername())
+        );
 
-        Review review = reviewRepository.findById(new ReviewKey(user.getId(), courseId)).orElseThrow(  // TODO review author and comment author are different users
-                () -> new ReviewNotFoundException("No existing review of course " + courseId + "by " + username));
-        // TODO: Use the user directly from principal to avoid this check entirely
-        if (!user.getUsername().equals(principal.getUsername())){
-            throw new UnauthorizedException("Cannot add comment as someone else");
-        }
 
-        Comment comment = new Comment(text, review, user);
+        // TODO: change thrown exception to badrequest
+        User addingUser = userRepository.findByUsername(principal.getUsername()).orElseThrow(
+                () -> new UserNotFoundException("No user found with username: " + principal.getUsername()));
+
+        Review review = reviewRepository.findById(new ReviewKey(reviewUser.getId(), courseId)).orElseThrow(
+                () -> new ReviewNotFoundException("No existing review of course " + courseId + "by " + reviewUsername));
+
+
+        Comment comment = new Comment(text, review, addingUser);
         return commentRepository.save(comment);
     }
 }

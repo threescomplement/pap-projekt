@@ -59,8 +59,11 @@ public class CommentController {
     }
 
     @PostMapping("/api/courses/{courseId}/reviews/{username}/comments")
-    public Comment addComment(@RequestBody AddCommentRequest request, @AuthenticationPrincipal UserPrincipal principal) {
-        return commentService.addNewComment(request, principal);
+    public Comment addComment(@PathVariable Long courseId,
+                              @PathVariable String reviewUsername,
+                              @RequestBody AddCommentRequest request,
+                              @AuthenticationPrincipal UserPrincipal principal) {
+        return commentService.addNewComment(courseId, reviewUsername, request, principal);
     }
 
 

@@ -46,19 +46,16 @@ public class CommentController {
     }
 
     @GetMapping("/api/users/{username}/comments")
-    public CollectionModel<EntityModel<Comment>> getUserComments(@PathVariable String username) {
+    public RepresentationModel<EntityModel<Comment>> getUserComments(@PathVariable String username) {
         List<Comment> comments = commentService.getCommentsByUsername(username);
         List<EntityModel<Comment>> commentModelList = comments.stream()
                 .map(this::commentWithLinks)
                 .toList();
-//        List<EntityModel<Comment>> commentModelList = new ArrayList<>();
-//        for (Comment comment : comments) {
-//            commentModelList.add(getCommentById(comment.getId()));
-//        }
-        return CollectionModel.of(
-                commentModelList,
-                linkTo(methodOn(UserController.class).getUser(username)).withRel("user") // TODO fix empty list handling
-        );
+
+        return HalModelBuilder.emptyHalModel()
+                .embed(commentModelList.isEmpty() ? Collections.emptyList() : commentModelList, LinkRelation.of("comments"))
+                .link(linkTo(methodOn(UserController.class).getUser(username)).withRel("user"))
+                .build();
     }
 
     @PostMapping("/api/courses/{courseId}/reviews/{username}/comments")

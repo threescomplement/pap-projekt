@@ -9,7 +9,7 @@ export interface Course {
     module: string | null, //TODO: make api return teacher id
     averageRating: string,
     teacherId: string,
-    links: any
+    _links: any
 }
 
 export interface CourseFilters {

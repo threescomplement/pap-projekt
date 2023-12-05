@@ -31,14 +31,13 @@ public class ReviewController {
     private final UserRepository userRepository;
 
 
-
     @GetMapping("/api/courses/{courseId}/reviews/{username}")
     public EntityModel<Review> getReview(@PathVariable Long courseId, @PathVariable String username) {
         User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("No user with username " + username) );
+                () -> new UserNotFoundException("No user with username " + username));
 
         Review review = reviewService.getReviewById(user.getId(), courseId).orElseThrow(
-                () -> new ReviewNotFoundException("No review of course " + courseId + " by " + username) );
+                () -> new ReviewNotFoundException("No review of course " + courseId + " by " + username));
 
         return reviewWithLinks(review);
     }
@@ -63,7 +62,7 @@ public class ReviewController {
 
 
     @GetMapping("/api/reviews/{username}")
-    public RepresentationModel<EntityModel<Review>> getUserReviews(@PathVariable String username){
+    public RepresentationModel<EntityModel<Review>> getUserReviews(@PathVariable String username) {
 
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("No user with username " + username));
@@ -76,21 +75,18 @@ public class ReviewController {
 
         Link selfLink = linkTo(methodOn(ReviewController.class).getUserReviews(username)).withSelfRel();
         Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
-        Link[] linkList = {selfLink, userLink};
+        var links = List.of(selfLink, userLink);
 
         // TODO: check if this returns a proper list of links
         return HalModelBuilder.emptyHalModel()
                 .embed(reviewModelList.isEmpty() ? Collections.emptyList() : reviewModelList, LinkRelation.of("reviews"))
-                .links(List.of(linkList))
+                .links(links)
                 .build();
     }
 
 
-
-
-
     @PostMapping("/api/courses/{courseId}/reviews/{username}") // TODO: change request to take username from principal
-    public Review addReview(@RequestBody AddReviewRequest request, UserPrincipal userPrincipal){
+    public Review addReview(@RequestBody AddReviewRequest request, UserPrincipal userPrincipal) {
         return reviewService.addReview(request, userPrincipal);
     }
 
@@ -101,10 +97,13 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
+    //TODO get all reviews about given teacher
 
 
     @ExceptionHandler({CommentNotFoundException.class, UserNotFoundException.class, ReviewNotFoundException.class})
-    public ResponseEntity<Exception> handleEntityNotFound(Exception e) { return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);}
+    public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+    }
 
 
     @ExceptionHandler(UnauthorizedException.class)
@@ -112,7 +111,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
     }
 
-    private EntityModel<Review> reviewWithLinks( Review review){
+    private EntityModel<Review> reviewWithLinks(Review review) {
         var courseId = review.getCourse().getId();
         var username = review.getUser().getUsername();
 

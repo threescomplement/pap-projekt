@@ -42,27 +42,31 @@ public class ReviewService {
 
     public void deleteReview (Long courseId, String username, UserPrincipal userPrincipal){
 
-        log.info("Asked for deletion of review by " + username + " of course " + courseId);
+        log.debug("Asked for deletion of review by " + username + " of course " + courseId);
         // Not sure if this can be simplified any more than this
         // It has to check if the parameters exist before it takes the review (I think?)
         // I could throw exceptions and ignore them but that sounds like bad practise
         // might try with nulls everywhere after tests are done
         Optional<User> maybeUser = userRepository.findByUsername(username);
-        if (maybeUser.isEmpty()){ return;}
+        if (maybeUser.isEmpty()) {
+            return;
+        }
 
-        log.info("Found user of review being deleted");
+        log.debug("Found user of review being deleted");
         User user = maybeUser.get();
-        if (!user.getId().equals(userPrincipal.getUserId())) { return; }
+        if (!user.getId().equals(userPrincipal.getUserId())) {
+            return;  // TODO its not ok, should be Forbidden 403 unless admin
+        }
 
-        Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey( maybeUser.get().getId(), courseId));
-        if (maybeReview.isEmpty()){ return; }
+        Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey(user.getId(), courseId));
+        if (maybeReview.isEmpty()){
+            return;
+        }
 
-        log.info("Trying to remove review");
+        log.debug("Trying to remove review");
         Review review = maybeReview.get();
 
         reviewRepository.delete(review);
-
-
     }
 
     public Review addReview(AddReviewRequest request, UserPrincipal userPrincipal) {

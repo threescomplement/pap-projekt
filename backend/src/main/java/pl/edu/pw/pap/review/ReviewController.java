@@ -85,9 +85,9 @@ public class ReviewController {
     }
 
 
-    @PostMapping("/api/courses/{courseId}/reviews/{username}") // TODO: change request to take username from principal
-    public Review addReview(@RequestBody AddReviewRequest request, UserPrincipal userPrincipal) {
-        return reviewService.addReview(request, userPrincipal);
+    @PostMapping("/api/courses/{courseId}/reviews")
+    public Review addReview(@PathVariable Long courseId, @RequestBody AddReviewRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return reviewService.addReview(courseId, request, userPrincipal);
     }
 
 

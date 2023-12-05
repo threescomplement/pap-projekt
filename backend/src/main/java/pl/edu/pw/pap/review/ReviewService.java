@@ -69,19 +69,15 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
-    public Review addReview(AddReviewRequest request, UserPrincipal userPrincipal) {
-        var user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new UserNotFoundException("No user with given username: " + request.username()));
+    public Review addReview(Long courseId, AddReviewRequest request, UserPrincipal userPrincipal) {
+        // TODO Change thrown exception to BAD_REQUEST and handle it
+        var addingUser = userRepository.findByUsername(userPrincipal.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + userPrincipal.getUsername() + "doesn't exist"));
+        var course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException("No course with id: " + userPrincipal.getUsername()));
 
-        var course = courseRepository.findById(request.courseId())
-                .orElseThrow(() -> new CourseNotFoundException("No course with id: " + request.courseId()));
 
-        // TODO: Use only the userPrincipal to determine the user, skipping this check
-        if (!user.getId().equals(userPrincipal.getUserId())){
-            throw new UnauthorizedException("User can only add reviews in his own name.");
-        }
-
-        return reviewRepository.save(new Review(user, course, request.text(), request.rating()));
+        return reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()));
     }
 
 }

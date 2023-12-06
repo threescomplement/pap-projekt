@@ -2,16 +2,23 @@ import {Course} from "../lib/Course";
 import {Teacher, TeacherService} from "../lib/Teacher";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
+import {Review, ReviewService} from "../lib/Review";
+import {CommentReviewCard} from "./CommentReview";
 
 export default function CourseDetails(course: Course) {
     const [teacher, setTeacher] = useState<Teacher | null>(null);
     const [teacherLoaded, setTeacherLoaded] = useState(false);
+    const [reviews, setReviews] = useState<Review[]>([]);
 
     useEffect(() => {
-        TeacherService.fetchTeacher(course.teacherId)
+        TeacherService.fetchTeacherByCourse(course)
             .then(t => {
                 setTeacher(t);
                 setTeacherLoaded(true);
+            })
+        ReviewService.fetchReviewsByCourse(course)
+            .then(r => {
+                setReviews(r);
             })
 
     }, []);
@@ -27,6 +34,10 @@ export default function CourseDetails(course: Course) {
     const levelContent = <p className="CourseInfo">Poziom: {course.level}</p>
     const typeContent = <p className="CourseInfo">Typ kursu: {course.type}</p>
 
+    const reviewContent = reviews.length == 0
+        ? <div>Ten kurs nie ma jeszcze opinii</div>
+        : <CommentReviewCard data={reviews[0]}/>
+
     return <>
         <h1>{course.name}</h1>
         <p className="TeacherHeader">Lektor: {teacherContent}</p>
@@ -35,5 +46,6 @@ export default function CourseDetails(course: Course) {
         {levelContent}
         {typeContent}
         <h2 className="OpinionsSection">Opinie</h2>
+        {reviewContent}
     </>
 }

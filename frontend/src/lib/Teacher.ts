@@ -40,8 +40,15 @@ async function fetchTeachersByFilters(filters: TeacherFilters): Promise<Teacher[
     return json._embedded.teachers;
 }
 
+async function fetchTeacherByCourse(course: Course) {
+    return await api.get(course._links.teacher.href)
+        .then(response => response.json())
+        .catch(e => console.error(e));
+}
+
 export const TeacherService = {
     fetchTeacher,
     fetchTeacherByFilters: fetchTeachersByFilters,
-    fetchTeacherCourses
+    fetchTeacherCourses,
+    fetchTeacherByCourse
 }

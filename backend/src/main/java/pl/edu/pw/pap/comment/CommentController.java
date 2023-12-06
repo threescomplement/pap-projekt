@@ -14,7 +14,6 @@ import pl.edu.pw.pap.user.UserController;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -25,11 +24,11 @@ public class CommentController {
     private final CommentService commentService;
 
     @GetMapping("/api/courses/{courseId}/reviews/{username}/comments")
-    public RepresentationModel<EntityModel<Comment>> getCommentsForReview(@PathVariable Long courseId, @PathVariable String username) {
+    public RepresentationModel<CommentDTO> getCommentsForReview(@PathVariable Long courseId, @PathVariable String username) {
         var comments = commentService.getCommentsForReview(courseId, username);
 
-        List<EntityModel<Comment>> commentModelList = comments.stream()
-                .map(this::commentWithLinks)
+        var commentModelList = comments.stream()
+                .map(this::addLinks)
                 .toList();
 
         return HalModelBuilder.emptyHalModel()
@@ -39,17 +38,17 @@ public class CommentController {
     }
 
     @GetMapping("/api/comments/{commentId}")
-    public EntityModel<Comment> getCommentById(@PathVariable Long commentId) {
-        var comment = commentService.findCommentById(commentId)
+    public CommentDTO getCommentById(@PathVariable Long commentId) {
+        return commentService.findCommentById(commentId)
+                .map(this::addLinks)
                 .orElseThrow(() -> new CommentNotFoundException("no comment with ID: " + commentId));
-        return commentWithLinks(comment);
     }
 
     @GetMapping("/api/users/{username}/comments")
-    public RepresentationModel<EntityModel<Comment>> getUserComments(@PathVariable String username) {
-        List<Comment> comments = commentService.getCommentsByUsername(username);
-        List<EntityModel<Comment>> commentModelList = comments.stream()
-                .map(this::commentWithLinks)
+    public RepresentationModel<CommentDTO> getUserComments(@PathVariable String username) {
+        var comments = commentService.getCommentsByUsername(username);
+        var commentModelList = comments.stream()
+                .map(this::addLinks)
                 .toList();
 
         return HalModelBuilder.emptyHalModel()
@@ -58,21 +57,24 @@ public class CommentController {
                 .build();
     }
 
-    @PostMapping("/api/courses/{courseId}/reviews/{username}/comments")
-    public Comment addComment(@PathVariable Long courseId,
-                              @PathVariable String reviewUsername,
-                              @RequestBody AddCommentRequest request,
-                              @AuthenticationPrincipal UserPrincipal principal) {
-        return commentService.addNewComment(courseId, reviewUsername, request, principal);
+    @PostMapping("/api/courses/{courseId}/reviews/{reviewerUsername}/comments")
+    public CommentDTO addComment(
+            @PathVariable Long courseId,
+            @PathVariable String reviewerUsername,
+            @RequestBody AddCommentRequest request,
+            @AuthenticationPrincipal UserPrincipal principal
+    ) {
+        return commentService.addNewComment(courseId, reviewerUsername, request, principal);
     }
 
 
     @DeleteMapping("/api/comments/{commentId}")
-    public ResponseEntity<Comment> deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal principal) {
+    public ResponseEntity<CommentDTO> deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal principal) {
         commentService.deleteComment(commentId, principal);
         return ResponseEntity.noContent().build();
     }
 
+    // TODO change this to return 400 instead of 404 when appropriate
     @ExceptionHandler({CommentNotFoundException.class, UserNotFoundException.class, ReviewNotFoundException.class})
     public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
@@ -83,12 +85,11 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
     }
 
-    private EntityModel<Comment> commentWithLinks(Comment comment) {
-        return EntityModel.of(
-                comment,
+    private CommentDTO addLinks(CommentDTO comment) {
+        return comment.add(
                 linkTo(methodOn(CommentController.class).getCommentById(comment.getId())).withSelfRel(),
-                linkTo(methodOn(ReviewController.class).getReview(comment.getReview().getCourse().getId(), comment.getUser().getUsername())).withRel("review"),
-                linkTo(methodOn(UserController.class).getUser(comment.getUser().getUsername())).withRel("user")
+                linkTo(methodOn(ReviewController.class).getReview(comment.getCourseId(), comment.getAuthorUsername())).withRel("review"),
+                linkTo(methodOn(UserController.class).getUser(comment.getAuthorUsername())).withRel("user")
         );
     }
 }

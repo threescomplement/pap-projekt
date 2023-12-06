@@ -24,42 +24,64 @@ public class CommentService {
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
 
-    public List<Comment> getCommentsForReview(Long courseId, String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("No user with username " + username) );
-        return commentRepository.findByReview_Id(new ReviewKey(user.getId(), courseId));
+    public CommentDTO convertToDto(Comment comment) {
+        return CommentDTO.builder()
+                .id(comment.getId())
+                .authorUsername(comment.getUser().getUsername())
+                .text(comment.getText())
+                .created(comment.getCreated())
+                .courseId(comment.getReview().getCourse().getId())
+                .build();
+    }
+
+    public List<CommentDTO> getCommentsForReview(Long courseId, String username) {
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("No user with username " + username));
+
+        return commentRepository
+                .findByReview_Id(new ReviewKey(user.getId(), courseId))
+                .stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
     public void deleteComment(Long commentId, UserPrincipal principal) {
 
         var maybeComment = commentRepository.findById(commentId);
-        if (maybeComment.isEmpty()){
+        if (maybeComment.isEmpty()) {
             return;
         }
         log.info("Trying to get user with username: " + principal.getUsername());
         var maybeUser = userRepository.findByUsername(principal.getUsername());
-        if (maybeUser.isEmpty()){
+        if (maybeUser.isEmpty()) {
             return;
         }
         var comment = maybeComment.get();
         var user = maybeUser.get();
-        if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN") ))) {
+        if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN")))) {
             return; // TODO not handling case where user is forbidden from deleting
         }
 
         commentRepository.delete(comment);
     }
 
-    public Optional<Comment> findCommentById(Long commentId) {
-        return commentRepository.findById(commentId);
+    public Optional<CommentDTO> findCommentById(Long commentId) {
+        return commentRepository
+                .findById(commentId)
+                .map(this::convertToDto);
     }
 
 
-    public List<Comment> getCommentsByUsername(String username){
-        return commentRepository.findCommentsByUser_Username(username);
+    public List<CommentDTO> getCommentsByUsername(String username) {
+        return commentRepository
+                .findCommentsByUser_Username(username)
+                .stream()
+                .map(this::convertToDto)
+                .toList();
     }
 
-    public Comment addNewComment(Long courseId, String reviewUsername, AddCommentRequest request, UserPrincipal principal) {
+    public CommentDTO addNewComment(Long courseId, String reviewUsername, AddCommentRequest request, UserPrincipal principal) {
         String text = request.text();
         User reviewUser = userRepository.findByUsername(reviewUsername).orElseThrow(
                 () -> new UserNotFoundException("No user found with username: " + principal.getUsername())
@@ -75,6 +97,8 @@ public class CommentService {
 
 
         Comment comment = new Comment(text, review, addingUser);
-        return commentRepository.save(comment);
+        return convertToDto(
+                commentRepository.save(comment)
+        );
     }
 }

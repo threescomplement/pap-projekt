@@ -1,15 +1,13 @@
-import {Review} from "../lib/Review";
-import {CommentService, ReviewComment} from "../lib/ReviewComment";
-import {useEffect, useState} from "react";
+import {ReviewComment} from "../lib/ReviewComment";
 
 
 interface CommentReviewCardProps {
-    data: ReviewComment | Review;
+    data: ReviewComment;
 }
 
 export function CommentReviewCard({data}: CommentReviewCardProps) {
     return <>
-        <div>{data.username}</div>
+        <div>{data.authorUsername}</div>
         <div>{'overallRating' in data && "Ocena: " + data.overallRating}</div>
         <div>{data.opinion}</div>
         <div>{'overallRating' in data._links && "This is a review"}</div>

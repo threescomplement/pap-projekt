@@ -1,7 +1,7 @@
 import {Review} from "../lib/Review";
 import React, {useEffect, useState} from "react";
 import {CommentService, ReviewComment} from "../lib/ReviewComment";
-import {CommentReviewCard} from "./CommentReview";
+import {CommentReviewCard} from "./CommentReviewCard";
 import {CommentList} from "./CommentList";
 
 interface ReviewDetailsProps {

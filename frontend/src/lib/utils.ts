@@ -35,13 +35,13 @@ export const COURSE_TEACHER_PLACEHOLDER = "dr. Andrzej Sysy";
 export function getDummyReviews(): Review[] {
     return [{
         id: "1",
-        username: "gordonsysy123",
+        authorUsername: "gordonsysy123",
         opinion: "Wyczumpisty kurs!",
         overallRating: "9",
         _links: null
     }, {
         id: "2",
-        username: "czumpi94ez",
+        authorUsername: "czumpi94ez",
         opinion: "Średnio na jeża",
         overallRating: "4",
         _links: null
@@ -51,12 +51,12 @@ export function getDummyReviews(): Review[] {
 export function getDummyComments(): ReviewComment[] {
     return [{
         id: "1",
-        username: "waltuh",
+        authorUsername: "waltuh",
         opinion: "Nie zgadzam się!",
         _links: null
     }, {
         id: "2",
-        username: "jesser",
+        authorUsername: "jesser",
         opinion: "Zgadzam się!",
         _links: null
     }]

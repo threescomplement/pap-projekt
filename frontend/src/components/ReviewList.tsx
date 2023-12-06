@@ -1,5 +1,5 @@
 import {Review} from "../lib/Review";
-import {CommentReviewCard} from "./CommentReview";
+import {CommentReviewCard} from "./CommentReviewCard";
 
 interface ReviewListProps {
     reviews: Review[]

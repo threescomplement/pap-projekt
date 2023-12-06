@@ -1,11 +1,12 @@
 import {Course} from "./Course";
 import {getDummyReviews} from "./utils";
 import api from "./api";
+import {ReviewComment} from "./ReviewComment";
 
 
-export interface Review {
+export interface Review extends ReviewComment{
     id: string;
-    username: string;
+    authorUsername: string;
     opinion: string;
     overallRating: string;
     _links: any;

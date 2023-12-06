@@ -1,12 +1,11 @@
 import {Review} from "./Review";
-import {getDummyComments} from "./utils";
 import api from "./api";
 
 
 export interface ReviewComment {
     id: string;
     opinion: string;
-    username: string,
+    authorUsername: string,
     _links: any;
 }
 

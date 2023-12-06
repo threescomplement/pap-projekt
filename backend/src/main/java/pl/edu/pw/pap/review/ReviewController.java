@@ -33,26 +33,26 @@ public class ReviewController {
 
 
     @GetMapping("/api/courses/{courseId}/reviews/{username}")
-    public EntityModel<Review> getReview(@PathVariable Long courseId, @PathVariable String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UserNotFoundException("No user with username " + username));
+    public ReviewDTO getReview(@PathVariable Long courseId, @PathVariable String username) {
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("No user with username " + username));
 
-        Review review = reviewService.getReviewById(user.getId(), courseId).orElseThrow(
-                () -> new ReviewNotFoundException("No review of course " + courseId + " by " + username));
-
-        return reviewWithLinks(review);
+        return reviewService
+                .getReviewById(user.getId(), courseId)
+                .map(this::addLinks)
+                .orElseThrow(() -> new ReviewNotFoundException("No review of course " + courseId + " by " + username));
     }
 
 
     @GetMapping("/api/courses/{courseId}/reviews")
-    public RepresentationModel<EntityModel<Review>> getCourseReviews(@PathVariable Long courseId) {
+    public RepresentationModel<ReviewDTO> getCourseReviews(@PathVariable Long courseId) {
         var reviews = reviewService.getCourseReviews(courseId);
 
-        List<EntityModel<Review>> reviewModelList = reviews
+        var reviewModelList = reviews
                 .stream()
-                .map(this::reviewWithLinks)
+                .map(this::addLinks)
                 .toList();
-
 
         return HalModelBuilder.emptyHalModel()
                 .embed(reviewModelList.isEmpty() ? Collections.emptyList() : reviewModelList, LinkRelation.of("reviews"))
@@ -65,15 +65,16 @@ public class ReviewController {
 
 
     @GetMapping("/api/reviews/{username}")
-    public RepresentationModel<EntityModel<Review>> getUserReviews(@PathVariable String username) {
+    public RepresentationModel<ReviewDTO> getUserReviews(@PathVariable String username) {
 
         User user = userRepository.findByUsername(username).orElseThrow(
                 () -> new UserNotFoundException("No user with username " + username));
 
-        List<EntityModel<Review>> reviewModelList = user
+        var reviewModelList = user
                 .getReviews()
                 .stream()
-                .map(this::reviewWithLinks)
+                .map(reviewService::convertToDTO)
+                .map(this::addLinks)
                 .toList();
 
         Link selfLink = linkTo(methodOn(ReviewController.class).getUserReviews(username)).withSelfRel();
@@ -89,7 +90,7 @@ public class ReviewController {
 
 
     @PostMapping("/api/courses/{courseId}/reviews")
-    public Review addReview(@PathVariable Long courseId, @RequestBody AddReviewRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+    public ReviewDTO addReview(@PathVariable Long courseId, @RequestBody AddReviewRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return reviewService.addReview(courseId, request, userPrincipal);
     }
 
@@ -114,20 +115,12 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
     }
 
-    private EntityModel<Review> reviewWithLinks(Review review) {
-        var courseId = review.getCourse().getId();
-        var username = review.getUser().getUsername();
-
-        Link selfLink = linkTo(methodOn(ReviewController.class).getReview(courseId, username)).withSelfRel();
-        Link userLink = linkTo(methodOn(UserController.class).getUser(username)).withRel("user");
-        Link commentsLink = linkTo(methodOn(CommentController.class).getCommentsForReview(courseId, username)).withRel("comments");
-        Link courseLink = linkTo(methodOn(CourseController.class).getCourseById(review.getCourse().getId())).withRel("course");
-        return EntityModel.of(
-                review,
-                selfLink,
-                userLink,
-                commentsLink,
-                courseLink
+    private ReviewDTO addLinks(ReviewDTO review) {
+        return review.add(
+                linkTo(methodOn(ReviewController.class).getReview(review.getCourseId(), review.getAuthorUsername())).withSelfRel(),
+                linkTo(methodOn(UserController.class).getUser(review.getAuthorUsername())).withRel("user"),
+                linkTo(methodOn(CommentController.class).getCommentsForReview(review.getCourseId(), review.getAuthorUsername())).withRel("comments"),
+                linkTo(methodOn(CourseController.class).getCourseById(review.getCourseId())).withRel("course")
         );
     }
 

@@ -38,12 +38,14 @@ export function getDummyReviews(): Review[] {
         authorUsername: "gordonsysy123",
         opinion: "Wyczumpisty kurs!",
         overallRating: "9",
+        created: "2023-12-06T22:51:36.585+00:00",
         _links: null
     }, {
         id: "2",
         authorUsername: "czumpi94ez",
         opinion: "Średnio na jeża",
         overallRating: "4",
+        created: "2023-12-06T22:50:36.585+00:00",
         _links: null
     }]
 }
@@ -53,11 +55,13 @@ export function getDummyComments(): ReviewComment[] {
         id: "1",
         authorUsername: "waltuh",
         opinion: "Nie zgadzam się!",
+        created: "2023-12-06T22:55:36.585+00:00",
         _links: null
     }, {
         id: "2",
         authorUsername: "jesser",
         opinion: "Zgadzam się!",
+        created: "2023-12-06T22:56:36.585+00:00",
         _links: null
     }]
 }

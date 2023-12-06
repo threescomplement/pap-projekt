@@ -6,6 +6,7 @@ export interface ReviewComment {
     id: string;
     opinion: string;
     authorUsername: string,
+    created: string
     _links: any;
 }
 

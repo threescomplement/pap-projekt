@@ -8,6 +8,7 @@ export interface Review extends ReviewComment{
     id: string;
     authorUsername: string;
     opinion: string;
+    created: string
     overallRating: string;
     _links: any;
 }

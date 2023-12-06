@@ -27,7 +27,7 @@ interface CourseProps {
 }
 
 export function CourseRow({course}: CourseProps) {
-    return <tr>
+    return <tr id={course.id}>
         <td><Link to={"/courses/" + course.id}> {course.name}</Link></td>
         <td style={{textAlign: 'right'}}>{course.averageRating}</td>
         <td style={{textAlign: 'right'}}>{NUM_REVIEWS_PLACEHOLDER}</td>

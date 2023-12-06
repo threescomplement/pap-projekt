@@ -10,13 +10,13 @@ interface TeacherListProps {
 export default function TeacherList({teachers}: TeacherListProps) {
     return <table>
         <tbody>
-        <tr>
+        <tr id="headers">
             <td>Nazwisko</td>
             <td>Średnia ocena</td>
             <td>Liczba opinii</td>
         </tr>
-        </tbody>
         {teachers.map(t => <TeacherRow teacher={t}/>)}
+        </tbody>
     </table>;
 }
 
@@ -26,7 +26,7 @@ interface TeacherProps {
 }
 
 export function TeacherRow({teacher}: TeacherProps) {
-    return <tr>
+    return <tr id={teacher.id}>
         <td>
             <Link to={"/teachers/" + teacher.id}> {teacher.name}</Link>
         </td>

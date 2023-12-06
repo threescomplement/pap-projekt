@@ -11,13 +11,13 @@ export default function CourseList({courses}: CourseListProps) {
 
     return <table>
         <tbody>
-        <tr>
+        <tr id="headers">
             <td>Nazwa</td>
             <td>Średnia ocena</td>
             <td>Liczba opinii</td>
         </tr>
-        </tbody>
         {courses.map(c => <CourseRow course={c}/>)}
+        </tbody>
     </table>;
 }
 

@@ -1,6 +1,8 @@
 // Miscellaneous utilities
 
 import {ChangeEvent} from "react";
+import {Review} from "./Review";
+import {ReviewComment} from "./ReviewComment";
 
 
 /**
@@ -29,3 +31,33 @@ export function commonElements<T>(arrays: T[][]): T[] {
 
 export const NUM_REVIEWS_PLACEHOLDER = 0;
 export const COURSE_TEACHER_PLACEHOLDER = "dr. Andrzej Sysy";
+
+export function getDummyReviews(): Review[] {
+    return [{
+        id: "1",
+        username: "gordonsysy123",
+        opinion: "Wyczumpisty kurs!",
+        overallRating: "9",
+        _links: null
+    }, {
+        id: "2",
+        username: "czumpi94ez",
+        opinion: "Średnio na jeża",
+        overallRating: "4",
+        _links: null
+    }]
+}
+
+export function getDummyComments(): ReviewComment[] {
+    return [{
+        id: "1",
+        username: "waltuh",
+        opinion: "Nie zgadzam się!",
+        _links: null
+    }, {
+        id: "2",
+        username: "jesser",
+        opinion: "Zgadzam się!",
+        _links: null
+    }]
+}

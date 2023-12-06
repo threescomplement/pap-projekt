@@ -1,3 +1,5 @@
+import {Course} from "./Course";
+import {getDummyReviews} from "./utils";
 
 
 export interface Review {
@@ -9,9 +11,15 @@ export interface Review {
 }
 
 
-async function fetchReviewsByCourse() {}
-async function fetchReviewsByTeacher() {}
-async function fetchReviewsByUser() {}
+async function fetchReviewsByCourse(course: Course) {
+    return getDummyReviews();
+}
+async function fetchReviewsByTeacher() {
+    return getDummyReviews();
+}
+async function fetchReviewsByUser() {
+    return getDummyReviews();
+}
 
 export const ReviewService = {
     fetchReviewsByCourse,

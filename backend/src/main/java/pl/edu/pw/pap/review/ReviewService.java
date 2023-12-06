@@ -42,42 +42,42 @@ public class ReviewService {
 
     public void deleteReview (Long courseId, String username, UserPrincipal userPrincipal){
 
-        log.info("Asked for deletion of review by " + username + " of course " + courseId);
+        log.debug("Asked for deletion of review by " + username + " of course " + courseId);
         // Not sure if this can be simplified any more than this
         // It has to check if the parameters exist before it takes the review (I think?)
         // I could throw exceptions and ignore them but that sounds like bad practise
         // might try with nulls everywhere after tests are done
         Optional<User> maybeUser = userRepository.findByUsername(username);
-        if (maybeUser.isEmpty()){ return;}
+        if (maybeUser.isEmpty()) {
+            return;
+        }
 
-        log.info("Found user of review being deleted");
+        log.debug("Found user of review being deleted");
         User user = maybeUser.get();
-        if (!user.getId().equals(userPrincipal.getUserId())) { return; }
+        if (!user.getId().equals(userPrincipal.getUserId())) {
+            return;  // TODO its not ok, should be Forbidden 403 unless admin
+        }
 
-        Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey( maybeUser.get().getId(), courseId));
-        if (maybeReview.isEmpty()){ return; }
+        Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey(user.getId(), courseId));
+        if (maybeReview.isEmpty()){
+            return;
+        }
 
-        log.info("Trying to remove review");
+        log.debug("Trying to remove review");
         Review review = maybeReview.get();
 
         reviewRepository.delete(review);
-
-
     }
 
-    public Review addReview(AddReviewRequest request, UserPrincipal userPrincipal) {
-        var user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new UserNotFoundException("No user with given username: " + request.username()));
+    public Review addReview(Long courseId, AddReviewRequest request, UserPrincipal userPrincipal) {
+        // TODO Change thrown exception to BAD_REQUEST and handle it
+        var addingUser = userRepository.findByUsername(userPrincipal.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User with username: " + userPrincipal.getUsername() + "doesn't exist"));
+        var course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new CourseNotFoundException("No course with id: " + userPrincipal.getUsername()));
 
-        var course = courseRepository.findById(request.courseId())
-                .orElseThrow(() -> new CourseNotFoundException("No course with id: " + request.courseId()));
 
-        // TODO: Use only the userPrincipal to determine the user, skipping this check
-        if (!user.getId().equals(userPrincipal.getUserId())){
-            throw new UnauthorizedException("User can only add reviews in his own name.");
-        }
-
-        return reviewRepository.save(new Review(user, course, request.text(), request.rating()));
+        return reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()));
     }
 
 }

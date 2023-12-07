@@ -139,7 +139,7 @@ class CourseIntegrationTest {
     @Test
     public void getAllCourses() {
         teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2));
-        var cs = courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
+        courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
 
         var response = restTemplate.exchange(
                 buildUrl("/api/courses", port),

@@ -1,8 +1,8 @@
 import {Review} from "../lib/Review";
 import React, {useEffect, useState} from "react";
 import {CommentService, ReviewComment} from "../lib/ReviewComment";
-import {CommentReviewCard} from "./CommentReviewCard";
 import {CommentList} from "./CommentList";
+import {ReviewCardWithoutLink} from "./ReviewCards";
 
 interface ReviewDetailsProps {
     review: Review
@@ -19,7 +19,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     }, [review]);
 
     return <div>
-        <CommentReviewCard data={review}/>
+        <ReviewCardWithoutLink data={review}/>
         <CommentList comments={comments}/>
     </div>
 }

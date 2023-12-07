@@ -3,7 +3,7 @@ import {Teacher, TeacherService} from "../lib/Teacher";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {Review, ReviewService} from "../lib/Review";
-import {CommentReviewCard} from "./CommentReviewCard";
+import {ReviewList} from "./ReviewList";
 
 export default function CourseDetails(course: Course) {
     const [teacher, setTeacher] = useState<Teacher | null>(null);
@@ -36,7 +36,7 @@ export default function CourseDetails(course: Course) {
 
     const reviewContent = reviews.length == 0
         ? <div>Ten kurs nie ma jeszcze opinii</div>
-        : <div>{reviews.map(r => <CommentReviewCard data={r}/>)}</div>
+        : <div>{<ReviewList reviews={reviews}/>}</div>
 
     return <>
         <h1>{course.name}</h1>

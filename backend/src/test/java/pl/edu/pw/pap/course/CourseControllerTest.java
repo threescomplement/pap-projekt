@@ -49,7 +49,7 @@ class CourseControllerTest {
                 .andExpect(jsonPath("$.level").value(course.getLevel()))
                 .andExpect(jsonPath("$.module").value(course.getModule()))
                 .andExpect(jsonPath("$.averageRating").value(course.getAverageRating()))
-                .andExpect(jsonPath("$.teacherId").doesNotExist());
+                .andExpect(jsonPath("$.teacherId").value(course.getTeacherId()));
 
         // TODO Find way to check links
     }

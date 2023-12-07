@@ -31,5 +31,6 @@ export function CourseRow({course}: CourseProps) {
         <td><Link to={"/courses/" + course.id}> {course.name}</Link></td>
         <td style={{textAlign: 'right'}}>{course.averageRating}</td>
         <td style={{textAlign: 'right'}}>{NUM_REVIEWS_PLACEHOLDER}</td>
+        {/*TODO: replace placeholder*/}
     </tr>
 }

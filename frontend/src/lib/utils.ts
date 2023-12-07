@@ -54,13 +54,13 @@ export function getDummyComments(): ReviewComment[] {
     return [{
         id: "1",
         authorUsername: "waltuh",
-        opinion: "Nie zgadzam się!",
+        text: "Nie zgadzam się!",
         created: "2023-12-06T22:55:36.585+00:00",
         _links: null
     }, {
         id: "2",
         authorUsername: "jesser",
-        opinion: "Zgadzam się!",
+        text: "Zgadzam się!",
         created: "2023-12-06T22:56:36.585+00:00",
         _links: null
     }]

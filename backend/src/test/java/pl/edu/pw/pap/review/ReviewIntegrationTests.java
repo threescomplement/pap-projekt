@@ -104,6 +104,14 @@ public class ReviewIntegrationTests {
 
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", json.read("$.opinion"));
         assertEquals(8, (int) json.read("$.overallRating"));
+        assertEquals("user_1", json.read("$.authorUsername"));
+
+        // check links
+        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/user_1"));
+        assertTrue(json.read("$._links.user.href").toString().endsWith("/api/users/user_1"));
+        assertTrue(json.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/user_1/comments"));
+        assertTrue(json.read("$._links.course.href").toString().endsWith("/api/courses/1"));
+
     }
 
     @Test
@@ -123,7 +131,7 @@ public class ReviewIntegrationTests {
     }
 
     @Test
-    public void getReviewByCourseAndUserIdNoMatch() {
+    public void getReviewNotExists() {
         addDummyData();
         String endpoint = "/api/courses/4/reviews/user_1";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
@@ -131,7 +139,6 @@ public class ReviewIntegrationTests {
     }
 
     @Test
-    // TODO: multiple problem
     public void getReviewsByCourseIdMultiple() {
         addDummyData();
         String endpoint = "/api/courses/1/reviews";
@@ -140,7 +147,10 @@ public class ReviewIntegrationTests {
         var json = JsonPath.parse(response.getBody());
         List<String> reviews = json.read("$._embedded.reviews");
         assertEquals(2, reviews.size());
-        // TODO compare opinions, regardless of order
+        assertTrue(reviews.toString().contains("\"opinion\":\"Zbyt duże wymagania do studentów\""));
+        assertTrue(reviews.toString().contains("\"opinion\":\"Dobrze prowadzony kurs, wymagający nauczyciel\""));
+        assertTrue(json.read("$._links.course.href").toString().endsWith(("api/courses/1")));
+
     }
 
     @Test
@@ -174,7 +184,10 @@ public class ReviewIntegrationTests {
         var json = JsonPath.parse(response.getBody());
         List<String> reviews = json.read("$._embedded.reviews");
         assertEquals(2, reviews.size());
-        // TODO compare opinions, regardless of order
+        assertEquals("user_1", json.read("$._embedded.reviews[0].authorUsername"));
+        // hacky but works regardless of order
+        assertTrue(reviews.toString().contains("\"opinion\":\"W porządku\""));
+        assertTrue(reviews.toString().contains("\"opinion\":\"Dobrze prowadzony kurs, wymagający nauczyciel\""));
     }
 
     @Test

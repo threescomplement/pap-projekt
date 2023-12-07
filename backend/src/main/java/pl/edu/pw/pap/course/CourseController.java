@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.view.RedirectView;
+import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.teacher.TeacherController;
 
 import java.util.Collections;
@@ -58,9 +60,8 @@ public class CourseController {
         return course.add(
                 linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel(),
                 linkTo(methodOn(TeacherController.class).getTeacherById(course.getTeacherId())).withRel("teacher"),
-                linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, "")).withRel("all")
+                linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, "")).withRel("all"),
+                linkTo(methodOn(ReviewController.class).getCourseReviews(course.getId())).withRel("reviews")
         );
     }
-
-    // TODO add links to reviews
 }

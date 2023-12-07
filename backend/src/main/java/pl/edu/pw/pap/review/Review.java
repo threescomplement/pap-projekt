@@ -3,10 +3,12 @@ package pl.edu.pw.pap.review;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.comment.Comment;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -30,10 +32,10 @@ public class Review {
 
     private String opinion;
     private int overallRating; // TODO: Decide which parameters should be included in the review
-    private int likes;
-    private int dislikes;
+    @CreationTimestamp
+    private Timestamp created;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Comment> comments;
 
     public Review(User user, Course course, String opinion, int overallRating) {
@@ -41,8 +43,16 @@ public class Review {
         this.course = course;
         this.opinion = opinion;
         this.overallRating = overallRating;
-        this.likes = 0;
-        this.dislikes = 0;
+    }
+
+    @PreRemove
+    public void clearCommentsAndUser(){
+//        this.comments.clear();
+        this.user.removeReview(this);
+        this.course.removeReview(this);
+    }
+    public void removeComment(Comment comment){
+        this.comments.remove(comment);
     }
 
     @Override
@@ -53,8 +63,7 @@ public class Review {
                 ", course=" + course.getName() +
                 ", opinion='" + opinion + '\'' +
                 ", overallRating=" + overallRating +
-                ", likes=" + likes +
-                ", dislikes=" + dislikes +
+                ", created=" + created.toString() +
                 '}';
     }
 

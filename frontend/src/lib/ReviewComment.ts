@@ -4,7 +4,7 @@ import api from "./api";
 
 export interface ReviewComment {
     id: string;
-    opinion: string;
+    text: string;
     authorUsername: string,
     created: string
     _links: any;

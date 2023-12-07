@@ -1,5 +1,5 @@
 import {Course, CourseService} from "../../lib/Course";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseDetails from "../../components/CourseDetails";
 import "./SingleCourse.css"
@@ -31,5 +31,6 @@ export default function SingleCourse() {
 
     return <div className="SingleCourseContainer">
         <CourseDetails {...course}/>
+        <Link to="writeReview">Napisz opinię</Link>
     </div>
 }

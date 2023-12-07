@@ -2,6 +2,7 @@ import {Teacher} from "../lib/Teacher";
 import React from "react";
 import {Link} from "react-router-dom";
 import {NUM_REVIEWS_PLACEHOLDER} from "../lib/utils";
+import "./CourseList.css"
 
 interface TeacherListProps {
     teachers: Teacher[]
@@ -30,10 +31,10 @@ export function TeacherRow({teacher}: TeacherProps) {
         <td>
             <Link to={"/teachers/" + teacher.id}> {teacher.name}</Link>
         </td>
-        <td style = {{textAlign: 'right'}}>
+        <td className="numTableEntry">
             {teacher.averageRating}
         </td>
-        <td style={{textAlign: 'right'}}>
+        <td className="numTableEntry">
             {NUM_REVIEWS_PLACEHOLDER}
         </td>
     </tr>

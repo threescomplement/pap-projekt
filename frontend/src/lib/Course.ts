@@ -33,7 +33,6 @@ async function fetchCourse(courseId: string): Promise<Course> {
 async function fetchCoursesByFilters(filters: CourseFilters): Promise<Course[]> {
     const response = await api.get("/courses", null, filters);
     const json = await response.json();
-    console.log(json);
     return json._embedded.courses;
 }
 

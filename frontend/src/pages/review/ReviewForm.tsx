@@ -2,12 +2,7 @@ import {useParams} from "react-router-dom";
 import useUser from "../../hooks/useUser";
 import {useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
-
-const ratingOptions = () => {
-    return Array.from({length: 10}, (_, index) => index + 1)
-        .map((n) => <option value={n}>{n}</option>);
-}
-
+import "./ReviewForm.css"
 
 export function ReviewForm() {
     const {user} = useUser();
@@ -41,10 +36,10 @@ export function ReviewForm() {
         );
     }
 
-    return <div>
+    return <div className="review-form">
         <h1>Napisz opinię {course !== null && ("do kursu " + course.name)}</h1>
         <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"></textarea>
-        {rating !== null && <p>Ocena: {rating}</p>}
+        <p>{rating !== null ? "Twoja ocena: " + rating: "Wybierz ocenę:"} </p>
         <div><RatingSlider/></div>
         <div>
             <button>Zatwierdź</button>

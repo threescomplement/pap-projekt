@@ -12,9 +12,9 @@ export default function TeacherList({teachers}: TeacherListProps) {
     return <table>
         <tbody>
         <tr id="headers">
-            <td>Nazwisko</td>
-            <td>Średnia ocena</td>
-            <td>Liczba opinii</td>
+            <th>Nazwisko</th>
+            <th>Średnia ocena</th>
+            <th>Liczba opinii</th>
         </tr>
         {teachers.map(t => <TeacherRow teacher={t}/>)}
         </tbody>

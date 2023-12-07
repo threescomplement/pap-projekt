@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.user.User;
+
+import java.sql.Timestamp;
 
 //Maybe it's possible to have one interface for reviews and comments that includes the text, likes and dislikes
 @Entity
@@ -18,8 +21,8 @@ public class Comment {
     private Long id;
 
     private String text;
-    private int likes;
-    private int dislikes;
+    @CreationTimestamp
+    private Timestamp created;
     @JsonIgnore
     @ManyToOne
     private Review review;
@@ -31,8 +34,6 @@ public class Comment {
         this.text = text;
         this.review = review;
         this.user = user;
-        this.likes = 0;
-        this.dislikes = 0;
     }
 
     protected Comment() {
@@ -49,8 +50,7 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", likes=" + likes +
-                ", dislikes=" + dislikes +
+                ", created=" + created.toString() +
                 ", review=" + review.getId() +
                 ", user=" + user.getId() +
                 '}';

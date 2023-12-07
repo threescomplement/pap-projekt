@@ -26,21 +26,35 @@ public class ReviewService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
 
-    public Optional<Review> getReviewById(Long userId, Long courseId ){
-        ReviewKey reviewKey = new ReviewKey(userId, courseId);
-        return reviewRepository.findById(reviewKey);
+
+    public ReviewDTO convertToDTO(Review review) {
+        return ReviewDTO.builder()
+                .authorUsername(review.getUser().getUsername())
+                .opinion(review.getOpinion())
+                .overallRating(review.getOverallRating())
+                .created(review.getCreated())
+                .courseId(review.getCourse().getId())
+                .build();
     }
 
-    public List<Review> getCourseReviews(Long courseId) {
+    public Optional<ReviewDTO> getReviewById(Long userId, Long courseId) {
+        ReviewKey reviewKey = new ReviewKey(userId, courseId);
+        return reviewRepository
+                .findById(reviewKey)
+                .map(this::convertToDTO);
+    }
+
+    public List<ReviewDTO> getCourseReviews(Long courseId) {
         Course course = courseRepository.findById(courseId).orElseThrow(
                 () -> new CourseNotFoundException("No course with id " + courseId));
 
         return course.getReviews()
                 .stream()
+                .map(this::convertToDTO)
                 .toList();
     }
 
-    public void deleteReview (Long courseId, String username, UserPrincipal userPrincipal){
+    public void deleteReview(Long courseId, String username, UserPrincipal userPrincipal) {
 
         log.debug("Asked for deletion of review by " + username + " of course " + courseId);
         // Not sure if this can be simplified any more than this
@@ -59,7 +73,7 @@ public class ReviewService {
         }
 
         Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey(user.getId(), courseId));
-        if (maybeReview.isEmpty()){
+        if (maybeReview.isEmpty()) {
             return;
         }
 
@@ -69,7 +83,7 @@ public class ReviewService {
         reviewRepository.delete(review);
     }
 
-    public Review addReview(Long courseId, AddReviewRequest request, UserPrincipal userPrincipal) {
+    public ReviewDTO addReview(Long courseId, AddReviewRequest request, UserPrincipal userPrincipal) {
         // TODO Change thrown exception to BAD_REQUEST and handle it
         var addingUser = userRepository.findByUsername(userPrincipal.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("User with username: " + userPrincipal.getUsername() + "doesn't exist"));
@@ -77,7 +91,9 @@ public class ReviewService {
                 .orElseThrow(() -> new CourseNotFoundException("No course with id: " + userPrincipal.getUsername()));
 
 
-        return reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()));
+        return convertToDTO(
+                reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()))
+        );
     }
 
 }

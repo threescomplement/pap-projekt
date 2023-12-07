@@ -3,25 +3,25 @@ import {Link} from "react-router-dom";
 import React from "react";
 
 interface ReviewCardProps {
-    data: Review;
+    review: Review;
 }
 
-export function ReviewCardWithLink({data}: ReviewCardProps) {
+export function ReviewCardWithLink({review}: ReviewCardProps) {
     return <>
-        <div>{data.authorUsername}</div>
-        <div>{"Ocena: " + data.overallRating}</div>
-        <div>{data.opinion}</div>
+        <div>{review.authorUsername}</div>
+        <div>{"Ocena: " + review.overallRating}</div>
+        <div>{review.opinion}</div>
         <div>
-            {<Link to={"comments/" + data.authorUsername}> Czytaj więcej </Link>}
+            {<Link to={"comments/" + review.authorUsername}> Czytaj więcej </Link>}
         </div>
     </>
 }
 
-export function ReviewCardWithoutLink({data}: ReviewCardProps) {
+export function ReviewCardWithoutLink({review}: ReviewCardProps) {
     return <>
-        <div>{data.authorUsername}</div>
-        <div>{"Ocena: " + data.overallRating}</div>
-        <div>{data.opinion}</div>
+        <div>{review.authorUsername}</div>
+        <div>{"Ocena: " + review.overallRating}</div>
+        <div>{review.opinion}</div>
     </>
 }
 

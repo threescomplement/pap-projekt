@@ -12,7 +12,7 @@ export function ReviewList({reviews}: ReviewListProps) {
             //todo .sort by timestamps
             .map((r) => (
                 <li key={r.id}>
-                    <ReviewCardWithLink data={r}/>
+                    <ReviewCardWithLink review={r}/>
                 </li>
             ))}
     </ul>

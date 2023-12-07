@@ -9,18 +9,18 @@ export function CommentList({comments}: CommentListProps) {
     return <ul>
         {comments
             .map(c => <li
-                id={c.id}><CommentCard data={c}/>
+                id={c.id}><CommentCard review={c}/>
             </li>)}
     </ul>
 }
 
 interface CommentCardProps {
-    data: ReviewComment;
+    review: ReviewComment;
 }
 
-function CommentCard({data}: CommentCardProps) {
+function CommentCard({review}: CommentCardProps) {
     return <>
-        <div>{data.authorUsername}</div>
-        <div>{data.text}</div>
+        <div>{review.authorUsername}</div>
+        <div>{review.text}</div>
     </>
 }

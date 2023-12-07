@@ -19,7 +19,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     }, [review]);
 
     return <div>
-        <ReviewCardWithoutLink data={review}/>
+        <ReviewCardWithoutLink review={review}/>
         <CommentList comments={comments}/>
     </div>
 }

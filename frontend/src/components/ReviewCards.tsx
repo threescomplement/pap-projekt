@@ -12,7 +12,7 @@ export function ReviewCardWithLink({review}: ReviewCardProps) {
         <div>{"Ocena: " + review.overallRating}</div>
         <div>{review.opinion}</div>
         <div>
-            {<Link to={"comments/" + review.authorUsername}> Czytaj więcej </Link>}
+            {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
         </div>
     </>
 }

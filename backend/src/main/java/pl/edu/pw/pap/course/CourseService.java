@@ -21,10 +21,29 @@ public class CourseService {
         // An additional call to the database is bad but otherwise I'd have to make an averageRating function which
         // Would have already been done earlier I imagine
         // TODO: Consider getting the average rating of a course by just counting the ratings from course.getRatings()
+        var reviews= course.getReviews();
+        double averageRating = 0;
+        int ratingSum = 0;
+        for (var review: reviews){
+            ratingSum += review.getOverallRating();
+        }
+        if (!reviews.isEmpty()){
+            averageRating = (double) ratingSum /(reviews.size());
+        }
 
-        return courseRepository
-                .findByIdWithRating(course.getId())
-                .orElseThrow( () -> new CourseNotFoundException("Conversion to CourseDTO failed"));
+
+
+
+        return CourseDTO.builder()
+                .id(course.getId())
+                .name(course.getName())
+                .language(course.getLanguage())
+                .type(course.getType())
+                .level(course.getLevel())
+                .module(course.getModule())
+                .averageRating(averageRating)
+                .teacherId(course.getTeacher().getId())
+                .build();
     }
 
     public Optional<CourseDTO> getById(Long courseId) {

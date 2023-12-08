@@ -55,12 +55,12 @@ interface FilterProps {
 
 export default function Filter(props: FilterProps) {
     const [chosen, setChosen] = useState(all)
-    const optionObjects = props.options.map(o => <option value={o}>{o}</option>)
+    const optionObjects = props.options.map(o => <option value={o} key={o} >{o}</option>)
     return <select onChange={e => {
         props.onSelect(e);
         setChosen(e.target.value)
     }}>
-        <option value={all} selected>{chosen !== all ? "Wszystkie": props.name}</option>
+        <option value={all} defaultValue={all}>{chosen !== all ? "Wszystkie": props.name}</option>
         {optionObjects}
     </select>
 }

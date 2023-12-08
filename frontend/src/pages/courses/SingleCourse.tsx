@@ -1,8 +1,8 @@
 import {Course, CourseService} from "../../lib/Course";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseDetails from "../../components/CourseDetails";
-
+import "./SingleCourse.css"
 
 export default function SingleCourse() {
     const {courseId} = useParams();
@@ -23,13 +23,14 @@ export default function SingleCourse() {
     }, [courseId]);
 
     if (course == null || courseId == null || !isLoaded) {
-        return <>
+        return <div className="SingleCourseContainer">
             <h1>{courseId}</h1>
-            <p>Loading...</p>
-        </>
+            <p className="SingleCourseLoading">Loading...</p>
+        </div>
     }
 
-    return <>
+    return <div className="SingleCourseContainer">
         <CourseDetails {...course}/>
-    </>
+        <Link to="writeReview">Napisz opinię</Link> {/* todo: change this to edytuj opinię if it has already been written*/}
+    </div>
 }

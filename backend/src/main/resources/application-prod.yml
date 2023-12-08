@@ -4,7 +4,7 @@ security:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     open-in-view: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
   datasource:

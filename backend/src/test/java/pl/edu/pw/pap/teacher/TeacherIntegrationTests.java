@@ -58,6 +58,8 @@ public class TeacherIntegrationTests {
     private static final Teacher TEACHER_1 = new Teacher("mgr. Jan Kowalski");
     private static final Teacher TEACHER_2 = new Teacher("mgr. Ann Nowak");
 
+    private static final Teacher TEACHER_3 = new Teacher("mgr. Andrzej Sysy");
+
     private static final Course COURSE_1 = new Course("Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, TEACHER_1);
     private static final Course COURSE_2 = new Course("Język angielski poziom C1", "Angielski", "Ogólny", "C1", "M15", TEACHER_1);
     private static final Course COURSE_3 = new Course("Język niemiecki, poziom A2", "Niemiecki", "Akademicki", "A2", "M6", TEACHER_2);
@@ -69,7 +71,7 @@ public class TeacherIntegrationTests {
     private static final Review REVIEW_4 = new Review(USER_1, COURSE_3, "W porządku", 6);
 
     private void addDummyData() {
-        teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2));
+        teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2, TEACHER_3));
         courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
         reviewRepository.saveAll(List.of(REVIEW_1, REVIEW_2, REVIEW_3, REVIEW_4));
     }
@@ -97,6 +99,7 @@ public class TeacherIntegrationTests {
         assertEquals(1, (int) json.read("$.id"));
         assertEquals(TEACHER_1.getName(), json.read("$.name"));
         assertEquals(5.5, (double) (json.read("$.averageRating")));
+        // TODO        assertEquals(2, (int) json.read("$.numRatings"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/teachers/1"));
         assertTrue(json.read("$._links.courses.href").toString().contains("/api/courses?name=&language=all&module=all&type=all&level=all&teacherName=mgr.%20Jan%20Kowalski"));
         assertTrue(json.read("$._links.all.href").toString().endsWith("/api/teachers?name=&language=all"));
@@ -130,9 +133,10 @@ public class TeacherIntegrationTests {
         var response = restTemplate.exchange(buildUrl("/api/teachers", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
-        assertEquals(2, ((JSONArray) json.read("$._embedded.teachers")).size());
+        assertEquals(3, ((JSONArray) json.read("$._embedded.teachers")).size());
         assertTrue(json.read("$._embedded.teachers[?(@.id == 1)].name").toString().contains(TEACHER_1.getName()));
         assertTrue(json.read("$._embedded.teachers[?(@.id == 2)].name").toString().contains(TEACHER_2.getName()));
+        assertTrue(json.read("$._embedded.teachers[?(@.id == 3)].name").toString().contains(TEACHER_3.getName()));
     }
 
     @Test
@@ -175,4 +179,12 @@ public class TeacherIntegrationTests {
         assertEquals(1, ((JSONArray) json.read("$._embedded.teachers")).size());
         assertTrue(json.read("$._embedded.teachers[0].name").toString().contains(TEACHER_1.getName()));
     }
+// TODO
+//    @Test
+//    public void noReviewsForTeacher() {
+//        addDummyData();
+//        var response = restTemplate.exchange(buildUrl("/api/teachers/3", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+//        var json = JsonPath.parse(response.getBody());
+//        assertEquals(0, (int) json.read("$.numRatings"));
+//    }
 }

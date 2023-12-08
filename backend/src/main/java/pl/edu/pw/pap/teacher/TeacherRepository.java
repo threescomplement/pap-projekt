@@ -22,7 +22,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
             @Param("language") String language
     );
 
-
+    // TODO: querying for number of reviews
     @Query("SELECT new pl.edu.pw.pap.teacher.TeacherDTO(t.id, t.name, AVG(r.overallRating))" +
             "FROM Teacher t LEFT JOIN Review r ON t.id = r.course.teacher.id " +
             "WHERE t.id = :id " +

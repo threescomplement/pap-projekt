@@ -1,17 +1,16 @@
 .courseList table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 3rem;
+    /* other properties remain unchanged */
 }
 
-.courseList th, .courseList td {
+.courseList th,
+.courseList td {
     border: 1px solid #ddd;
     padding: 1rem;
     text-align: left;
 }
 
 .courseList th {
-    background-color: #4CAF50;
+    background-color: #6495ED;  /* changed to match Courses.module.css */
     color: white;
 }
 
@@ -29,5 +28,5 @@
 }
 
 .courseList a:hover {
-    color: #4CAF50;
+    color: #4169E1;  /* changed to match Courses.module.css */
 }

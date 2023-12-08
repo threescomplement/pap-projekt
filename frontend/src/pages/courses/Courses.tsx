@@ -28,9 +28,6 @@ export function Courses() {
             .catch(e => console.error(e));
     }, [query, language, type, level, module]);
 
-    const content = isLoaded
-        ? <CourseList courses={courses}/>
-        : <p>Loading...</p>
 
     // TODO: allow multiple selections for filters
     return (

@@ -14,6 +14,7 @@ import Register from "./pages/user/Register";
 import Profile from "./pages/user/Profile";
 import ConfirmEmail from "./pages/user/ConfirmEmail";
 import AdminPanel from "./pages/admin/AdminPanel";
+import {SingleReview} from "./pages/review/SingleReview";
 
 /**
  * Top level component for the entire application
@@ -40,7 +41,10 @@ export default function App() {
                         <Route index element={<Home/>}/>
                         <Route path="courses">
                             <Route index element={<Courses/>}/>
-                            <Route path=":courseId" element={<SingleCourse/>}/>
+                            <Route path=":courseId">
+                                <Route index element={<SingleCourse/>}/>
+                                <Route path="reviews/:authorUsername" element={<SingleReview/>}/>
+                            </Route>
                         </Route>
                         <Route path="teachers">
                             <Route index element={<Teachers/>}/>

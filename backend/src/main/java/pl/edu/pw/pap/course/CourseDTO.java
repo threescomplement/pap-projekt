@@ -1,6 +1,5 @@
 package pl.edu.pw.pap.course;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +16,5 @@ public class CourseDTO extends RepresentationModel<CourseDTO> {
     private String level;
     private String module;
     private Double averageRating;
-    @JsonIgnore
     private Long teacherId;
 }

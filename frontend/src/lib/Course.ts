@@ -1,14 +1,15 @@
 import api from "./api";
-import {commonElements} from "./utils";
 
 export interface Course {
     id: string,
     name: string,
     language: string,
-    type: string | null, // TODO: can type be null?
-    level: string | null, // TODO: can level be null?
+    type: string,
+    level: string,
     module: string | null, //TODO: make api return teacher id
-    links: any
+    averageRating: string,
+    teacherId: string,
+    _links: any
 }
 
 export interface CourseFilters {
@@ -32,7 +33,6 @@ async function fetchCourse(courseId: string): Promise<Course> {
 async function fetchCoursesByFilters(filters: CourseFilters): Promise<Course[]> {
     const response = await api.get("/courses", null, filters);
     const json = await response.json();
-    console.log(json);
     return json._embedded.courses;
 }
 

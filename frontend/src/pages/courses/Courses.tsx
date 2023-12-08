@@ -35,7 +35,7 @@ export function Courses() {
     // TODO: allow multiple selections for filters
     return <>
         <h1>Kursy</h1>
-        <input type="text" onChange={e => setQuery(e.target.value)}/>
+        <input type="text" placeholder="Szukaj po nazwie" onChange={e => setQuery(e.target.value)}/>
 
         <Filter
             name={"Język"}

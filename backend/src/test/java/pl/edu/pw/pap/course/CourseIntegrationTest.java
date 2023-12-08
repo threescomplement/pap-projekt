@@ -94,6 +94,7 @@ class CourseIntegrationTest {
         assertEquals(COURSE_1.getType(), json.read("$.type"));
         assertEquals(COURSE_1.getLevel(), json.read("$.level"));
         assertEquals(COURSE_1.getModule(), json.read("$.module"));
+        assertEquals(1, (int) json.read("$.teacherId"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1"));
     }
 
@@ -138,7 +139,7 @@ class CourseIntegrationTest {
     @Test
     public void getAllCourses() {
         teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2));
-        var cs = courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
+        courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
 
         var response = restTemplate.exchange(
                 buildUrl("/api/courses", port),

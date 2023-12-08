@@ -15,6 +15,8 @@ import Profile from "./pages/user/Profile";
 import ConfirmEmail from "./pages/user/ConfirmEmail";
 import AdminPanel from "./pages/admin/AdminPanel";
 import {SingleReview} from "./pages/review/SingleReview";
+import {ReviewForm} from "./pages/review/ReviewForm";
+import {ThankYouPage} from "./pages/review/ThankYou";
 
 /**
  * Top level component for the entire application
@@ -44,6 +46,8 @@ export default function App() {
                             <Route path=":courseId">
                                 <Route index element={<SingleCourse/>}/>
                                 <Route path="reviews/:authorUsername" element={<SingleReview/>}/>
+                                <Route path="writeReview" element={<ReviewForm/>}/>
+                                <Route path="thankyou" element={<ThankYouPage/>}/>
                             </Route>
                         </Route>
                         <Route path="teachers">

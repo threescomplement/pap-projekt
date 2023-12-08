@@ -21,7 +21,7 @@ export default function CourseDetails(course: Course) {
                 setReviews(r);
             })
 
-    }, []);
+    }, [course]);
 
     const teacherContent = (teacher != null && teacherLoaded)
         ? <Link className="TeacherLink" to={"/teachers/" + course.teacherId}> {teacher.name} </Link>
@@ -32,7 +32,7 @@ export default function CourseDetails(course: Course) {
         : <p className="CourseInfo">Ten kurs nie jest przypisany do żadnego modułu</p>
 
 
-    const reviewContent = reviews.length == 0
+    const reviewContent = reviews.length === 0
         ? <div>Ten kurs nie ma jeszcze opinii</div>
         : <div>{<ReviewList reviews={reviews}/>}</div>
 

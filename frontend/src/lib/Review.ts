@@ -1,7 +1,6 @@
 import {Course} from "./Course";
 import {getDummyReviews} from "./utils";
 import api from "./api";
-import {ReviewComment} from "./ReviewComment";
 
 
 export interface Review {
@@ -11,6 +10,11 @@ export interface Review {
     created: string
     overallRating: string;
     _links: any;
+}
+
+export interface ReviewRequest {
+    text: string,
+    rating: number
 }
 
 
@@ -23,7 +27,12 @@ async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
 
 async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review> {
     return api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
-        .then(r=>r.json());
+        .then(r => r.json());
+}
+
+async function postReview(request: ReviewRequest, courseId: string) {
+    api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews"), request)
+        .catch(e => console.log(e));
 }
 
 async function fetchReviewsByTeacher(): Promise<Review[]> {
@@ -37,6 +46,7 @@ async function fetchReviewsByUser(): Promise<Review[]> {
 export const ReviewService = {
     fetchReviewsByCourse,
     fetchReviewByCourseIdAndAuthor,
+    postReview,
     fetchReviewsByTeacher,
     fetchReviewsByUser
 }

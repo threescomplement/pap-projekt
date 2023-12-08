@@ -12,7 +12,7 @@ export function ThankYouPage() {
         }, 3000);
 
         return () => clearTimeout(redirectTimeout);
-    }, [navigate]);
+    }, [courseId, navigate]);
 
     return (
         <div className="thank-you-page">

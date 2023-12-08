@@ -13,7 +13,7 @@ export function SingleReview() {
                 console.log(r);
                 setReview(r);
             })
-    }, []);
+    }, [authorUsername, courseId]);
 
-    return review !== null ? <ReviewDetails review={review} /> : <h1>Loading..</h1>
+    return review != null ? <ReviewDetails review={review} /> : <h1>Loading..</h1>
 }

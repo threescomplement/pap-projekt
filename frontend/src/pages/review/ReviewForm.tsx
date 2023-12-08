@@ -1,13 +1,11 @@
 import {useNavigate, useParams} from "react-router-dom";
-import useUser from "../../hooks/useUser";
-import {useEffect, useState} from "react";
+import {ChangeEvent, useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
 import "./ReviewForm.css"
 import {ReviewRequest, ReviewService} from "../../lib/Review";
 
 export function ReviewForm() {
     const navigate = useNavigate();
-    const {user} = useUser();
     const {courseId} = useParams();
     const [course, setCourse] = useState<Course | null>(null);
     const [rating, setRating] = useState<number | null>(null);
@@ -18,10 +16,10 @@ export function ReviewForm() {
             .then(c => {
                 setCourse(c);
             })
-    }, []);
+    }, [courseId]);
 
     function RatingSlider() { // todo: swap this for a nicer one
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
             const value = Math.round(parseFloat(e.target.value));
             setRating(value);
         };
@@ -32,7 +30,7 @@ export function ReviewForm() {
                 min={1}
                 max={10}
                 step={1}
-                value={rating !== null ? rating : 1}
+                value={rating != null ? rating : 1}
                 onChange={handleChange}
                 onInput={handleChange}
             />

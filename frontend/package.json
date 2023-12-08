@@ -21,7 +21,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "eslint src --ext .js,.jsx,.ts,.tsx --max-warnings=0 && react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0"
   }
 }

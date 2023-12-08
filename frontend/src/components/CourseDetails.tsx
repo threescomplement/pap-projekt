@@ -27,12 +27,10 @@ export default function CourseDetails(course: Course) {
         ? <Link className="TeacherLink" to={"/teachers/" + course.teacherId}> {teacher.name} </Link>
         : <span className="TeacherLink">COURSE_TEACHER_PLACEHOLDER</span>;
 
-    const moduleContent = course.module !== null
+    const moduleContent = course.module != null
         ? <p className="CourseInfo">Moduł: {course.module}</p>
         : <p className="CourseInfo">Ten kurs nie jest przypisany do żadnego modułu</p>
 
-    const levelContent = <p className="CourseInfo">Poziom: {course.level}</p>
-    const typeContent = <p className="CourseInfo">Typ kursu: {course.type}</p>
 
     const reviewContent = reviews.length == 0
         ? <div>Ten kurs nie ma jeszcze opinii</div>
@@ -43,8 +41,8 @@ export default function CourseDetails(course: Course) {
         <p className="TeacherHeader">Lektor: {teacherContent}</p>
         <h3>Informacje o kursie:</h3>
         {moduleContent}
-        {levelContent}
-        {typeContent}
+        <p className="CourseInfo">Poziom: {course.level}</p>
+        <p className="CourseInfo">Typ kursu: {course.type}</p>
         <h2 className="OpinionsSection">Opinie</h2>
         {reviewContent}
     </>

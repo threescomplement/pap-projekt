@@ -10,8 +10,8 @@ export interface ReviewComment {
     _links: any;
 }
 
-async function fetchCommentsByReview(review: Review) {
-    return await api.get(review._links.comments.href)
+async function fetchCommentsByReview(review: Review): Promise<ReviewComment[]> {
+    return api.get(review._links.comments.href)
         .then(c => c.json())
         .then(json => json._embedded.comments)
         .catch(e => console.log(e));

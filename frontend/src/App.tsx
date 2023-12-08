@@ -44,7 +44,7 @@ export default function App() {
                             <Route index element={<Courses/>}/>
                             <Route path=":courseId">
                                 <Route index element={<SingleCourse/>}/>
-                                <Route path="comments/:authorUsername" element={<SingleReview/>}/>
+                                <Route path="reviews/:authorUsername" element={<SingleReview/>}/>
                                 <Route path="writeReview" element={<ReviewForm/>}/>
                             </Route>
                         </Route>

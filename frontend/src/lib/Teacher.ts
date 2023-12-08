@@ -19,7 +19,7 @@ export interface TeacherFilters {
  */
 async function fetchTeacher(teacherId: string): Promise<Teacher> {
     // TODO: teacherId does not exist in the database
-    return await api.get(`/teachers/${Number(teacherId)}`)
+    return api.get(`/teachers/${Number(teacherId)}`)
         .then(response => response.json())
         .catch(e => console.error(e));
 }
@@ -41,7 +41,7 @@ async function fetchTeachersByFilters(filters: TeacherFilters): Promise<Teacher[
 }
 
 async function fetchTeacherByCourse(course: Course) {
-    return await api.get(course._links.teacher.href)
+    return api.get(course._links.teacher.href)
         .then(response => response.json())
         .catch(e => console.error(e));
 }

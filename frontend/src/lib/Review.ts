@@ -20,15 +20,14 @@ export interface ReviewRequest {
 
 
 async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
-    console.log(course._links.reviews.href)
-    return await api.get(course._links.reviews.href)
+    return api.get(course._links.reviews.href)
         .then(r => r.json())
         .then(json => json._embedded.reviews)
         .catch(e => console.log(e));
 }
 
 async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review> {
-    return await api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
+    return api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
         .then(r=>r.json());
 }
 

@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import useUser from "../../hooks/useUser";
 import {useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
@@ -6,6 +6,7 @@ import "./ReviewForm.css"
 import {ReviewRequest, ReviewService} from "../../lib/Review";
 
 export function ReviewForm() {
+    const navigate = useNavigate();
     const {user} = useUser();
     const {courseId} = useParams();
     const [course, setCourse] = useState<Course | null>(null);
@@ -45,6 +46,7 @@ export function ReviewForm() {
             rating: rating
         }
         ReviewService.postReview(request, courseId!);
+        navigate(("/courses/" + courseId));
     }
 
     return <div className="review-form">

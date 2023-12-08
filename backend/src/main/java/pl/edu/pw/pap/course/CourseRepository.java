@@ -22,12 +22,12 @@ public interface CourseRepository extends JpaRepository<Course, Long> {
     @Query("SELECT new pl.edu.pw.pap.course.CourseDTO(c.id, c.name, c.language, c.type, c.level, c.module, AVG(r.overallRating), t.id) " +
             "FROM Course c LEFT JOIN Review r ON c.id = r.course.id LEFT JOIN Teacher t ON c.teacher.id = t.id " +
             "WHERE " +
-            "(:name IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
-            "(:language IS NULL OR LOWER(c.language) = LOWER(:language)) AND " +
+            "(:name IS NULL OR LOWER(c.name) LIKE LOWER('%' || COALESCE(:name, '')) || '%') AND " +
+            "(:language IS NULL OR LOWER(c.language) = LOWER(COALESCE(:language, ''))) AND " +
             "(:module IS NULL OR (c.module IS NULL AND :module IS NULL) OR c.module = :module) AND " +
             "(:type IS NULL OR c.type = :type) AND " +
             "(:level IS NULL OR c.level = :level) AND " +
-            "(:teacherName IS NULL OR LOWER(c.teacher.name) LIKE LOWER(CONCAT('%', :teacherName, '%'))) " +
+            "(:teacherName IS NULL OR LOWER(c.teacher.name) LIKE LOWER('%' || COALESCE(:teacherName, '') || '%')) " +
             "GROUP BY c.id, c.name, c.language, c.type, c.level, c.module, t.id"
     )
     List<CourseDTO> findCoursesByAttributesWithRatings(

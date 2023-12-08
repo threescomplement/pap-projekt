@@ -7,7 +7,6 @@ import {ReviewRequest, ReviewService} from "../../lib/Review";
 
 export function ReviewForm() {
     const navigate = useNavigate();
-    const {user} = useUser();
     const {courseId} = useParams();
     const [course, setCourse] = useState<Course | null>(null);
     const [rating, setRating] = useState<number | null>(null);
@@ -53,7 +52,9 @@ export function ReviewForm() {
     return <div className="review-form">
         <h1>Napisz opinię {course !== null && ("do kursu " + course.name)}</h1>
         <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"
-                  onChange={e => setOpinion(e.target.value)}></textarea>
+                  onChange={e => setOpinion(e.target.value)}
+                  value={opinion}>
+        </textarea>
         <p>{rating !== null ? "Twoja ocena: " + rating : "Wybierz ocenę:"} </p>
         <div><RatingSlider/></div>
         <div>

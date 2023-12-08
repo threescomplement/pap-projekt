@@ -8,8 +8,9 @@ interface CommentListProps {
 export function CommentList({comments}: CommentListProps) {
     return <ul>
         {comments
+            // todo: sort
             .map(c => <li
-                id={c.id}><CommentCard review={c}/>
+                key={c.id}><CommentCard review={c}/>
             </li>)}
     </ul>
 }

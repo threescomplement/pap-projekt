@@ -3,7 +3,7 @@ import {Teacher, TeacherService} from "../lib/Teacher";
 import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {Review, ReviewService} from "../lib/Review";
-import {ReviewList} from "./ReviewList";
+import {ReviewCardWithLink} from "./ReviewCards";
 
 export default function CourseDetails(course: Course) {
     const [teacher, setTeacher] = useState<Teacher | null>(null);
@@ -21,7 +21,7 @@ export default function CourseDetails(course: Course) {
                 setReviews(r);
             })
 
-    }, []);
+    }, [course]);
 
     const teacherContent = (teacher != null && teacherLoaded)
         ? <Link className="TeacherLink" to={"/teachers/" + course.teacherId}> {teacher.name} </Link>
@@ -32,7 +32,7 @@ export default function CourseDetails(course: Course) {
         : <p className="CourseInfo">Ten kurs nie jest przypisany do żadnego modułu</p>
 
 
-    const reviewContent = reviews.length == 0
+    const reviewContent = reviews.length === 0
         ? <div>Ten kurs nie ma jeszcze opinii</div>
         : <div>{<ReviewList reviews={reviews}/>}</div>
 
@@ -47,3 +47,21 @@ export default function CourseDetails(course: Course) {
         {reviewContent}
     </>
 }
+
+
+interface ReviewListProps {
+    reviews: Review[]
+}
+
+function ReviewList({reviews}: ReviewListProps) {
+    return <ul>
+        {reviews
+            //todo .sort by timestamps
+            .map((r) => (
+                <li key={r.id}>
+                    <ReviewCardWithLink review={r}/>
+                </li>
+            ))}
+    </ul>
+}
+

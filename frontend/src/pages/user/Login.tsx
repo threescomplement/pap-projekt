@@ -3,6 +3,7 @@ import {attemptLogin, LoginRequest} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
+import styles from "./Login.module.css"
 
 const initialFormData: LoginRequest = {
     username: "",
@@ -24,7 +25,7 @@ export default function Login() {
             });
     }
 
-    return <>
+    return <div className={styles.loginContainer}>
         <h1>Login</h1>
 
         <form onSubmit={handleFormSubmit}>
@@ -38,5 +39,5 @@ export default function Login() {
             </label>
             <input type="submit" value="Log In"/>
         </form>
-    </>
+    </div>
 }

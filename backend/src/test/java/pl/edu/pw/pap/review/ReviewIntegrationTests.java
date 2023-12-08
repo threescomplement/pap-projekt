@@ -105,6 +105,7 @@ public class ReviewIntegrationTests {
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", json.read("$.opinion"));
         assertEquals(8, (int) json.read("$.overallRating"));
         assertEquals("user_1", json.read("$.authorUsername"));
+        assertTrue(json.read("$.created").toString().endsWith("+00:00"));
 
         // check links
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/user_1"));
@@ -144,11 +145,13 @@ public class ReviewIntegrationTests {
         String endpoint = "/api/courses/1/reviews";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
         var json = JsonPath.parse(response.getBody());
         List<String> reviews = json.read("$._embedded.reviews");
         assertEquals(2, reviews.size());
         assertTrue(reviews.toString().contains("\"opinion\":\"Zbyt duże wymagania do studentów\""));
         assertTrue(reviews.toString().contains("\"opinion\":\"Dobrze prowadzony kurs, wymagający nauczyciel\""));
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("api/courses/1/reviews")));
         assertTrue(json.read("$._links.course.href").toString().endsWith(("api/courses/1")));
 
     }
@@ -159,20 +162,25 @@ public class ReviewIntegrationTests {
         String endpoint = "/api/courses/3/reviews";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
         var json = JsonPath.parse(response.getBody());
         assertEquals("W porządku", json.read("$._embedded.reviews[0].opinion"));
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("api/courses/3/reviews")));
+        assertTrue(json.read("$._links.course.href").toString().endsWith(("api/courses/3")));
     }
 
     @Test
-    // TODO: check key
     public void getReviewsByCourseIdEmpty() {
         addDummyData();
         String endpoint = "/api/courses/2/reviews";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
         var json = JsonPath.parse(response.getBody());
         List<String> reviews = json.read("$._embedded.reviews");
         assertTrue(reviews.isEmpty());
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("api/courses/2/reviews")));
+        assertTrue(json.read("$._links.course.href").toString().endsWith(("api/courses/2")));
     }
 
     @Test
@@ -183,8 +191,9 @@ public class ReviewIntegrationTests {
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         List<String> reviews = json.read("$._embedded.reviews");
-        assertEquals(2, reviews.size());
         assertEquals("user_1", json.read("$._embedded.reviews[0].authorUsername"));
+        assertEquals("user_1", json.read("$._embedded.reviews[1].authorUsername"));
+        assertEquals(2, reviews.size());
         // hacky but works regardless of order
         assertTrue(reviews.toString().contains("\"opinion\":\"W porządku\""));
         assertTrue(reviews.toString().contains("\"opinion\":\"Dobrze prowadzony kurs, wymagający nauczyciel\""));

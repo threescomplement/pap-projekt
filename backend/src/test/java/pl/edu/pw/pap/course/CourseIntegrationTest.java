@@ -198,4 +198,58 @@ class CourseIntegrationTest {
         JSONArray courses = json.read("$._embedded.courses");
         assertEquals(0, courses.size());
     }
+
+
+    @Test
+    public void getTeacherCourses() {
+        teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2));
+        courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
+        var response = restTemplate.exchange(
+                buildUrl("/api/courses/teachers/" + TEACHER_1.getId(), port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+
+        JSONArray courses = json.read("$._embedded.courses");
+        assertEquals(2, courses.size());
+    }
+
+
+    @Test
+    public void getTeacherCoursesFollowTeacherLink() {
+        teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2));
+        courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
+        var response = restTemplate.exchange(
+                buildUrl("/api/courses/teachers/" + TEACHER_1.getId(), port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+
+        JSONArray courses = json.read("$._embedded.courses");
+        assertEquals(2, courses.size());
+
+        var teacherLink = json.read("$._links.teacher.href").toString();
+
+        var response2 = restTemplate.exchange(
+                teacherLink,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
+        var jsonTeacher = JsonPath.parse(response2.getBody());
+        assertEquals(teacherLink, jsonTeacher.read("$._links.self.href").toString());
+
+    }
+
+
+
 }

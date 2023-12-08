@@ -10,6 +10,10 @@ export interface ReviewComment {
     _links: any;
 }
 
+export interface CommentRequest {
+    text: string
+}
+
 async function fetchCommentsByReview(review: Review): Promise<ReviewComment[]> {
     return api.get(review._links.comments.href)
         .then(c => c.json())
@@ -17,7 +21,12 @@ async function fetchCommentsByReview(review: Review): Promise<ReviewComment[]> {
         .catch(e => console.log(e));
 }
 
+async function postComment(request: CommentRequest, courseId: string, reviewAuthor: string) {
+    api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + reviewAuthor + "/comments"), request)
+        .catch(e => console.log(e));
+}
 
 export const CommentService = {
-    fetchCommentsByReview
+    fetchCommentsByReview,
+    postComment
 }

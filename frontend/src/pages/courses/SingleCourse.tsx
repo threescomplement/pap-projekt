@@ -31,6 +31,6 @@ export default function SingleCourse() {
 
     return <div className="SingleCourseContainer">
         <CourseDetails {...course}/>
-        <Link to="writeReview">Napisz opinię</Link>
+        <Link to="writeReview">Napisz opinię</Link> {/* todo: change this to edytuj opinię if it has already been written*/}
     </div>
 }

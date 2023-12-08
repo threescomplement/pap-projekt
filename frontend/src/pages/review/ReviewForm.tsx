@@ -3,12 +3,14 @@ import useUser from "../../hooks/useUser";
 import {useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
 import "./ReviewForm.css"
+import {ReviewRequest, ReviewService} from "../../lib/Review";
 
 export function ReviewForm() {
     const {user} = useUser();
     const {courseId} = useParams();
     const [course, setCourse] = useState<Course | null>(null);
     const [rating, setRating] = useState<number | null>(null);
+    const [opinion, setOpinion] = useState<string>("");
 
     useEffect(() => {
         CourseService.fetchCourse(courseId!)
@@ -36,13 +38,23 @@ export function ReviewForm() {
         );
     }
 
+    function handleClick() {
+        if (rating == null) return; // todo: indicate to the user that they need to rate numerically
+        const request: ReviewRequest = {
+            text: opinion,
+            rating: rating
+        }
+        ReviewService.postReview(request, courseId!);
+    }
+
     return <div className="review-form">
         <h1>Napisz opinię {course !== null && ("do kursu " + course.name)}</h1>
-        <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"></textarea>
-        <p>{rating !== null ? "Twoja ocena: " + rating: "Wybierz ocenę:"} </p>
+        <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"
+                  onChange={e => setOpinion(e.target.value)}></textarea>
+        <p>{rating !== null ? "Twoja ocena: " + rating : "Wybierz ocenę:"} </p>
         <div><RatingSlider/></div>
         <div>
-            <button>Zatwierdź</button>
+            <button onClick={handleClick}>Zatwierdź</button>
         </div>
     </div>
 }

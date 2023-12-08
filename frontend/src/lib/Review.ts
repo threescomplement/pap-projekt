@@ -13,6 +13,11 @@ export interface Review {
     _links: any;
 }
 
+export interface ReviewRequest {
+    text: string,
+    rating: number
+}
+
 
 async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
     console.log(course._links.reviews.href)
@@ -27,6 +32,11 @@ async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: 
         .then(r=>r.json());
 }
 
+async function postReview(request: ReviewRequest, courseId: string) {
+    api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews"), request)
+        .catch(e => console.log(e));
+}
+
 async function fetchReviewsByTeacher(): Promise<Review[]> {
     return getDummyReviews();
 }
@@ -38,6 +48,7 @@ async function fetchReviewsByUser(): Promise<Review[]> {
 export const ReviewService = {
     fetchReviewsByCourse,
     fetchReviewByCourseIdAndAuthor,
+    postReview,
     fetchReviewsByTeacher,
     fetchReviewsByUser
 }

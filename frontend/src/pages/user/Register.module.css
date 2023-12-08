@@ -1,0 +1,44 @@
+.registerContainer {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+}
+
+.registerContainer h1 {
+    color: #333;
+    font-size: 2.5rem;
+    text-align: left;
+}
+
+.registerContainer label p {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 0.5rem;
+}
+
+.registerContainer label input {
+    display: block;
+    width: 40%;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1em;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.registerContainer a {
+    color: #4169E1;
+    text-decoration: none;
+}
+
+.registerContainer a:hover {
+    color: #6495ED;
+}
+
+.registerContainer input[type="submit"] {
+    cursor: pointer;
+    background-color: #4169E1;
+    color: white;
+    border: none;
+    font-size: 1em;
+    padding: 0.5rem 1rem;
+}

@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.utils.WithMockUser;
 
 

@@ -5,6 +5,7 @@ import {CommentList} from "./CommentList";
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
 import {useParams} from "react-router-dom";
+import useUser from "../hooks/useUser";
 
 interface ReviewDetailsProps {
     review: Review
@@ -15,12 +16,16 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     const [comments, setComments] = useState<ReviewComment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
 
-    function reloadCourses() {
+    useEffect(() => {
+        reloadComments()
+    }, [review, courseId, authorUsername]);
+
+    function reloadComments() {
         CommentService.fetchCommentsByReview(review)
             .then(c => {
-                console.log(comments)
-                setComments(c)
+                setComments(c);
             })
+            .catch(e => console.log(e));
     }
 
     function handleCommentSubmit() {
@@ -28,14 +33,15 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
         const request: CommentRequest = {
             text: newComment
         }
+
         CommentService.postComment(request, courseId!, authorUsername!)
-            .then(_ => {
-                reloadCourses();
+            .then(() => {
+                reloadComments();
                 setNewComment("")
             })
+            .catch(e => console.log(e));
     }
 
-    reloadCourses();
     return <div>
         <ReviewCardWithoutLink review={review}/>
         <CommentList comments={comments}/>

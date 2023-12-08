@@ -22,8 +22,11 @@ async function fetchCommentsByReview(review: Review): Promise<ReviewComment[]> {
 }
 
 async function postComment(request: CommentRequest, courseId: string, reviewAuthor: string) {
-    api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + reviewAuthor + "/comments"), request)
-        .catch(e => console.log(e));
+    try {
+        await api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + reviewAuthor + "/comments"), request)
+    } catch (e) {
+        console.log(e)
+    }
 }
 
 export const CommentService = {

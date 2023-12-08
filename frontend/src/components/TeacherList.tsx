@@ -2,7 +2,7 @@ import {Teacher} from "../lib/Teacher";
 import React from "react";
 import {Link} from "react-router-dom";
 import {NUM_REVIEWS_PLACEHOLDER} from "../lib/utils";
-import "./CourseList.css"
+import "./CourseList.module.css"
 
 interface TeacherListProps {
     teachers: Teacher[]

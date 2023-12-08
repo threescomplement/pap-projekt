@@ -1,0 +1,77 @@
+.teachersContainer {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+}
+
+.teachersContainer h1 {
+    color: #333;
+    font-size: 2.5rem;
+    text-align: left;
+}
+
+.teachersContainer input[type="text"] {
+    display: block;
+    width: 60%;
+    padding: .75rem;
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    box-sizing: border-box;
+}
+
+.filterContainer {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-bottom: 2rem;
+}
+
+.teachersContainer select {
+    display: block;
+    width: 100%;
+    height: 45px;
+    margin: 10px;
+    padding: .375rem .75rem;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    font-size: 1em;
+}
+
+.teacherList table {
+    width: 100%;
+    margin-left: 0;
+    border-collapse: collapse;
+    margin-top: 3rem;
+}
+
+.teacherList th, .teacherList td {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    text-align: left;
+}
+
+.teacherList th {
+    background-color: #6495ED;
+    color: white;
+}
+
+.teacherList tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.teacherList tr:hover {
+    background-color: #ddd;
+}
+
+.teacherList a {
+    color: #333;
+    text-decoration: none;
+}
+
+.teacherList a:hover {
+    color: #4169E1;
+}

@@ -71,7 +71,7 @@ class CourseControllerTest {
                 .andExpect(jsonPath("$._embedded.courses[0].level").value(course_1.getLevel()))
                 .andExpect(jsonPath("$._embedded.courses[0].module").value(course_1.getModule()))
                 .andExpect(jsonPath("$._embedded.courses[0].averageRating").value(course_1.getAverageRating()))
-                .andExpect(jsonPath("$._embedded.courses[0].teacherId").doesNotExist())
+                .andExpect(jsonPath("$._embedded.courses[0].teacherId").value(course_1.getTeacherId()))
                 .andExpect(jsonPath("$._embedded.courses[1].id").value(course_2.getId()))
                 .andExpect(jsonPath("$._embedded.courses[1].name").value(course_2.getName()))
                 .andExpect(jsonPath("$._embedded.courses[1].language").value(course_2.getLanguage()))
@@ -79,7 +79,7 @@ class CourseControllerTest {
                 .andExpect(jsonPath("$._embedded.courses[1].level").value(course_2.getLevel()))
                 .andExpect(jsonPath("$._embedded.courses[1].module").value(course_2.getModule()))
                 .andExpect(jsonPath("$._embedded.courses[1].averageRating").value(course_2.getAverageRating()))
-                .andExpect(jsonPath("$._embedded.courses[1].teacherId").doesNotExist());
+                .andExpect(jsonPath("$._embedded.courses[1].teacherId").value(course_2.getTeacherId()));
 
 
     }

@@ -1,0 +1,19 @@
+.homeContainer {
+    text-align: left;
+    font-family: Arial, sans-serif;
+    margin: 2rem auto;
+    padding: 1rem;
+    width: 80%;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.homeContainer h1 {
+    color: #333;
+    font-size: 2.5rem;
+}
+
+.homeContainer p {
+    color: #666;
+    font-size: 1.2rem;
+}

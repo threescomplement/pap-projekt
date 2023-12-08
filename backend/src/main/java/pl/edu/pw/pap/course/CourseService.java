@@ -17,21 +17,16 @@ public class CourseService {
     private final TeacherRepository teacherRepository;
 
 
-    public CourseDTO convertToDto(Course course){
-        // An additional call to the database is bad but otherwise I'd have to make an averageRating function which
-        // Would have already been done earlier I imagine
-        // TODO: Consider getting the average rating of a course by just counting the ratings from course.getRatings()
-        var reviews= course.getReviews();
+    public CourseDTO convertToDto(Course course) {
+        var reviews = course.getReviews();
         double averageRating = 0;
         int ratingSum = 0;
-        for (var review: reviews){
+        for (var review : reviews) {
             ratingSum += review.getOverallRating();
         }
-        if (!reviews.isEmpty()){
-            averageRating = (double) ratingSum /(reviews.size());
+        if (!reviews.isEmpty()) {
+            averageRating = (double) ratingSum / (reviews.size());
         }
-
-
 
 
         return CourseDTO.builder()
@@ -50,10 +45,10 @@ public class CourseService {
         return courseRepository.findByIdWithRating(courseId);
     }
 
-    public List<CourseDTO> getTeacherCourses(Long teacherId){
+    public List<CourseDTO> getTeacherCourses(Long teacherId) {
         var teacher = teacherRepository
-                    .findById(teacherId)
-                    .orElseThrow( () -> new TeacherNotFoundException("No teacher with given id: " + teacherId));
+                .findById(teacherId)
+                .orElseThrow(() -> new TeacherNotFoundException("No teacher with given id: " + teacherId));
         return teacher
                 .getCourses()
                 .stream()

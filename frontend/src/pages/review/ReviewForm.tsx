@@ -46,7 +46,8 @@ export function ReviewForm() {
             rating: rating
         }
         ReviewService.postReview(request, courseId!);
-        navigate(("/courses/" + courseId));
+        navigate(("/courses/" + courseId + "/thankyou"));
+        // todo: remove this page from history so that clicking back doesn't return to it
     }
 
     return <div className="review-form">

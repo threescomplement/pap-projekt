@@ -20,7 +20,7 @@ export function ReviewForm() {
             })
     }, []);
 
-    function RatingSlider() {
+    function RatingSlider() { // todo: swap this for a nicer one
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = Math.round(parseFloat(e.target.value));
             setRating(value);

@@ -1,7 +1,6 @@
 package pl.edu.pw.pap.comment;
 
 import com.jayway.jsonpath.JsonPath;
-import net.minidev.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import pl.edu.pw.pap.PapApplication;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
-import pl.edu.pw.pap.review.AddReviewRequest;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.security.AuthService;
@@ -27,10 +25,8 @@ import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 
-import java.util.*;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
@@ -64,8 +60,8 @@ public class CommentIntegrationTest {
     private static final User USER_1 = new User("user_1", "user@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true); // password
     private static final User USER_2 = new User("user_2", "user2@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true); // password
     private static final User USER_3 = new User("user_3", "user3@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true); // password
-    private static final User USER_4 = new User("user_4", "use4@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true); // password
-    private static final User ADMIN = new User("admin", "user2@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_ADMIN", true); // password
+    private static final User USER_4 = new User("user_4", "user4@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true); // password
+    private static final User ADMIN = new User("admin", "admin@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_ADMIN", true); // password
 
     private static final Teacher TEACHER_1 = new Teacher("mgr. Jan Kowalski");
     private static final Teacher TEACHER_2 = new Teacher("mgr. Ann Nowak");
@@ -85,7 +81,7 @@ public class CommentIntegrationTest {
     private static final Comment COMMENT_21_1 = new Comment("przesada", REVIEW_21, USER_1);
     private static final Comment COMMENT_21_2 = new Comment("trudne serio", REVIEW_21, USER_2);
     private static final Comment COMMENT_21_3 = new Comment("oj tak", REVIEW_21, USER_3);
-    // private static final Comment COMMENT_24_3 = new Comment("zgadzam się", REVIEW_24, USER_3);
+    // private static final Comment COMMENT_24_3 = new Comment("tak jest", REVIEW_24, USER_3);
 
     private void addDummyData() {
         teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2));
@@ -184,9 +180,7 @@ public class CommentIntegrationTest {
     public void getCommentsByUsernameNotExists() {
         var response = restTemplate.exchange(buildUrl("/api/users/nope/comments", port),
                 HttpMethod.GET, new HttpEntity<>(headers), String.class);
-        // TODO: what is the behaviour we want? fail or succeed empty?
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
-        fail();
     }
 
     @Test
@@ -241,8 +235,9 @@ public class CommentIntegrationTest {
     @Test
     public void addCommentReviewNotExists() {
         addDummyData();
+        String endpoint = "/api/courses/4/reviews/user_1/comments";
         var request = new AddCommentRequest("ok");
-        var response = restTemplate.exchange(buildUrl("/api/courses/4/reviews/user_1/comments", port),
+        var response = restTemplate.exchange(buildUrl(endpoint,  port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
@@ -295,19 +290,21 @@ public class CommentIntegrationTest {
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
     }
     @Test
-    public void deleteCommentDifferentUser() {;
+    public void deleteCommentDifferentUser() {
         addDummyData();
         String endpoint = "/api/comments/1"; // by user_3
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
-        // TODO: what do we expect?
         assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
-        fail();
+        // make sure comment was not deleted
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
     @Test
-    public void deleteCommentExistsGoodUser() {
+    public void deleteCommentByAuthor() {
         addDummyData();
-        String endpoint = "/api/comments/2";
+        String endpoint = "/api/comments/2"; // by user_1
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());

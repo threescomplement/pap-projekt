@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentController;
+import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.comment.UnauthorizedException;
 import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.course.CourseController;
@@ -113,6 +114,16 @@ public class ReviewController {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<Exception> handleUnauthorized(Exception e) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Exception> handleForbidden(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e);
+    }
+
+    @ExceptionHandler(DuplicateReviewException.class)
+    public ResponseEntity<Exception> handleDuplicateReview(Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
     }
 
     private ReviewDTO addLinks(ReviewDTO review) {

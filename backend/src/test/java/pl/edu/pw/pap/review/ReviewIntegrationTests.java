@@ -8,10 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import pl.edu.pw.pap.PapApplication;
@@ -231,10 +228,10 @@ public class ReviewIntegrationTests {
     @Test
     public void addDuplicateReview() {
         addDummyData();
-        String endpoint = "/api/courses/1/reviews/";
+        String endpoint = "/api/courses/1/reviews";
         var request = new AddReviewRequest("test_opinion", 6);
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode()); // 400 BAD REQUEST
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()); // 400 BAD REQUEST
     }
 
     // DELETE TESTS
@@ -253,7 +250,7 @@ public class ReviewIntegrationTests {
     @Test
     public void deleteReviewNotExists() {
         addDummyData();
-        String endpoint = "/api/courses/2/reviews/user_3";
+        String endpoint = "/api/courses/2/reviews/user_1";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
     }
@@ -274,7 +271,6 @@ public class ReviewIntegrationTests {
     @Test
     public void deleteReviewDifferentUser() {
         addDummyData();
-        adminLogin();
         String endpoint = "/api/courses/1/reviews/user_2";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode()); // FORBIDDEN

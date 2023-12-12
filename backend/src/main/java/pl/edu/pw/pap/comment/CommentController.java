@@ -85,6 +85,11 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Exception> handleForbidden(Exception e) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e);
+    }
+
     private CommentDTO addLinks(CommentDTO comment) {
         return comment.add(
                 linkTo(methodOn(CommentController.class).getCommentById(comment.getId())).withSelfRel(),

@@ -35,6 +35,12 @@ async function postReview(request: ReviewRequest, courseId: string) {
         .catch(e => console.log(e));
 }
 
+async function deleteReview(courseId: string, username: string) {
+    api.delete((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + username))
+        //todo: error handling?? or is it handled at the backend level completely?
+        .catch(e => console.log(e));
+}
+
 async function fetchReviewsByTeacher(): Promise<Review[]> {
     return getDummyReviews();
 }
@@ -47,6 +53,7 @@ export const ReviewService = {
     fetchReviewsByCourse,
     fetchReviewByCourseIdAndAuthor,
     postReview,
+    deleteReview,
     fetchReviewsByTeacher,
     fetchReviewsByUser
 }

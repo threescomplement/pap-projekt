@@ -1,6 +1,8 @@
 .loginContainer {
     padding: 2rem;
     font-family: Arial, sans-serif;
+    margin: 0 auto;
+    width: 80%;
 }
 
 .loginContainer h1 {
@@ -30,6 +32,7 @@
     background-color: #4169E1;
     color: white;
     border: none;
+    border-radius: 0.8rem;
     font-size: 1em;
     padding: 0.5rem 1rem;
 }

@@ -33,6 +33,28 @@ Nginx obsługuje komunikację HTTPS, zapytania klientów do subdomen `mgarbowski
 Używamy certyfikatów wystawionych przez [Let's Encrypt](https://letsencrypt.org/). Za pozyskiwanie i okresowe
 odświeżanie certyfikatów odpowiada program [certbot](https://certbot.eff.org/)
 
+### Proxy pass
+Dla poprawnego generowania linków przez Spring HATEOAS trzeba ustawić odpowiednie nagłówki przy przekierowywaniu
+zapytań przez reverse proxy do serwera aplikacyjnego. Spring z ustawionym parametrem 
+`server.forward-headers-strategy: framework` buduje link na podstawie nagłówków (tak że linki zaczynają się od
+`http://api.pap.mgarbowski.pl` a nie od `http://pap-backend:8080`)
+
+Konfiguracja Nginx
+```
+server {
+        server_name api.pap.mgarbowski.pl;
+        
+        location / {
+                proxy_pass http://pap-backend:8080/;
+                proxy_set_header Host $host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    ...
+}
+```
+
 ### Serwer HTTP
 Kolejna instancja Nginx serwująca statyczne pliki aplikacji frontendowej - aplikacja React spakowana do jednego
 pliku `.js`.

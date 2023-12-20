@@ -4,11 +4,10 @@ import api from "./api";
 
 
 export interface Review {
-    id: string;
     authorUsername: string;
     opinion: string;
-    created: string
     overallRating: string;
+    created: string
     _links: any;
 }
 

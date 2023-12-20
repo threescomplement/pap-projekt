@@ -58,7 +58,7 @@ function ReviewList({reviews}: ReviewListProps) {
         {reviews
             //todo .sort by timestamps
             .map((r) => (
-                <li key={r.id}>
+                <li key={r.authorUsername}>
                     <ReviewCardWithLink review={r}/>
                 </li>
             ))}

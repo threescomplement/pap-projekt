@@ -30,7 +30,7 @@ public class PapApplication {
         SpringApplication.run(PapApplication.class, args);
     }
 
-//    @Bean
+    @Bean
     @Profile({"dev", "dev-postgres"})
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,

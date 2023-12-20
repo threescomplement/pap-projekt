@@ -1,4 +1,4 @@
-import {getStoredUser, User} from "./User";
+import UserService, {User} from "./User";
 
 const defaultHeaders = {
     'Accept': 'application/json',
@@ -23,7 +23,7 @@ export function buildParamsString(queryParams: any): string {
 }
 
 function myFetch(endpoint: string, headers: any, body: any, method: string, queryParams: any = null, withAuth = true): Promise<any> {
-    const user = getStoredUser();
+    const user = UserService.getStoredUser();
     const auth = (withAuth && user != null) ? authHeader(user) : null;
     const requestBody = (body == null) ? null : JSON.stringify(body);
     const params = (queryParams != null) ? buildParamsString(queryParams) : "";

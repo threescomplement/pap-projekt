@@ -1,7 +1,7 @@
 import {FormEvent, useReducer} from "react";
-import {attemptLogin, LoginRequest} from "../../lib/User";
+import UserService, {LoginRequest} from "../../lib/User";
 import useUser from "../../hooks/useUser";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
 import styles from "./Login.module.css"
 
@@ -18,7 +18,7 @@ export default function Login() {
     function handleFormSubmit(event: FormEvent) {
         event.preventDefault();
         console.log(formData);
-        attemptLogin(formData)
+        UserService.attemptLogin(formData)
             .then(user => {
                 setUser(user)
                 navigate("/user")
@@ -38,6 +38,7 @@ export default function Login() {
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
             <input type="submit" value="Log In"/>
+            <Link to={"/user/forgot-password"}>Nie pamiętam hasła</Link>
         </form>
     </div>
 }

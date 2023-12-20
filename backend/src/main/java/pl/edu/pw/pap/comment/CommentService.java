@@ -60,7 +60,7 @@ public class CommentService {
         var comment = maybeComment.get();
         var user = maybeUser.get();
         if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN")))) {
-            return; // TODO not handling case where user is forbidden from deleting
+            throw(new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
         commentRepository.delete(comment);
@@ -74,6 +74,9 @@ public class CommentService {
 
 
     public List<CommentDTO> getCommentsByUsername(String username) {
+        userRepository.findByUsername(username).orElseThrow(
+                () -> new UserNotFoundException("No user with username: " + username)
+        );
         return commentRepository
                 .findCommentsByUser_Username(username)
                 .stream()

@@ -26,10 +26,11 @@ function myFetch(endpoint: string, headers: any, body: any, method: string, quer
     const user = getStoredUser();
     const auth = (withAuth && user != null) ? authHeader(user) : null;
     const requestBody = (body == null) ? null : JSON.stringify(body);
-    const params = (queryParams != null) ? buildParamsString(queryParams) : ""
-    const requestUrl = process.env.REACT_APP_API_ROOT != null && endpoint.indexOf(process.env.REACT_APP_API_ROOT) !== -1 ?
+    const params = (queryParams != null) ? buildParamsString(queryParams) : "";
+    const apiRoot = process.env.REACT_APP_API_ROOT!;
+    const requestUrl = endpoint.startsWith("http") ?
         endpoint + params
-        : process.env.REACT_APP_API_ROOT + endpoint + params;
+        : apiRoot + endpoint + params;
 
     return fetch(requestUrl, {
         method: method,

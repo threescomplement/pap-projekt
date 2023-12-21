@@ -86,8 +86,9 @@ async function sendResetPasswordEmail(email: string): Promise<void> {
     //TODO
 }
 
-async function resetPassword(newPassword: string, resetPasswordToken: string): Promise<void> {
+async function resetPassword(newPassword: string, resetPasswordToken: string): Promise<boolean> {
     //TODO
+    return false;
 }
 
 const UserService = {

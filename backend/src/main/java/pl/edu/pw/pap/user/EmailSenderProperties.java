@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Configuration
 @ConfigurationProperties("email-verification")
-public class EmailVerificationProperties {
+public class EmailSenderProperties {
     private String confirmBaseUrl;
 }

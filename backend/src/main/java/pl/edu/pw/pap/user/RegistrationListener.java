@@ -15,7 +15,7 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
     private final Logger log = LoggerFactory.getLogger(RegistrationListener.class);
     private final UserService userService;
     private final JavaMailSender emailSender;
-    private final EmailVerificationProperties properties;
+    private final EmailSenderProperties properties;
     @Value("${spring.mail.username}")
     private String senderEmail;
 

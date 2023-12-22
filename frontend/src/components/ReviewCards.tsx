@@ -39,12 +39,8 @@ export function ReviewCardWithoutLink({review}: ReviewCardProps) {
 function createDeleteHandler(courseId: string, username: string): React.MouseEventHandler {
     return async event => {
         event.preventDefault();
-        try {
-            await ReviewService.deleteReview(courseId, username);
-            alert('Review deleted successfully!');
-        } catch (error) {
-            console.error(`Failed to delete review: `, error);
-            alert('Failed to delete review! Please try again...')
-        }
+        let deleted = await ReviewService.deleteReview(courseId, username);
+        const feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
+        alert(feedback);
     };
 }

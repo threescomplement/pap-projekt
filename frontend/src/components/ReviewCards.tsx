@@ -40,11 +40,13 @@ export function ReviewCardWithoutLink({review}: ReviewCardProps) {
 function createDeleteHandler(courseId: string, username: string, refresher: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
-        ReviewService.deleteReview(courseId, username)
-            .then(deleted => {
-                let feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
-                alert(feedback);
-                refresher();
-            })
+        if (window.confirm("Czy na pewno chcesz usunąć swoją opinię?")) {
+            ReviewService.deleteReview(courseId, username)
+                .then(deleted => {
+                    let feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
+                    alert(feedback);
+                    refresher();
+                })
+        }
     }
 }

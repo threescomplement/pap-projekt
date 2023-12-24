@@ -42,7 +42,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     }
 
     return <div>
-        <ReviewCardWithoutLink review={review}/>
+        <ReviewCardWithoutLink review={review} refreshParent={reloadComments}/>
         <CommentList comments={comments}/>
         <div className="add-comment-container">
             <textarea

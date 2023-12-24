@@ -10,16 +10,23 @@ export default function CourseDetails(course: Course) {
     const [teacherLoaded, setTeacherLoaded] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
 
+    function reloadReviews() {
+        ReviewService.fetchReviewsByCourse(course)
+            .then(r => {
+                setReviews(r);
+            })
+            .catch(e => console.log(e));
+    }
+
     useEffect(() => {
         TeacherService.fetchTeacherByCourse(course)
             .then(t => {
                 setTeacher(t);
                 setTeacherLoaded(true);
             })
-        ReviewService.fetchReviewsByCourse(course)
-            .then(r => {
-                setReviews(r);
-            })
+            .catch(e => console.log(e));
+
+        reloadReviews();
 
     }, [course]);
 
@@ -34,7 +41,7 @@ export default function CourseDetails(course: Course) {
 
     const reviewContent = reviews.length === 0
         ? <div>Ten kurs nie ma jeszcze opinii</div>
-        : <div>{<ReviewList reviews={reviews}/>}</div>
+        : <div>{<ReviewList reviews={reviews} refreshParent={reloadReviews}/>}</div>
 
     return <>
         <h1>{course.name}</h1>
@@ -51,15 +58,16 @@ export default function CourseDetails(course: Course) {
 
 interface ReviewListProps {
     reviews: Review[]
+    refreshParent: Function
 }
 
-function ReviewList({reviews}: ReviewListProps) {
+function ReviewList({reviews, refreshParent}: ReviewListProps) {
     return <ul>
         {reviews
             //todo .sort by timestamps
             .map((r) => (
                 <li key={r.authorUsername}>
-                    <ReviewCardWithLink review={r}/>
+                    <ReviewCardWithLink review={r} refreshParent={refreshParent}/>
                 </li>
             ))}
     </ul>

@@ -7,15 +7,16 @@ import {User} from "../lib/User";
 
 interface ReviewCardProps {
     review: Review;
+    refreshParent: Function
 }
 
-export function ReviewCardWithLink({review}: ReviewCardProps) {
+export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
     const {courseId} = useParams()
     const user: User = useUser().user!;
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
     const ownComment: boolean = review.authorUsername === user.username;
     const modificationContent = (ownComment || isAdmin) ?
-        <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername)}/> : null; // todo
+        <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent)}/> : null;
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
@@ -36,11 +37,14 @@ export function ReviewCardWithoutLink({review}: ReviewCardProps) {
 }
 
 
-function createDeleteHandler(courseId: string, username: string): React.MouseEventHandler {
+function createDeleteHandler(courseId: string, username: string, refresher: Function): React.MouseEventHandler {
     return async event => {
-        event.preventDefault();
-        let deleted = await ReviewService.deleteReview(courseId, username);
-        const feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
-        alert(feedback);
-    };
+        event.preventDefault()
+        ReviewService.deleteReview(courseId, username)
+            .then(deleted => {
+                let feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
+                alert(feedback);
+                refresher();
+            })
+    }
 }

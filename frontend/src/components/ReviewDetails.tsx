@@ -3,7 +3,7 @@ import React, {useEffect, useState, useCallback} from "react";
 import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewComment";
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 
 interface ReviewDetailsProps {
     review: Review
@@ -13,7 +13,8 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     const {courseId, authorUsername} = useParams();
     const [comments, setComments] = useState<ReviewComment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
-    const memorizedReloadComments = useCallback(reloadComments, [review])
+    const memorizedReloadComments = useCallback(reloadComments, [review]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         memorizedReloadComments()
@@ -41,8 +42,10 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
             .catch(e => console.log(e));
     }
 
+    function goBack() {navigate(-1)}
+
     return <div>
-        <ReviewCardWithoutLink review={review} refreshParent={reloadComments}/>
+        <ReviewCardWithoutLink review={review} refreshParent={goBack}/>
         <CommentList comments={comments}/>
         <div className="add-comment-container">
             <textarea
@@ -63,18 +66,18 @@ export function CommentList({comments}: CommentListProps) {
     return <ul>
         {comments //todo: sort
             .map(c => <li
-                key={c.id}><CommentCard review={c}/>
+                key={c.id}><CommentCard comment={c}/>
             </li>)}
     </ul>
 }
 
 interface CommentCardProps {
-    review: ReviewComment;
+    comment: ReviewComment;
 }
 
-function CommentCard({review}: CommentCardProps) {
+function CommentCard({comment}: CommentCardProps) {
     return <>
-        <div>{review.authorUsername}</div>
-        <div>{review.text}</div>
+        <div>{comment.authorUsername}</div>
+        <div>{comment.text}</div>
     </>
 }

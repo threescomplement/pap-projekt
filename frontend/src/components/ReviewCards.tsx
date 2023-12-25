@@ -21,8 +21,8 @@ export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) 
     const {courseId} = useParams()
     const user: User = useUser().user!;
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
-    const ownComment: boolean = review.authorUsername === user.username;
-    const modificationContent = (ownComment || isAdmin) ?
+    const isReviewAuthor: boolean = review.authorUsername === user.username;
+    const modificationContent = (isReviewAuthor || isAdmin) ?
         <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent)}/> : null;
 
     return <>

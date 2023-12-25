@@ -29,7 +29,15 @@ async function postComment(request: CommentRequest, courseId: string, reviewAuth
     }
 }
 
+async function deleteComment(commentId: string) {
+    const response = await api.delete((process.env.REACT_APP_API_ROOT + "/comments/" + commentId));
+    console.log(response);
+    return response.ok;
+}
+
+
 export const CommentService = {
     fetchCommentsByReview,
-    postComment
+    postComment,
+    deleteComment
 }

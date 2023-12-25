@@ -4,6 +4,9 @@ import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewCommen
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
 import {useParams, useNavigate} from "react-router-dom";
+import useUser from "../hooks/useUser";
+import {User} from "../lib/User";
+import {EditBar} from "./EditBar";
 
 interface ReviewDetailsProps {
     review: Review
@@ -46,7 +49,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 
     return <div>
         <ReviewCardWithoutLink review={review} refreshParent={goBack}/>
-        <CommentList comments={comments}/>
+        <CommentList comments={comments} refreshParent={reloadComments}/>
         <div className="add-comment-container">
             <textarea
                 placeholder="Twój komentarz"
@@ -59,25 +62,48 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 }
 
 interface CommentListProps {
-    comments: ReviewComment[]
+    comments: ReviewComment[],
+    refreshParent: Function
 }
 
-export function CommentList({comments}: CommentListProps) {
+export function CommentList({comments, refreshParent}: CommentListProps) {
     return <ul>
         {comments //todo: sort
             .map(c => <li
-                key={c.id}><CommentCard comment={c}/>
+                key={c.id}><CommentCard comment={c} refreshParent={refreshParent}/>
             </li>)}
     </ul>
 }
 
 interface CommentCardProps {
     comment: ReviewComment;
+    refreshParent: Function;
 }
 
-function CommentCard({comment}: CommentCardProps) {
+function CommentCard({comment, refreshParent}: CommentCardProps) {
+    const user: User = useUser().user!
+    const isAdmin = user.roles[0] === "ROLE_ADMIN";
+    const isCommentAuthor = user.username === comment.authorUsername;
+    const modificationContent = (isAdmin || isCommentAuthor) ?
+        <EditBar handleDelete={createCommentDeleteHandler(comment.id, refreshParent)}/> : null;
+
     return <>
-        <div>{comment.authorUsername}</div>
+        <div>{comment.authorUsername} {modificationContent}</div>
         <div>{comment.text}</div>
     </>
+}
+
+
+function createCommentDeleteHandler(commentId: string, afterDeleting: Function): React.MouseEventHandler {
+    return async event => {
+        event.preventDefault()
+        if (window.confirm("Czy na pewno chcesz usunąć swój komentarz?")) {
+            CommentService.deleteComment(commentId)
+                .then(deleted => {
+                    let feedback = deleted ? 'Comment deleted successfully!' : 'Failed to delete comment! Please try again...';
+                    alert(feedback);
+                    afterDeleting();
+                })
+        }
+    }
 }

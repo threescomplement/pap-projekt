@@ -1,6 +1,6 @@
 import {Course} from "../lib/Course";
 import {Teacher, TeacherService} from "../lib/Teacher";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {Review, ReviewService} from "../lib/Review";
 import {ReviewCardWithLink} from "./ReviewCards";
@@ -9,6 +9,7 @@ export default function CourseDetails(course: Course) {
     const [teacher, setTeacher] = useState<Teacher | null>(null);
     const [teacherLoaded, setTeacherLoaded] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
+    const memorizedReloadReviews = useCallback(reloadReviews, [course])
 
     function reloadReviews() {
         ReviewService.fetchReviewsByCourse(course)
@@ -26,9 +27,9 @@ export default function CourseDetails(course: Course) {
             })
             .catch(e => console.log(e));
 
-        reloadReviews();
+        memorizedReloadReviews();
 
-    }, [course]);
+    }, [course, memorizedReloadReviews]);
 
     const teacherContent = (teacher != null && teacherLoaded)
         ? <Link className="TeacherLink" to={"/teachers/" + course.teacherId}> {teacher.name} </Link>

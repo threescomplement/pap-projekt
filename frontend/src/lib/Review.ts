@@ -38,7 +38,6 @@ async function deleteReview(courseId: string, username: string) {
     const response = await api.delete((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + username));
     console.log(response);
     return response.ok;
-    //todo: error handling?? or is it handled at the backend level completely?
 }
 
 async function fetchReviewsByTeacher(): Promise<Review[]> {

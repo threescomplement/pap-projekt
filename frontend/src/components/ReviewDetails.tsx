@@ -100,6 +100,7 @@ function createCommentDeleteHandler(commentId: string, afterDeleting: Function):
         if (window.confirm("Czy na pewno chcesz usunąć swój komentarz?")) {
             CommentService.deleteComment(commentId)
                 .then(deleted => {
+                    //todo: should we even display the feedback? is it frustrating to click through the popups?
                     let feedback = deleted ? 'Comment deleted successfully!' : 'Failed to delete comment! Please try again...';
                     alert(feedback);
                     afterDeleting();

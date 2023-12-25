@@ -4,11 +4,10 @@ import api from "./api";
 
 
 export interface Review {
-    id: string;
     authorUsername: string;
     opinion: string;
-    created: string
     overallRating: string;
+    created: string
     _links: any;
 }
 
@@ -35,6 +34,13 @@ async function postReview(request: ReviewRequest, courseId: string) {
         .catch(e => console.log(e));
 }
 
+async function deleteReview(courseId: string, username: string) {
+    const response = await api.delete((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + username));
+    console.log(response);
+    return response.ok;
+    //todo: error handling?? or is it handled at the backend level completely?
+}
+
 async function fetchReviewsByTeacher(): Promise<Review[]> {
     return getDummyReviews();
 }
@@ -47,6 +53,7 @@ export const ReviewService = {
     fetchReviewsByCourse,
     fetchReviewByCourseIdAndAuthor,
     postReview,
+    deleteReview,
     fetchReviewsByTeacher,
     fetchReviewsByUser
 }

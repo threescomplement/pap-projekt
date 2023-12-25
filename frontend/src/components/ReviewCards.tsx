@@ -11,6 +11,14 @@ interface ReviewCardProps {
 }
 
 export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
+    return <div>
+        {/* todo: if deleted here, route one page back*/}
+        <ReviewCardWithoutLink review={review} refreshParent={refreshParent}/>
+        {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
+    </div>
+}
+
+export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) {
     const {courseId} = useParams()
     const user: User = useUser().user!;
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
@@ -22,22 +30,11 @@ export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
         <div>{review.authorUsername} {modificationContent}</div>
         <div>{"Ocena: " + review.overallRating}</div>
         <div>{review.opinion}</div>
-        <div>
-            {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
-        </div>
-    </>
-}
-
-export function ReviewCardWithoutLink({review}: ReviewCardProps) {
-    return <>
-        <div>{review.authorUsername}</div>
-        <div>{"Ocena: " + review.overallRating}</div>
-        <div>{review.opinion}</div>
     </>
 }
 
 
-function createDeleteHandler(courseId: string, username: string, refresher: Function): React.MouseEventHandler {
+function createDeleteHandler(courseId: string, username: string, afterDeleting: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
         if (window.confirm("Czy na pewno chcesz usunąć swoją opinię?")) {
@@ -45,7 +42,7 @@ function createDeleteHandler(courseId: string, username: string, refresher: Func
                 .then(deleted => {
                     let feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
                     alert(feedback);
-                    refresher();
+                    afterDeleting();
                 })
         }
     }

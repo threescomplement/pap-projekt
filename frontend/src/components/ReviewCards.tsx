@@ -12,7 +12,6 @@ interface ReviewCardProps {
 
 export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
     return <div>
-        {/* todo: if deleted here, route one page back*/}
         <ReviewCardWithoutLink review={review} refreshParent={refreshParent}/>
         {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
     </div>

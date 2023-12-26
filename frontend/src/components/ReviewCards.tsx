@@ -1,5 +1,5 @@
 import {Review, ReviewService} from "../lib/Review";
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {EditBar} from "./EditBar";
 import React from "react";
 import useUser from "../hooks/useUser";
@@ -20,10 +20,17 @@ export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
 export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) {
     const {courseId} = useParams()
     const user: User = useUser().user!;
+    const navigate = useNavigate();
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
+    /* todo: should admins be able to edit comments or just delete them? if they can edit, the way things are edited
+        have to be changed quite a bit since posting as useUser() will not work here...*/
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
-        <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent)}/> : null;
+        <EditBar
+            handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent)}
+            handleEdit={(e)=> navigate("/courses/"+courseId+"/writeReview")}
+            canEdit={isReviewAuthor}
+        /> : null;
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>

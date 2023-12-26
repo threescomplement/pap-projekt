@@ -4,13 +4,13 @@ import React, {MouseEventHandler} from "react";
 
 interface EditBarProps {
     handleDelete: MouseEventHandler<HTMLButtonElement>
+    handleEdit: MouseEventHandler<HTMLButtonElement>
+    canEdit: boolean
 }
 
-export function EditBar({handleDelete}: EditBarProps) {
+export function EditBar({handleDelete, handleEdit, canEdit}: EditBarProps) {
     return <div>
-        <button><MdEdit/></button>
-        <button onClick={(event) => {
-            handleDelete(event);
-        }}><MdDeleteForever/></button>
+        {canEdit ? <button onClick={event => handleEdit(event)}><MdEdit/></button> : null}
+        <button onClick={(event) => {handleDelete(event)}}><MdDeleteForever/></button>
     </div>
 }

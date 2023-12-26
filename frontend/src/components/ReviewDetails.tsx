@@ -85,7 +85,9 @@ function CommentCard({comment, refreshParent}: CommentCardProps) {
     const isAdmin = user.roles[0] === "ROLE_ADMIN";
     const isCommentAuthor = user.username === comment.authorUsername;
     const modificationContent = (isAdmin || isCommentAuthor) ?
-        <EditBar handleDelete={createCommentDeleteHandler(comment.id, refreshParent)}/> : null;
+        <EditBar handleDelete={createCommentDeleteHandler(comment.id, refreshParent)}
+                 handleEdit={(e) => true}
+                 canEdit={isCommentAuthor}/> : null; //todo
 
     return <>
         <div>{comment.authorUsername} {modificationContent}</div>

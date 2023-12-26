@@ -2,21 +2,33 @@ import {useNavigate, useParams} from "react-router-dom";
 import {ChangeEvent, useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
 import "./ReviewForm.css"
-import {ReviewRequest, ReviewService} from "../../lib/Review";
+import {Review, ReviewRequest, ReviewService} from "../../lib/Review";
+import useUser from "../../hooks/useUser";
 
 export function ReviewForm() {
-    const navigate = useNavigate();
     const {courseId} = useParams();
+    const username = useUser().user!.username;
     const [course, setCourse] = useState<Course | null>(null);
     const [rating, setRating] = useState<number | null>(null);
     const [opinion, setOpinion] = useState<string>("");
+    const [previousReview, setPreviousReview] = useState<Review | null>(null);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         CourseService.fetchCourse(courseId!)
             .then(c => {
                 setCourse(c);
             })
-    }, [courseId]);
+
+        ReviewService.fetchReviewByCourseIdAndAuthor(courseId!, username)
+            .then(r => setPreviousReview(r))
+
+        if (previousReview !== null) {
+            setOpinion(previousReview.opinion);
+            setRating(Number(previousReview.overallRating));
+        }
+    }, [courseId, previousReview, username]);
 
     function RatingSlider() { // todo: swap this for a nicer one
         const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +61,7 @@ export function ReviewForm() {
     }
 
     return <div className="review-form">
-        <h1>Napisz opinię {course !== null && ("do kursu " + course.name)}</h1>
+        <h1>{previousReview === null ? "Napisz opinię" : "Edytuj swoją opinię"} {course !== null && ("kursu " + course.name)}</h1>
         <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"
                   onChange={e => setOpinion(e.target.value)}
                   value={opinion}>

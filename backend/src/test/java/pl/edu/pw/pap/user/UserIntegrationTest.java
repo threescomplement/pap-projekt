@@ -10,6 +10,8 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import pl.edu.pw.pap.PapApplication;
+import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
+import pl.edu.pw.pap.user.emailverification.EmailVerificationRequest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
@@ -83,7 +85,7 @@ public class UserIntegrationTest {
 
         // Use verification token sent by email
         var verificationToken = tokenRepository.findByUser_Username(registerRequest.username()).get();
-        var verifyRequest = new VerificationRequest(verificationToken.getToken());
+        var verifyRequest = new EmailVerificationRequest(verificationToken.getToken());
         var verifyEntity = new HttpEntity<>(verifyRequest, headers);
         var verifyResponse = restTemplate.exchange(
                 buildUrl("/api/users/verify", port),

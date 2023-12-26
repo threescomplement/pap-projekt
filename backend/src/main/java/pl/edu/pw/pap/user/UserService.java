@@ -3,9 +3,13 @@ package pl.edu.pw.pap.user;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.email.EmailSender;
+import pl.edu.pw.pap.email.EmailSenderProperties;
+import pl.edu.pw.pap.user.emailverification.EmailVerificationException;
+import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
+import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -20,8 +24,9 @@ public class UserService {
     private final Logger log = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final EmailVerificationTokenRepository tokenRepository;
-    private final ApplicationEventPublisher eventPublisher;
     private final PasswordEncoder passwordEncoder;
+    private final EmailSender emailSender;
+    private final EmailSenderProperties emailProperties;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -38,7 +43,7 @@ public class UserService {
 
         var user = new User(request.username(), request.email(), passwordEncoder.encode(request.password()), DEFAULT_ROLE, false);
         user = userRepository.save(user);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(user));
+        sendVerificationEmail(user);
         return user;
     }
 
@@ -68,5 +73,14 @@ public class UserService {
         user = userRepository.save(user);
         tokenRepository.delete(verificationToken);
         return user;
+    }
+
+    private void sendVerificationEmail(User user) {
+        var token = generateVerificationToken(user);
+        emailSender.sendEmail(
+                user.getEmail(),
+                String.format("Click here to confirm your email: %s%s", emailProperties.getConfirmBaseUrl(), token.getToken()),
+                "Verify your email"
+        );
     }
 }

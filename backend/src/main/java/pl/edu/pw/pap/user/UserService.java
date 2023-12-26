@@ -83,4 +83,18 @@ public class UserService {
                 "Verify your email"
         );
     }
+
+
+    public void sendPasswordResetEmail(String email) {
+        var token = generatePasswordResetToken(email);
+        emailSender.sendEmail(
+                email,
+                String.format("Click here to reset your password: %s%s", emailProperties.getResetPasswordBaseUrl(), token.getToken()),
+                "Reset your password"
+        );
+    }
+
+    private PasswordResetToken generatePasswordResetToken(String email) {
+        return null;
+    }
 }

@@ -3,3 +3,4 @@ security:
     secret-key: "dupa"
 email-verification:
   confirm-base-url: "http://localhost:3000/user/verify/"
+  reset-password-base-url: "http://localhost:3000/user/reset-password/"

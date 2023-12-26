@@ -62,7 +62,7 @@ export default function App() {
                             <Route path="register" element={<Register/>}/>
                             <Route path="verify/:token" element={<ConfirmEmail/>}/>
                             <Route path="forgot-password" element={<ForgotPassword/>}/>
-                            <Route path="reset-password" element={<ResetPassword/>}/>
+                            <Route path="reset-password/:token" element={<ResetPassword/>}/>
                         </Route>
                         <Route path="admin">
                             <Route index element={<AdminPanel />}/>

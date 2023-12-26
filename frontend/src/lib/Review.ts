@@ -24,9 +24,14 @@ async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
         .catch(e => console.log(e));
 }
 
-async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review> {
-    return api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
-        .then(r => r.json());
+async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review | null> {
+    const response = await api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
+    // todo: better error handling
+    console.log(response)
+    if (response.status === 404) {
+        return null
+    }
+    return response.json()
 }
 
 async function postReview(request: ReviewRequest, courseId: string) {

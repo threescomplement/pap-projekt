@@ -92,9 +92,7 @@ public class ReviewService {
                 .orElseThrow(() -> new CourseNotFoundException("No course with id: " + userPrincipal.getUsername()));
 
         var duplicate = reviewRepository.findByCourse_IdAndUser_Username(courseId, userPrincipal.getUsername());
-        if (duplicate.isPresent()) {
-            throw (new DuplicateReviewException("Cannot add more than one review to a course"));
-        }
+        duplicate.ifPresent(reviewRepository::delete);
         return convertToDTO(
                 reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()))
         );

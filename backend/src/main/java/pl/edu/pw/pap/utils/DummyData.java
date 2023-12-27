@@ -15,6 +15,8 @@ import pl.edu.pw.pap.user.EmailVerificationTokenRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 
+import java.util.List;
+
 /**
  * Utility for creating and deleting data, useful for testing
  */
@@ -75,6 +77,8 @@ public class DummyData {
         comment_3 = commentRepository.save(new Comment("przesada", review_2, user_1));
         comment_4 = commentRepository.save(new Comment("trudne serio", review_2, user_2));
         comment_5 = commentRepository.save(new Comment("oj tak", review_2, user_3));
+
+        reviewRepository.saveAll(List.of(review_1, review_2, review_3, review_4));  // Will not work otherwise FIXME
     }
 
     public void deleteAll() {

@@ -45,7 +45,7 @@ public class Comment {
         if (this.user != null) {
             this.user.removeComment(this);
         }
-        if (this.user != null) {
+        if (this.review != null) {
             this.review.removeComment(this);
         }
     }

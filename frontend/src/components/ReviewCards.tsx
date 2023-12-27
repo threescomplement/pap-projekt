@@ -7,44 +7,42 @@ import {User} from "../lib/User";
 
 interface ReviewCardProps {
     review: Review;
+    refreshParent: Function
 }
 
-export function ReviewCardWithLink({review}: ReviewCardProps) {
+export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
+    return <div>
+        <ReviewCardWithoutLink review={review} refreshParent={refreshParent}/>
+        {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
+    </div>
+}
+
+export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) {
     const {courseId} = useParams()
     const user: User = useUser().user!;
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
-    const ownComment: boolean = review.authorUsername === user.username;
-    const modificationContent = (ownComment || isAdmin) ?
-        <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername)}/> : null; // todo
+    const isReviewAuthor: boolean = review.authorUsername === user.username;
+    const modificationContent = (isReviewAuthor || isAdmin) ?
+        <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent)}/> : null;
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
         <div>{"Ocena: " + review.overallRating}</div>
         <div>{review.opinion}</div>
-        <div>
-            {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
-        </div>
-    </>
-}
-
-export function ReviewCardWithoutLink({review}: ReviewCardProps) {
-    return <>
-        <div>{review.authorUsername}</div>
-        <div>{"Ocena: " + review.overallRating}</div>
-        <div>{review.opinion}</div>
     </>
 }
 
 
-function createDeleteHandler(courseId: string, username: string): React.MouseEventHandler {
+function createDeleteHandler(courseId: string, username: string, afterDeleting: Function): React.MouseEventHandler {
     return async event => {
-        event.preventDefault();
-        try {
-            await ReviewService.deleteReview(courseId, username);
-            alert('Review deleted successfully!');
-        } catch (error) {
-            console.error(`Failed to delete review: `, error);
-            alert('Failed to delete review! Please try again...')
+        event.preventDefault()
+        if (window.confirm("Czy na pewno chcesz usunąć swoją opinię?")) {
+            ReviewService.deleteReview(courseId, username)
+                .then(deleted => {
+                    let feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
+                    alert(feedback);
+                    afterDeleting();
+                })
         }
-    };
+    }
 }

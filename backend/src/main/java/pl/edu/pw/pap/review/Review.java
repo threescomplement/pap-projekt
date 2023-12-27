@@ -48,8 +48,12 @@ public class Review {
 
     @PreRemove
     public void preRemove(){
-        this.user.removeReview(this);
-        this.course.removeReview(this);
+        if (this.user != null) {
+            this.user.removeReview(this);
+        }
+        if (this.course != null) {
+            this.course.removeReview(this);
+        }
         this.comments.forEach(c -> c.setReview(null));
         this.comments.clear();
     }

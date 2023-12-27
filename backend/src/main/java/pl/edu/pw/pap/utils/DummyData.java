@@ -11,17 +11,22 @@ import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
+import pl.edu.pw.pap.user.EmailVerificationTokenRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 
+/**
+ * Utility for creating and deleting data, useful for testing
+ */
 @Service
 @RequiredArgsConstructor
-public class DummyDataGenerator {
+public class DummyData {
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final CourseRepository courseRepository;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
+    private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     public User user_1;
@@ -29,6 +34,7 @@ public class DummyDataGenerator {
     public User admin_1;
     public Teacher teacher_1;
     public Teacher teacher_2;
+    public Teacher teacher_3;
     public Course course_1;
     public Course course_2;
     public Course course_3;
@@ -47,6 +53,7 @@ public class DummyDataGenerator {
 
         teacher_1 = teacherRepository.save(new Teacher("mgr. Jan Kowalski"));
         teacher_2 = teacherRepository.save(new Teacher("mgr. Ann Nowak"));
+        teacher_3 = teacherRepository.save(new Teacher("mgr. Andrzej Sysy"));
 
         course_1 = courseRepository.save(new Course("Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, teacher_1));
         course_2 = courseRepository.save(new Course("Język angielski poziom C1", "Angielski", "Ogólny", "C1", "M15", teacher_1));
@@ -60,5 +67,14 @@ public class DummyDataGenerator {
 
         comment_1 = commentRepository.save(new Comment("Przesada", review_2, user_1));
         comment_2 = commentRepository.save(new Comment("Pełna zgoda", review_3, user_1));
+    }
+
+    public void deleteAll() {
+        userRepository.deleteAll();
+        teacherRepository.deleteAll();
+        courseRepository.deleteAll();
+        reviewRepository.deleteAll();
+        commentRepository.deleteAll();
+        emailVerificationTokenRepository.deleteAll();
     }
 }

@@ -7,21 +7,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.comment.CommentRepository;
-import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
-import pl.edu.pw.pap.review.Review;
-import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewRepository;
-import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
-import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
-import pl.edu.pw.pap.utils.DummyDataGenerator;
-
-import java.util.List;
+import pl.edu.pw.pap.utils.DummyData;
 
 @SpringBootApplication
 public class PapApplication {
@@ -32,7 +23,7 @@ public class PapApplication {
         SpringApplication.run(PapApplication.class, args);
     }
 
-    @Bean
+//    @Bean
     @Profile({"dev", "dev-postgres"})
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,
@@ -40,7 +31,7 @@ public class PapApplication {
             UserRepository userRepository,
             ReviewRepository reviewRepository,
             CommentRepository commentRepository,
-            DummyDataGenerator generator
+            DummyData generator
     ) {
         return (args) -> {
             generator.addDummyData();

@@ -82,10 +82,17 @@ async function verifyEmail(emailVerificationToken: string): Promise<User> {
     return await response.json() as User;
 }
 
-async function sendResetPasswordEmail(email: string): Promise<any> {
-    return api.post("/users/send-reset-email", {email: email})
+/**
+ * Return bool whether sending email succeeded
+ */
+async function sendResetPasswordEmail(email: string): Promise<boolean> {
+    const response = await api.post("/users/send-reset-email", {email: email});
+    return response.ok;
 }
 
+/**
+ * Return bool whether password reset succeeded
+ */
 async function resetPassword(newPassword: string, resetPasswordToken: string): Promise<boolean> {
     const response = await api.post("/users/reset-password", {
         newPassword: newPassword,

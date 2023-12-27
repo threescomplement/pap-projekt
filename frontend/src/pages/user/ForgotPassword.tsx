@@ -16,17 +16,21 @@ export default function ForgotPassword() {
         }
 
         try {
-            await UserService.sendResetPasswordEmail(email);
+            const success = await UserService.sendResetPasswordEmail(email);
+            if (!success) {
+                setErrorMessage("Nie istnieje użytkownik o podanym adresie email");
+                return;
+            }
             setEmailSent(true);
         } catch (e) {
-            setErrorMessage("Nie istnieje użytkownik o podanym adresie email");
+            setErrorMessage("Operacja nie powiodła się");
         }
     }
 
     if (emailSent) {
         return <div>
             <h1>Odzyskiwanie hasła</h1>
-            <MessageBox message={"Wysłano link do resetu hasła na podany adres"}/>
+            <MessageBox message={"Wysłano link do zmiany hasła na podany adres"}/>
             <button>
                 <Link to={"/user/login"}>Zaloguj się</Link>
             </button>

@@ -29,7 +29,6 @@ export default function ResetPassword() {
 
     async function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        //TODO better UX
         if (formData.password !== formData.confirmPassword) {
             setErrorMessage("Hasła nie są jednakowe");
             return;

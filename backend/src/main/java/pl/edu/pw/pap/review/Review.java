@@ -9,6 +9,7 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.comment.Comment;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,24 +36,32 @@ public class Review {
     @CreationTimestamp
     private Timestamp created;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
 
     public Review(User user, Course course, String opinion, int overallRating) {
-        this.user = user;
-        this.course = course;
         this.opinion = opinion;
         this.overallRating = overallRating;
+        course.addReview(this);
+        user.addReview(this);
     }
 
     @PreRemove
-    public void clearCommentsAndUser(){
-//        this.comments.clear();
+    public void preRemove(){
         this.user.removeReview(this);
         this.course.removeReview(this);
+        this.comments.forEach(c -> c.setReview(null));
+        this.comments.clear();
     }
+
     public void removeComment(Comment comment){
         this.comments.remove(comment);
+        comment.setReview(null);
+    }
+
+    public void addComment(Comment comment) {
+        comment.setReview(this);
+        comments.add(comment);
     }
 
     @Override

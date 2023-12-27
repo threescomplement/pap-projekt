@@ -6,6 +6,7 @@ import lombok.Setter;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.teacher.Teacher;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,24 +27,40 @@ public class Course {
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course")
-    private Set<Review> reviews;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Review> reviews = new HashSet<>();
 
-    public Course(String name, String language, String type, String level, String module, Teacher teacher) {
+    public Course(String name, String language, String type, String level, String module) {
         this.name = name;
         this.language = language;
         this.type = type;
         this.level = level;
         this.module = module;
-        this.teacher = teacher;
     }
 
 
-    public void removeReview (Review review){
-        this.reviews.remove(review);
-    }
     protected Course() {
 
+    }
+
+    @PreRemove
+    public void preRemove() {
+        if (this.teacher != null) {
+            this.teacher.removeCourse(this);
+        }
+
+        this.reviews.forEach(r -> r.setCourse(null));
+        this.reviews.clear();
+    }
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
+        review.setCourse(this);
+    }
+
+    public void removeReview(Review review) {
+        this.reviews.remove(review);
+        review.setCourse(null);
     }
 
     @Override

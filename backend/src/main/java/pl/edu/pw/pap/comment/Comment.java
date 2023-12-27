@@ -30,19 +30,22 @@ public class Comment {
     @ManyToOne
     private User user;
 
-    public Comment(String text, Review review, User user) {
+
+    public Comment(String text) {
         this.text = text;
-        this.review = review;
-        this.user = user;
     }
 
     protected Comment() {
     }
 
     @PreRemove
-    public void removeFromUser(){
-        this.user.removeComment(this);
-        this.review.removeComment(this);
+    public void preRemove(){
+        if (this.user != null) {
+            this.user.removeComment(this);
+        }
+        if (this.user != null) {
+            this.review.removeComment(this);
+        }
     }
 
     @Override

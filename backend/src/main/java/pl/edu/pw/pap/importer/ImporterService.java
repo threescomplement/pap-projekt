@@ -28,18 +28,22 @@ public class ImporterService {
                 .map(r -> courseFromRecord(r, teachers))
                 .toList();
         courseRepository.saveAll(courses);
+        teacherRepository.saveAll(teachers);
         log.info("Import complete, saved " + teachers.size() + " teachers and " + courses.size() + " courses");
     }
 
+    // TODO test whether still working
     private Course courseFromRecord(ImporterRecord record, List<Teacher> teachers) {
-        return new Course(
+        var course = new Course(
                 record.title().substring(0, min(record.title().length(), 200)),
                 record.language(),
                 record.type(),
                 record.level(),
-                record.module(),
-                getTeacherByName(teachers, record.teacher())
+                record.module()
         );
+        var teacher = getTeacherByName(teachers, record.teacher());
+        teacher.addCourse(course);
+        return course;
     }
 
     private Teacher getTeacherByName(List<Teacher> teachers, String name) {

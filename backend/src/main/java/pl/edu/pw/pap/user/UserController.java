@@ -46,7 +46,7 @@ public class UserController {
     @PostMapping("/api/users/reset-password")
     public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest request) {
         try {
-            userService.resetPassword(request.newPassword(), request.passwordResetToken());
+            userService.resetPassword(request.passwordResetToken(), request.newPassword());
             return ResponseEntity.ok("Password has been reset successfully");
         } catch (Exception e ) {
             return ResponseEntity.badRequest().body(e.toString());

@@ -82,13 +82,18 @@ async function verifyEmail(emailVerificationToken: string): Promise<User> {
     return await response.json() as User;
 }
 
-async function sendResetPasswordEmail(email: string): Promise<void> {
-    //TODO
+async function sendResetPasswordEmail(email: string): Promise<any> {
+    return api.post("/users/send-reset-email", {email: email})
 }
 
 async function resetPassword(newPassword: string, resetPasswordToken: string): Promise<boolean> {
-    //TODO
-    return false;
+    const response = await api.post("/users/reset-password", {
+        newPassword: newPassword,
+        passwordResetToken: resetPasswordToken
+    })
+
+    return response.ok;
+
 }
 
 const UserService = {

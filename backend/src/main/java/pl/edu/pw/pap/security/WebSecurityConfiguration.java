@@ -40,6 +40,8 @@ public class WebSecurityConfiguration {
                         .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/users").permitAll()
                         .requestMatchers("/api/users/verify").permitAll()
+                        .requestMatchers("/api/users/send-reset-email").permitAll()
+                        .requestMatchers("/api/users/reset-password").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 );

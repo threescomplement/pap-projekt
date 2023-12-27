@@ -185,7 +185,6 @@ class CourseIntegrationTest {
 
     @Test
     public void getAllCoursesEmpty() {
-//         TODO find a way to include empty list in JSON even if it is empty
         var response = restTemplate.exchange(
                 buildUrl("/api/courses", port),
                 HttpMethod.GET,

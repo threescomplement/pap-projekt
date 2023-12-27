@@ -30,12 +30,13 @@ public class Course {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
-    public Course(String name, String language, String type, String level, String module) {
+    public Course(String name, String language, String type, String level, String module, Teacher teacher) {
         this.name = name;
         this.language = language;
         this.type = type;
         this.level = level;
         this.module = module;
+        teacher.addCourse(this);
     }
 
 

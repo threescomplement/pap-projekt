@@ -31,8 +31,10 @@ public class Comment {
     private User user;
 
 
-    public Comment(String text) {
+    public Comment(String text, Review review, User user) {
         this.text = text;
+        review.addComment(this);
+        user.addComment(this);
     }
 
     protected Comment() {

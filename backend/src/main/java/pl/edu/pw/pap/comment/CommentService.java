@@ -99,12 +99,9 @@ public class CommentService {
                 () -> new ReviewNotFoundException("No existing review of course " + courseId + "by " + reviewUsername));
 
 
-        Comment comment = new Comment(text);
-        addingUser.addComment(comment);
-        userRepository.save(addingUser);
-        review.addComment(comment);
-        reviewRepository.save(review);
-
-        return convertToDto(comment);
+        Comment comment = new Comment(text, review, addingUser);
+        return convertToDto(
+                commentRepository.save(comment)
+        );
     }
 }

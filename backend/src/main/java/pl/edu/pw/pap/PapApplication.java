@@ -31,7 +31,7 @@ public class PapApplication {
         SpringApplication.run(PapApplication.class, args);
     }
 
-    @Bean
+//    @Bean
     @Profile({"dev", "dev-postgres"})
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,
@@ -49,25 +49,18 @@ public class PapApplication {
             var teacher_1 = teacherRepository.save(new Teacher("mgr. Jan Kowalski"));
             var teacher_2 = teacherRepository.save(new Teacher("mgr. Ann Nowak"));
 
+            var course_1 = courseRepository.save(new Course("Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, teacher_1));
+            var course_2 = courseRepository.save(new Course("Język angielski poziom C1", "Angielski", "Ogólny", "C1", "M15", teacher_1));
+            var course_3 = courseRepository.save(new Course("Język niemiecki, poziom A2", "Niemiecki", "Akademicki", "A2", "M6", teacher_2));
+            var course_4 = courseRepository.save(new Course("Język włoski dla początkujących", "Włoski", "Akademicki", "A1", "M1", teacher_2));
 
-            var course_1 = new Course("Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null);
-            var course_2 = new Course("Język angielski poziom C1", "Angielski", "Ogólny", "C1", "M15");
-            teacher_1.addCourse(course_1);
-            teacher_1.addCourse(course_2);
-            teacher_1 = teacherRepository.save(teacher_1);
+            var review_1 = reviewRepository.save(new Review(user_1, course_1, "Dobrze prowadzony kurs, wymagający nauczyciel", 8));
+            var review_2 = reviewRepository.save(new Review(user_2, course_1, "Zbyt duże wymagania do studentów", 3));
+            var review_3 = reviewRepository.save(new Review(user_2, course_4, "Świetne wprowadzenie do języka", 10));
+            var review_4 = reviewRepository.save(new Review(user_1, course_3, "W porządku", 6));
 
-            var course_3 = new Course("Język niemiecki, poziom A2", "Niemiecki", "Akademicki", "A2", "M6");
-            var course_4 = new Course("Język włoski dla początkujących", "Włoski", "Akademicki", "A1", "M1");
-            teacher_2.addCourse(course_3);
-            teacher_2.addCourse(course_4);
-            teacher_2 = teacherRepository.save(teacher_2);
-
-            var review = new Review(user_1, course_1, "text", 5);
-            reviewRepository.save(review);
-
-            var reviews = reviewRepository.findAll();
-            log.info(reviews.toString());
-
+            var comment_1 = commentRepository.save(new Comment("Przesada", review_2, user_1));
+            var comment_2 = commentRepository.save(new Comment("Pełna zgoda", review_3, user_1));
 
             var teachers = teacherRepository.findAll();
             log.info("Added teachers:");
@@ -81,13 +74,13 @@ public class PapApplication {
             log.info("Added users:");
             users.forEach(u -> log.info(u.toString()));
 
-//            var reviews = reviewRepository.findAll();
-//            log.info("Added reviews:");
-//            reviews.forEach(r -> log.info(r.toString()));
-//
-//            var comments = commentRepository.findAll();
-//            log.info("Added comments:");
-//            comments.forEach(c -> log.info(c.toString()));
+            var reviews = reviewRepository.findAll();
+            log.info("Added reviews:");
+            reviews.forEach(r -> log.info(r.toString()));
+
+            var comments = commentRepository.findAll();
+            log.info("Added comments:");
+            comments.forEach(c -> log.info(c.toString()));
         };
     }
 }

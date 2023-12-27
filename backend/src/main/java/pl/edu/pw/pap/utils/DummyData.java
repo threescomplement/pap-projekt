@@ -46,6 +46,9 @@ public class DummyData {
     public Review review_4;
     public Comment comment_1;
     public Comment comment_2;
+    public Comment comment_3;
+    public Comment comment_4;
+    public Comment comment_5;
 
     public void addDummyData() {
         user_1 = userRepository.save(new User("rdeckard", "rdeckard@example.com", passwordEncoder.encode("password"), "ROLE_USER", true));
@@ -67,8 +70,11 @@ public class DummyData {
         review_3 = reviewRepository.save(new Review(user_2, course_4, "Świetne wprowadzenie do języka", 10));
         review_4 = reviewRepository.save(new Review(user_1, course_3, "W porządku", 6));
 
-        comment_1 = commentRepository.save(new Comment("Przesada", review_2, user_1));
-        comment_2 = commentRepository.save(new Comment("Pełna zgoda", review_3, user_1));
+        comment_1 = commentRepository.save(new Comment("rel", review_1, user_3));
+        comment_2 = commentRepository.save(new Comment("czyli co?", review_4, user_2));
+        comment_3 = commentRepository.save(new Comment("przesada", review_2, user_1));
+        comment_4 = commentRepository.save(new Comment("trudne serio", review_2, user_2));
+        comment_5 = commentRepository.save(new Comment("oj tak", review_2, user_3));
     }
 
     public void deleteAll() {

@@ -1,28 +1,43 @@
-import {FormEvent, useReducer} from "react";
+import {FormEvent, useReducer, useState} from "react";
 import UserService, {LoginRequest} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
 import styles from "./Login.module.css"
+import ErrorBox from "../../components/ErrorBox";
 
 const initialFormData: LoginRequest = {
     username: "",
     password: ""
 }
-// TODO error handling
+
 export default function Login() {
     const {setUser} = useUser();
+    const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useReducer(formReducer<LoginRequest>, initialFormData);
     const navigate = useNavigate();
 
-    function handleFormSubmit(event: FormEvent) {
+    async function handleFormSubmit(event: FormEvent) {
         event.preventDefault();
-        console.log(formData);
-        UserService.attemptLogin(formData)
-            .then(user => {
-                setUser(user)
-                navigate("/user")
-            });
+        console.debug(formData);
+
+        if (formData.password === "") {
+            setErrorMessage("Hasło nie może być puste");  //TODO do not allow weak passwords
+            return;
+        }
+
+        if (formData.username === "") {
+            setErrorMessage("Nazwa użytkownika nie może być pusta");
+            return;
+        }
+
+        try {
+            const user = await UserService.attemptLogin(formData);
+            setUser(user);
+            navigate("/user");
+        } catch (e) {
+            setErrorMessage("Nieprawidłowy login lub hasło");
+        }
     }
 
     return <div className={styles.loginContainer}>
@@ -37,6 +52,7 @@ export default function Login() {
                 <p>Hasło:</p>
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
+            <ErrorBox message={errorMessage}/>
             <input type="submit" value="Log In"/>
             <Link to={"/user/forgot-password"}>Nie pamiętam hasła</Link>
         </form>

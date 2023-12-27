@@ -2,6 +2,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {FormEvent, useReducer, useState} from "react";
 import {formReducer} from "../../lib/utils";
 import UserService from "../../lib/User";
+import ErrorBox from "../../components/ErrorBox";
 
 const initialFormData = {
     password: "",
@@ -30,7 +31,7 @@ export default function ResetPassword() {
         e.preventDefault();
         //TODO better UX
         if (formData.password !== formData.confirmPassword) {
-            setErrorMessage("Passwords do not match");
+            setErrorMessage("Hasła nie są jednakowe");
             return;
         }
 
@@ -38,7 +39,7 @@ export default function ResetPassword() {
         if (success) {
             navigate("/user/login");
         } else {
-            setErrorMessage("Unable to reset password, try again, the link may be expired");
+            setErrorMessage("Operacja nie powiodła się");
         }
 
     }
@@ -56,7 +57,7 @@ export default function ResetPassword() {
                     <p>Potwierdź nowe hasło</p>
                     <input name="confirmPassword" type="password" onChange={setFormData}/>
                 </label>
-                {/*<ErrorBox message={errorMessage}/> //TODO*/}
+                <ErrorBox message={errorMessage}/>
                 <input type="submit" value="Resetuj hasło"/>
             </form>
         </div>

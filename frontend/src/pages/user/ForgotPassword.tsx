@@ -2,6 +2,7 @@ import {FormEvent, useState} from "react";
 import MessageBox from "../../components/MessageBox";
 import UserService from "../../lib/User";
 import {Link} from "react-router-dom";
+import ErrorBox from "../../components/ErrorBox";
 
 export default function ForgotPassword() {
     const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ export default function ForgotPassword() {
     async function handleSubmit(event: FormEvent) {
         event.preventDefault();
         if (email === "") {
-            setErrorMessage("Please enter email");
+            setErrorMessage("Podaj adres email");
             return;
         }
 
@@ -43,7 +44,7 @@ export default function ForgotPassword() {
                 <p>Email:</p>
                 <input type="email" onChange={e => setEmail(e.target.value)}/>
             </label>
-            {/*<ErrorBox message={errorMessage}/>*/}
+            <ErrorBox message={errorMessage}/>
             <input type="submit" value="Wyślij"/>
         </form>
     </div>

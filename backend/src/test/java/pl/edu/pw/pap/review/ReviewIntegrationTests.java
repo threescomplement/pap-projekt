@@ -62,7 +62,7 @@ public class ReviewIntegrationTests {
 
     public void adminLogin() {
         headers = new HttpHeaders();
-        var token = authService.attemptLogin("admin", "password").getAccessToken();
+        var token = authService.attemptLogin(data.admin_1.getUsername(), "password").getAccessToken();
         headers.add("Authorization", "Bearer " + token);
     }
 

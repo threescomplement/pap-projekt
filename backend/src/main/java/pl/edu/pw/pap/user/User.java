@@ -30,7 +30,7 @@ public class User {
     private Boolean enabled;
 
     // TODO: figure out how to cascade reviews and comments without repository.deleteAll throwing Cocurrent Modification (if needed)
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)

@@ -27,7 +27,7 @@ public class Course {
     @JoinColumn(name = "teacher_id", nullable = false)
     private Teacher teacher;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.MERGE, orphanRemoval = true)
     private Set<Review> reviews = new HashSet<>();
 
     public Course(String name, String language, String type, String level, String module, Teacher teacher) {

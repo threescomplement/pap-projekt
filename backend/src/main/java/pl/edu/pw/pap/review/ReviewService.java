@@ -82,6 +82,12 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
+
+        // TODO fix cascade delete
+        var comments = commentRepository.findAll().stream()
+                .filter(c -> c.getReview().getId().equals(review.getId()))
+                .toList();
+        commentRepository.deleteAll(comments);
         reviewRepository.delete(review);
     }
 

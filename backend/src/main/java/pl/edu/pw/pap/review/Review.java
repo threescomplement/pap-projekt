@@ -64,8 +64,8 @@ public class Review {
     }
 
     public void addComment(Comment comment) {
+        this.comments.add(comment);
         comment.setReview(this);
-        comments.add(comment);
     }
 
     @Override

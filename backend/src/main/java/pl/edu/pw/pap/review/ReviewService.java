@@ -82,10 +82,6 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
-
-        var comments = review.getComments();
-        commentRepository.deleteAll(comments);
-        review = reviewRepository.findById(review.getId()).orElseThrow();
         reviewRepository.delete(review);
     }
 

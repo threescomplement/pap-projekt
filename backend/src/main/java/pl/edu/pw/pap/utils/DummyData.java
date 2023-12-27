@@ -31,6 +31,7 @@ public class DummyData {
 
     public User user_1;
     public User user_2;
+    public User user_3;
     public User admin_1;
     public Teacher teacher_1;
     public Teacher teacher_2;
@@ -49,6 +50,7 @@ public class DummyData {
     public void addDummyData() {
         user_1 = userRepository.save(new User("rdeckard", "rdeckard@example.com", passwordEncoder.encode("password"), "ROLE_USER", true));
         user_2 = userRepository.save(new User("rbatty", "rbatty@example.com", passwordEncoder.encode("password"), "ROLE_USER", true));
+        user_3 = userRepository.save(new User("user_3", "user3@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true));
         admin_1 = userRepository.save(new User("admin", "admin@example.com", passwordEncoder.encode("password"), "ROLE_ADMIN", true));
 
         teacher_1 = teacherRepository.save(new Teacher("mgr. Jan Kowalski"));

@@ -12,17 +12,16 @@ import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import pl.edu.pw.pap.PapApplication;
-import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.security.AuthService;
-import pl.edu.pw.pap.user.User;
-import pl.edu.pw.pap.user.UserRepository;
-import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
+import pl.edu.pw.pap.user.UserRepository;
+import pl.edu.pw.pap.utils.DummyData;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
 
 @SpringBootTest(classes = PapApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -45,43 +44,19 @@ public class ReviewIntegrationTests {
     UserRepository userRepository;
     @Autowired
     AuthService authService;
+    @Autowired
+    DummyData data;
 
     TestRestTemplate restTemplate = new TestRestTemplate();
     HttpHeaders headers = new HttpHeaders();
 
-    private static final User USER_1 = new User("user_1", "user@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true); // password
-    private static final User USER_2 = new User("user_2", "user2@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true); // password
-    private static final User USER_3 = new User("user_3", "user3@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_USER", true);
-    private static final User ADMIN = new User("admin", "admin@example.com", "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2", "ROLE_ADMIN", true);
-    private static final Teacher TEACHER_1 = new Teacher("mgr. Jan Kowalski");
-    private static final Teacher TEACHER_2 = new Teacher("mgr. Ann Nowak");
-
-    private static final Course COURSE_1 = new Course("Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, TEACHER_1);
-    private static final Course COURSE_2 = new Course("Język angielski poziom C1", "Angielski", "Ogólny", "C1", "M15", TEACHER_1);
-    private static final Course COURSE_3 = new Course("Język niemiecki, poziom A2", "Niemiecki", "Akademicki", "A2", "M6", TEACHER_2);
-    private static final Course COURSE_4 = new Course("Język włoski dla początkujących", "Włoski", "Akademicki", "A1", "M1", TEACHER_2);
-
-    private static final Review REVIEW_1 = new Review(USER_1, COURSE_1, "Dobrze prowadzony kurs, wymagający nauczyciel", 8);
-    private static final Review REVIEW_2 = new Review(USER_2, COURSE_1, "Zbyt duże wymagania do studentów", 3);
-    private static final Review REVIEW_3 = new Review(USER_2, COURSE_4, "Świetne wprowadzenie do języka", 10);
-    private static final Review REVIEW_4 = new Review(USER_1, COURSE_3, "W porządku", 6);
-
-    private void addDummyData() {
-        teacherRepository.saveAll(List.of(TEACHER_1, TEACHER_2));
-        courseRepository.saveAll(List.of(COURSE_1, COURSE_2, COURSE_3, COURSE_4));
-        reviewRepository.saveAll(List.of(REVIEW_1, REVIEW_2, REVIEW_3, REVIEW_4));
-    }
-
 
     @BeforeEach
     public void setupDatabase() {
-        userRepository.deleteAll();
-        courseRepository.deleteAll();
-        reviewRepository.deleteAll();
-        teacherRepository.deleteAll();
+        data.deleteAll();
+        data.addDummyData();
 
-        userRepository.saveAll(List.of(USER_1, USER_2, USER_3, ADMIN));
-        var token = authService.attemptLogin("user_1", "password").getAccessToken();
+        var token = authService.attemptLogin(data.user_1.getUsername(), "password").getAccessToken();
         headers.add("Authorization", "Bearer " + token);
     }
 
@@ -93,36 +68,33 @@ public class ReviewIntegrationTests {
 
     @Test
     public void getReviewByCourseAndUserIdExists() {
-        addDummyData();
-        String endpoint = "/api/courses/1/reviews/user_1";
+        String endpoint = "/api/courses/1/reviews/rdeckard";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
 
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", json.read("$.opinion"));
         assertEquals(8, (int) json.read("$.overallRating"));
-        assertEquals("user_1", json.read("$.authorUsername"));
+        assertEquals("rdeckard", json.read("$.authorUsername"));
         assertTrue(json.read("$.created").toString().endsWith("+00:00"));
 
         // check links
-        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/user_1"));
-        assertTrue(json.read("$._links.user.href").toString().endsWith("/api/users/user_1"));
-        assertTrue(json.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/user_1/comments"));
+        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+        assertTrue(json.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(json.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/rdeckard/comments"));
         assertTrue(json.read("$._links.course.href").toString().endsWith("/api/courses/1"));
 
     }
 
     @Test
     public void getReviewByCourseAndUserIdCourseNotExists() {
-        addDummyData();
-        String endpoint = "/api/courses/420/reviews/user_1";
+        String endpoint = "/api/courses/420/reviews/rdeckard";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
     }
 
     @Test
     public void getReviewByCourseAndUserIdUserNotExists() {
-        addDummyData();
         String endpoint = "/api/courses/1/reviews/iDoNotExist";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
@@ -130,15 +102,13 @@ public class ReviewIntegrationTests {
 
     @Test
     public void getReviewNotExists() {
-        addDummyData();
-        String endpoint = "/api/courses/4/reviews/user_1";
+        String endpoint = "/api/courses/4/reviews/rdeckard";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
     }
 
     @Test
     public void getReviewsByCourseIdMultiple() {
-        addDummyData();
         String endpoint = "/api/courses/1/reviews";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -155,7 +125,6 @@ public class ReviewIntegrationTests {
 
     @Test
     public void getReviewsByCourseIdSingle() {
-        addDummyData();
         String endpoint = "/api/courses/3/reviews";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -168,7 +137,6 @@ public class ReviewIntegrationTests {
 
     @Test
     public void getReviewsByCourseIdEmpty() {
-        addDummyData();
         String endpoint = "/api/courses/2/reviews";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -182,14 +150,13 @@ public class ReviewIntegrationTests {
 
     @Test
     public void getReviewsByUsernameMultiple() {
-        addDummyData();
-        String endpoint = "/api/reviews/user_1";
+        String endpoint = "/api/reviews/rdeckard";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var json = JsonPath.parse(response.getBody());
         List<String> reviews = json.read("$._embedded.reviews");
-        assertEquals("user_1", json.read("$._embedded.reviews[0].authorUsername"));
-        assertEquals("user_1", json.read("$._embedded.reviews[1].authorUsername"));
+        assertEquals("rdeckard", json.read("$._embedded.reviews[0].authorUsername"));
+        assertEquals("rdeckard", json.read("$._embedded.reviews[1].authorUsername"));
         assertEquals(2, reviews.size());
         // hacky but works regardless of order
         assertTrue(reviews.toString().contains("\"opinion\":\"W porządku\""));
@@ -198,7 +165,6 @@ public class ReviewIntegrationTests {
 
     @Test
     public void getReviewsByUsernameEmpty() {
-        addDummyData();
         String endpoint = "/api/reviews/user_3";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -211,14 +177,13 @@ public class ReviewIntegrationTests {
 
     @Test
     public void addNewReview() {
-        addDummyData();
         String endpoint = "/api/courses/2/reviews";
         var request = new AddReviewRequest("test_opinion", 6);
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
         // check if added
-        endpoint = "/api/courses/2/reviews/user_1";
+        endpoint = "/api/courses/2/reviews/rdeckard";
         response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         var json = JsonPath.parse(response.getBody());
         assertEquals("test_opinion", json.read("$.opinion"));
@@ -227,7 +192,6 @@ public class ReviewIntegrationTests {
 
     @Test
     public void addDuplicateReview() {
-        addDummyData();
         String endpoint = "/api/courses/1/reviews";
         var request = new AddReviewRequest("test_opinion", 6);
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
@@ -237,8 +201,7 @@ public class ReviewIntegrationTests {
     // DELETE TESTS
     @Test
     public void deleteReviewExists() {
-        addDummyData();
-        String endpoint = "/api/courses/1/reviews/user_1";
+        String endpoint = "/api/courses/1/reviews/rdeckard";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
@@ -249,17 +212,15 @@ public class ReviewIntegrationTests {
 
     @Test
     public void deleteReviewNotExists() {
-        addDummyData();
-        String endpoint = "/api/courses/2/reviews/user_1";
+        String endpoint = "/api/courses/2/reviews/rdeckard";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
     }
 
     @Test
     public void deleteReviewByAdmin() {
-        addDummyData();
         adminLogin();
-        String endpoint = "/api/courses/1/reviews/user_1";
+        String endpoint = "/api/courses/1/reviews/rdeckard";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
@@ -270,8 +231,7 @@ public class ReviewIntegrationTests {
 
     @Test
     public void deleteReviewDifferentUser() {
-        addDummyData();
-        String endpoint = "/api/courses/1/reviews/user_2";
+        String endpoint = "/api/courses/1/reviews/rbatty";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode()); // FORBIDDEN
 

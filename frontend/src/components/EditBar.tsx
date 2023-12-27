@@ -3,7 +3,7 @@ import React, {MouseEventHandler} from "react";
 
 
 interface EditBarProps {
-    handleDelete: React.MouseEventHandler<HTMLButtonElement>
+    handleDelete: MouseEventHandler<HTMLButtonElement>
 }
 export function EditBar({handleDelete}: EditBarProps) {
     return <div>

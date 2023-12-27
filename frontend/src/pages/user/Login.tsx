@@ -22,12 +22,12 @@ export default function Login() {
         console.debug(formData);
 
         if (formData.password === "") {
-            setErrorMessage("Password cannot be empty");
+            setErrorMessage("Hasło nie może być puste");  //TODO do not allow weak passwords
             return;
         }
 
         if (formData.username === "") {
-            setErrorMessage("Username cannot be empty");
+            setErrorMessage("Nazwa użytkownika nie może być pusta");
             return;
         }
 
@@ -36,7 +36,7 @@ export default function Login() {
             setUser(user);
             navigate("/user");
         } catch (e) {
-            setErrorMessage("Incorrect username or password");
+            setErrorMessage("Nieprawidłowy login lub hasło");
         }
     }
 

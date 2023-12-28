@@ -4,14 +4,14 @@ import {formReducer} from "../../lib/utils";
 import UserService from "../../lib/User";
 import ErrorBox from "../../components/ErrorBox";
 
-const initialFormData = {
-    password: "",
-    confirmPassword: ""
-}
-
 interface ResetPasswordFormData {
     password: string,
     confirmPassword: string
+}
+
+const initialFormData: ResetPasswordFormData = {
+    password: "",
+    confirmPassword: ""
 }
 
 export default function ResetPassword() {

@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.user.User;
-import pl.edu.pw.pap.comment.Comment;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -37,7 +37,7 @@ public class Review {
     private Timestamp created;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+    private Set<Comment> comments = new HashSet<>();
 
     public Review(User user, Course course, String opinion, int overallRating) {
         this.opinion = opinion;
@@ -47,7 +47,7 @@ public class Review {
     }
 
     @PreRemove
-    public void preRemove(){
+    public void preRemove() {
         if (this.user != null) {
             this.user.removeReview(this);
         }
@@ -58,7 +58,7 @@ public class Review {
         this.comments.clear();
     }
 
-    public void removeComment(Comment comment){
+    public void removeComment(Comment comment) {
         this.comments.remove(comment);
         comment.setReview(null);
     }

@@ -1,0 +1,15 @@
+.errorBox {
+    background-color: rgba(232, 77, 77, 0.7);
+    border: 2px solid red;
+    border-radius: 10px;
+    color: whitesmoke;
+    width: 30%;
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hidden {
+    visibility: hidden;
+}

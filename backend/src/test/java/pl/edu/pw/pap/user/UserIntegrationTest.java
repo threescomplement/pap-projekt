@@ -10,6 +10,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import pl.edu.pw.pap.PapApplication;
+import pl.edu.pw.pap.utils.DummyData;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
@@ -34,14 +35,15 @@ public class UserIntegrationTest {
     private UserRepository userRepository;
     @Autowired
     private EmailVerificationTokenRepository tokenRepository;
+    @Autowired
+    private DummyData dummyData;
 
     TestRestTemplate restTemplate = new TestRestTemplate();
     HttpHeaders headers = new HttpHeaders();
 
     @BeforeEach
     public void clearDatabase() {
-        userRepository.deleteAll();
-        tokenRepository.deleteAll();
+        dummyData.deleteAll();
     }
 
     @Test

@@ -4,12 +4,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.user.User;
-import pl.edu.pw.pap.comment.Comment;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -35,24 +36,36 @@ public class Review {
     @CreationTimestamp
     private Timestamp created;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<Comment> comments;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments = new HashSet<>();
 
     public Review(User user, Course course, String opinion, int overallRating) {
-        this.user = user;
-        this.course = course;
         this.opinion = opinion;
         this.overallRating = overallRating;
+        course.addReview(this);
+        user.addReview(this);
     }
 
     @PreRemove
-    public void clearCommentsAndUser(){
-//        this.comments.clear();
-        this.user.removeReview(this);
-        this.course.removeReview(this);
+    public void preRemove() {
+        if (this.user != null) {
+            this.user.removeReview(this);
+        }
+        if (this.course != null) {
+            this.course.removeReview(this);
+        }
+        this.comments.forEach(c -> c.setReview(null));
+        this.comments.clear();
     }
-    public void removeComment(Comment comment){
+
+    public void removeComment(Comment comment) {
         this.comments.remove(comment);
+        comment.setReview(null);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setReview(this);
     }
 
     @Override

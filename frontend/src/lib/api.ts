@@ -1,4 +1,4 @@
-import {getStoredUser, User} from "./User";
+import UserService, {User} from "./User";
 
 const defaultHeaders = {
     'Accept': 'application/json',
@@ -22,8 +22,8 @@ export function buildParamsString(queryParams: any): string {
     return "?" + pairs.join("&");
 }
 
-function myFetch(endpoint: string, headers: any, body: any, method: string, queryParams: any = null, withAuth = true): Promise<any> {
-    const user = getStoredUser();
+function myFetch(endpoint: string, headers: any, body: any, method: string, queryParams: any = null, withAuth = true): Promise<Response> {
+    const user = UserService.getStoredUser();
     const auth = (withAuth && user != null) ? authHeader(user) : null;
     const requestBody = (body == null) ? null : JSON.stringify(body);
     const params = (queryParams != null) ? buildParamsString(queryParams) : "";
@@ -43,19 +43,19 @@ function myFetch(endpoint: string, headers: any, body: any, method: string, quer
     });
 }
 
-function apiGet(endpoint: string, headers: any = null, queryParams: any = null): Promise<any> {
+function apiGet(endpoint: string, headers: any = null, queryParams: any = null): Promise<Response> {
     return myFetch(endpoint, headers, null, "GET", queryParams);
 }
 
-function apiPost(endpoint: string, body: any, headers: any = null): Promise<any> {
+function apiPost(endpoint: string, body: any, headers: any = null): Promise<Response> {
     return myFetch(endpoint, headers, body, "POST");
 }
 
-function apiPut(endpoint: string, body: any, headers: any = null): Promise<any> {
+function apiPut(endpoint: string, body: any, headers: any = null): Promise<Response> {
     return myFetch(endpoint, headers, body, "PUT");
 }
 
-function apiDelete(endpoint: string, body: any, headers: any = null): Promise<any> {
+function apiDelete(endpoint: string, body: any, headers: any = null): Promise<Response> {
     return myFetch(endpoint, headers, body, "DELETE");
 }
 

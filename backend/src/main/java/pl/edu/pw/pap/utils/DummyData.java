@@ -11,9 +11,9 @@ import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
-import pl.edu.pw.pap.user.EmailVerificationTokenRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
+import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 
 import java.util.List;
 

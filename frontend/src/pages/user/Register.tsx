@@ -1,5 +1,5 @@
 import {FormEvent, useReducer, useState} from "react";
-import {attemptRegister, RegisterRequest} from "../../lib/User";
+import UserService, {RegisterRequest} from "../../lib/User";
 import {Link} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
 import styles from "./Register.module.css"
@@ -17,7 +17,7 @@ export default function Register() {
     function handleFormSubmit(event: FormEvent) {
         event.preventDefault();
         console.log(formData);
-        attemptRegister(formData)
+        UserService.attemptRegister(formData)
             .then(() => setIsRegistered(true));
     }
 

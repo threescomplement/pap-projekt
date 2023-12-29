@@ -1,4 +1,4 @@
-package pl.edu.pw.pap.user;
+package pl.edu.pw.pap.user.emailverification;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

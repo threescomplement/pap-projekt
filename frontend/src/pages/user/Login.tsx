@@ -1,7 +1,7 @@
 import {FormEvent, useReducer, useState} from "react";
-import {attemptLogin, LoginRequest} from "../../lib/User";
+import UserService, {LoginRequest} from "../../lib/User";
 import useUser from "../../hooks/useUser";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
 import styles from "./Login.module.css"
 import ErrorBox from "../../components/ErrorBox";
@@ -32,7 +32,7 @@ export default function Login() {
         }
 
         try {
-            const user = await attemptLogin(formData);
+            const user = await UserService.attemptLogin(formData);
             setUser(user);
             navigate("/user");
         } catch (e) {
@@ -54,6 +54,7 @@ export default function Login() {
             </label>
             <ErrorBox message={errorMessage}/>
             <input type="submit" value="Log In"/>
+            <Link to={"/user/forgot-password"}>Nie pamiętam hasła</Link>
         </form>
     </div>
 }

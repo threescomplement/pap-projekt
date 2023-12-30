@@ -17,3 +17,6 @@ spring:
             enable: "true"
 server:
   forward-headers-strategy: framework
+security:
+  jwt:
+    valid-for-seconds: 3600

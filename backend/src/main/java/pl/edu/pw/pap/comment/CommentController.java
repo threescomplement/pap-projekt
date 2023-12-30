@@ -64,12 +64,12 @@ public class CommentController {
             @RequestBody AddCommentRequest request,
             @AuthenticationPrincipal UserPrincipal principal
     ) {
-        return commentService.addNewComment(courseId, reviewerUsername, request, principal);
+        return addLinks(commentService.addNewComment(courseId, reviewerUsername, request, principal));
     }
 
     @PutMapping("/api/comments/{commentId}")
     public CommentDTO updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request, @AuthenticationPrincipal UserPrincipal principal ) {
-        return commentService.updateComment(commentId, request, principal);
+        return addLinks(commentService.updateComment(commentId, request, principal));
     }
 
 

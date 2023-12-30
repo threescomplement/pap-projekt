@@ -1,5 +1,6 @@
 .data
 frontend/node_modules
+/backend/src/main/resources/application-local.yml
 
 HELP.md
 .gradle
@@ -38,3 +39,4 @@ out/
 
 ### VS Code ###
 .vscode/
+

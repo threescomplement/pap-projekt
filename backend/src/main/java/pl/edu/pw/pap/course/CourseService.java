@@ -57,14 +57,16 @@ public class CourseService {
 
     }
 
+    // TODO write a repository method that works with both H2 and postgres
     public List<CourseDTO> getAllMatchingFilters(String name, String language, String module, String type, String level, String teacherName) {
-        return courseRepository.findCoursesByAttributesWithRatings(
-                name,
-                language.equals(ALL) ? null : language,
-                module.equals(ALL) ? null : module,
-                type.equals(ALL) ? null : type,
-                level.equals(ALL) ? null : level,
-                teacherName
-        );
+        return courseRepository.findAll().stream()
+                .filter(c -> c.getName().toLowerCase().contains(name.toLowerCase()))
+                .filter(c -> language.equals(ALL) || c.getLanguage().equalsIgnoreCase(language))
+                .filter(c -> module.equals(ALL) || (c.getModule() != null && c.getModule().equalsIgnoreCase(module)))
+                .filter(c -> type.equals(ALL) || c.getType().equalsIgnoreCase(type))
+                .filter(c -> level.equals(ALL) || c.getLevel().equalsIgnoreCase(level))
+                .filter(c -> c.getTeacher().getName().toLowerCase().contains(teacherName.toLowerCase()))
+                .map(this::convertToDto)
+                .toList();
     }
 }

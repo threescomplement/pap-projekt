@@ -100,8 +100,8 @@ public class CommentService {
 
 
         Comment comment = new Comment(text, review, addingUser);
-        return convertToDto(
-                commentRepository.save(comment)
-        );
+        comment = commentRepository.save(comment);
+        reviewRepository.save(review);
+        return convertToDto(comment);
     }
 }

@@ -1,4 +1,4 @@
-package pl.edu.pw.pap.user;
+package pl.edu.pw.pap.user.emailverification;
 
 public class EmailVerificationException extends RuntimeException{
     public EmailVerificationException(String message) {

@@ -7,6 +7,7 @@ import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.review.Review;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,11 +30,11 @@ public class User {
     private Boolean enabled;
 
     // TODO: figure out how to cascade reviews and comments without repository.deleteAll throwing Cocurrent Modification (if needed)
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<Review> reviews;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.MERGE, orphanRemoval = true)
+    private Set<Review> reviews = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    private Set<Comment> comments;
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments = new HashSet<>();
 
     public User(String username, String email, String password, String role, Boolean enabled) {
         this.username = username;
@@ -48,11 +49,32 @@ public class User {
 
     }
 
-    public void removeReview ( Review review){
-        this.reviews.remove(review);
+    @PreRemove
+    public void preRemove() {
+        this.reviews.forEach(review -> review.setUser(null));
+        this.reviews.clear();
+        this.comments.forEach(comment -> comment.setUser(null));
+        this.comments.clear();
     }
-    public void removeComment(Comment comment){
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
+        review.setUser(this);
+    }
+
+    public void removeReview(Review review) {
+        this.reviews.remove(review);
+        review.setUser(null);
+    }
+
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+        comment.setUser(this);
+    }
+
+    public void removeComment(Comment comment) {
         this.comments.remove(comment);
+        comment.setUser(null);
     }
 
     @Override

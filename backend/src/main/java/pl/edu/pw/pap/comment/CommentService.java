@@ -108,7 +108,7 @@ public class CommentService {
     }
 
     public CommentDTO updateComment(Long commentId, UpdateCommentRequest request, UserPrincipal principal) {
-        // check if user has proper privalages
+        // check if user has proper privileges
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("No comment with given ID: " + commentId + " found for edit"));
 

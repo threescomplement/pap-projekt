@@ -57,7 +57,7 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", text='" + edited + '\'' +
+                ", edited='" + edited + '\'' +
                 ", created=" + created.toString() +
                 ", review=" + review.getId() +
                 ", user=" + user.getId() +

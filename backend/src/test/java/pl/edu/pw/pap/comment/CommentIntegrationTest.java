@@ -293,6 +293,10 @@ public class CommentIntegrationTest {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var returnedComment = JsonPath.parse(response.getBody());
+        assertEquals("nowy tekscik", returnedComment.read("text"));
+        assertEquals("rdeckard", returnedComment.read("authorUsername"));
+        assertEquals(true, returnedComment.read("edited"));
 
         response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.GET, new HttpEntity<>(request, headers), String.class);
@@ -301,6 +305,14 @@ public class CommentIntegrationTest {
 
         assertEquals("nowy tekscik", commentJson.read("text"));
         assertEquals("rdeckard", commentJson.read("authorUsername"));
+
+
+        // check links
+        assertTrue(commentJson.read("$._links.self.href").toString().endsWith("/api/comments/3"));
+        assertTrue(commentJson.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(commentJson.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+
     }
 
     @Test
@@ -320,6 +332,8 @@ public class CommentIntegrationTest {
         assertEquals("rel", commentJson.read("text"));
         assertEquals("user_3", commentJson.read("authorUsername"));
         assertEquals(false, commentJson.read("edited"));
+
+
     }
 
 
@@ -342,6 +356,8 @@ public class CommentIntegrationTest {
         assertEquals("rel", commentJson.read("text"));
         assertEquals("user_3", commentJson.read("authorUsername"));
         assertEquals(false, commentJson.read("edited"));
+
+
     }
 
     @Test

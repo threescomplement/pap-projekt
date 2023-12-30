@@ -32,6 +32,7 @@ public class CommentService {
                 .text(comment.getText())
                 .created(comment.getCreated())
                 .courseId(comment.getReview().getCourse().getId())
+                .reviewAuthorUsername(comment.getReview().getUser().getUsername())
                 .edited(comment.getEdited())
                 .build();
     }

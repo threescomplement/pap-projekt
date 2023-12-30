@@ -98,7 +98,7 @@ public class CommentController {
     private CommentDTO addLinks(CommentDTO comment) {
         return comment.add(
                 linkTo(methodOn(CommentController.class).getCommentById(comment.getId())).withSelfRel(),
-                linkTo(methodOn(ReviewController.class).getReview(comment.getCourseId(), comment.getAuthorUsername())).withRel("review"),
+                linkTo(methodOn(ReviewController.class).getReview(comment.getCourseId(), comment.getReviewAuthorUsername())).withRel("review"),
                 linkTo(methodOn(UserController.class).getUser(comment.getAuthorUsername())).withRel("user")
         );
     }

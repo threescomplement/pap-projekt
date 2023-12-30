@@ -68,7 +68,7 @@ public class CommentController {
     }
 
     @PutMapping("/api/comments/{commentId}")
-    public CommentDTO updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request, @AuthenticationPrincipal UserPrincipal principal ) {
+    public CommentDTO updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request, @AuthenticationPrincipal UserPrincipal principal) {
         return addLinks(commentService.updateComment(commentId, request, principal));
     }
 

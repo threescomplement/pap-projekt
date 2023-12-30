@@ -323,7 +323,6 @@ public class CommentIntegrationTest {
     }
 
 
-
     @Test
     public void updateCommentByAdmin() {
         adminLogin();
@@ -342,7 +341,8 @@ public class CommentIntegrationTest {
         // make sure nothing was changed
         assertEquals("rel", commentJson.read("text"));
         assertEquals("user_3", commentJson.read("authorUsername"));
-        assertEquals(false, commentJson.read("edited"));}
+        assertEquals(false, commentJson.read("edited"));
+    }
 
     @Test
     public void updateCommentNotExist() {
@@ -364,9 +364,6 @@ public class CommentIntegrationTest {
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
     }
-
-
-
 
 
 }

@@ -43,7 +43,7 @@ public class Comment {
     }
 
     @PreRemove
-    public void preRemove(){
+    public void preRemove() {
         if (this.user != null) {
             this.user.removeComment(this);
         }

@@ -62,7 +62,7 @@ public class CommentService {
         var comment = maybeComment.get();
         var user = maybeUser.get();
         if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN")))) {
-            throw(new ForbiddenException(("You are not permitted to delete that comment")));
+            throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
         commentRepository.delete(comment);
@@ -116,7 +116,7 @@ public class CommentService {
         User editingUser = userRepository.findByUsername(principal.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("User asking for update doesn't exist"));
         if (!comment.getUser().getId().equals(editingUser.getId())) {
-            throw(new ForbiddenException(("You are not permitted to edit that comment")));
+            throw (new ForbiddenException(("You are not permitted to edit that comment")));
         }
         comment.setText(request.text());
         comment.setEdited(true);

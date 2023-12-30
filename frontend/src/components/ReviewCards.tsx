@@ -39,7 +39,7 @@ function createDeleteHandler(courseId: string, username: string, afterDeleting: 
         if (window.confirm("Czy na pewno chcesz usunąć swoją opinię?")) {
             ReviewService.deleteReview(courseId, username)
                 .then(deleted => {
-                    let feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
+                    let feedback = deleted ? 'Opinia została usunięta.' : 'Przy usuwaniu opinii wystąpił błąd. Spróbuj ponownie lub skontaktuj się z administracją...';
                     alert(feedback);
                     afterDeleting();
                 })

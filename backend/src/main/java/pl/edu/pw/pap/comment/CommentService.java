@@ -110,13 +110,13 @@ public class CommentService {
     public CommentDTO updateComment(Long commentId, UpdateCommentRequest request, UserPrincipal principal) {
         // check if user has proper privalages
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CommentNotFoundException("No comment with given ID: " + commentId.toString() + " found for edit"));
+                .orElseThrow(() -> new CommentNotFoundException("No comment with given ID: " + commentId + " found for edit"));
 
         // the throw shouldn't ever happen but we need the role in UserPrincipal to avoid this check
         User editingUser = userRepository.findByUsername(principal.getUsername())
                 .orElseThrow(() -> new UserNotFoundException("User asking for update doesn't exist"));
         if (!comment.getUser().getId().equals(editingUser.getId()) && (!(editingUser.getRole().equals("ROLE_ADMIN")))) {
-            throw(new ForbiddenException(("You are not permitted to delete that comment")));
+            throw(new ForbiddenException(("You are not permitted to edit that comment")));
         }
         comment.setText(request.text());
         comment.setEdited(true);

@@ -25,17 +25,17 @@ async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
 }
 
 async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review> {
-    return api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
+    return api.get(("/courses/" + courseId + "/reviews/" + authorUsername))
         .then(r => r.json());
 }
 
 async function postReview(request: ReviewRequest, courseId: string) {
-    api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews"), request)
+    api.post(("/courses/" + courseId + "/reviews"), request)
         .catch(e => console.log(e));
 }
 
 async function deleteReview(courseId: string, username: string) {
-    const response = await api.delete((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + username));
+    const response = await api.delete(("/courses/" + courseId + "/reviews/" + username));
     console.log(response);
     return response.ok;
 }

@@ -327,24 +327,22 @@ public class CommentIntegrationTest {
     @Test
     public void updateCommentByAdmin() {
         adminLogin();
-        String endpoint = "/api/comments/1"; // by user_3
-        var request = new UpdateCommentRequest("nowy tekscik");
 
+        String endpoint = "/api/comments/1"; // by user 3 user_3
+        var request = new UpdateCommentRequest("nowy tekscik");
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
 
         response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var commentJson = JsonPath.parse(response.getBody());
 
-        // make sure appropriate things were changed
-        assertEquals("nowy tekscik", commentJson.read("text"));
+        // make sure nothing was changed
+        assertEquals("rel", commentJson.read("text"));
         assertEquals("user_3", commentJson.read("authorUsername"));
-        assertEquals(true, commentJson.read("edited"));
-    }
+        assertEquals(false, commentJson.read("edited"));}
 
     @Test
     public void updateCommentNotExist() {

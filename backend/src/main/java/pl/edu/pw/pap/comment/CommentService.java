@@ -121,7 +121,6 @@ public class CommentService {
         }
         comment.setText(request.text());
         comment.setEdited(true);
-        commentRepository.save(comment);
-        return convertToDto(comment);
+        return convertToDto(commentRepository.save(comment));
     }
 }

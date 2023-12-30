@@ -3,6 +3,7 @@ package pl.edu.pw.pap.comment;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
@@ -102,6 +103,22 @@ public class CommentService {
         Comment comment = new Comment(text, review, addingUser);
         comment = commentRepository.save(comment);
         reviewRepository.save(review);
+        return convertToDto(comment);
+    }
+
+    public CommentDTO updateComment(Long commentId, UpdateCommentRequest request, UserPrincipal principal) {
+        // check if user has proper privalages
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("No comment with given ID: " + commentId.toString() + " found for edit"));
+
+        // the throw shouldn't ever happen but we need the role in UserPrincipal to avoid this check
+        User editingUser = userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User asking for update doesn't exist"));
+        if (!comment.getUser().getId().equals(editingUser.getId()) && (!(editingUser.getRole().equals("ROLE_ADMIN")))) {
+            throw(new ForbiddenException(("You are not permitted to delete that comment")));
+        }
+        comment.setText(request.text());
+        commentRepository.save(comment);
         return convertToDto(comment);
     }
 }

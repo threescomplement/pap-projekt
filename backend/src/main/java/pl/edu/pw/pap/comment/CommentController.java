@@ -67,6 +67,11 @@ public class CommentController {
         return commentService.addNewComment(courseId, reviewerUsername, request, principal);
     }
 
+    @PutMapping("/api/comments/{commentId}")
+    public CommentDTO updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request, @AuthenticationPrincipal UserPrincipal principal ) {
+        return commentService.updateComment(commentId, request, principal);
+    }
+
 
     @DeleteMapping("/api/comments/{commentId}")
     public ResponseEntity<CommentDTO> deleteComment(@PathVariable Long commentId, @AuthenticationPrincipal UserPrincipal principal) {

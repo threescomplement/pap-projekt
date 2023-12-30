@@ -97,7 +97,7 @@ public class CommentIntegrationTest {
         // check links
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rdeckard/comments"));
         assertTrue(json.read("$._embedded.comments[0]._links.self.href").toString().endsWith("/api/comments/1"));
-        assertTrue(json.read("$._embedded.comments[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/user_3"));
+        assertTrue(json.read("$._embedded.comments[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(json.read("$._embedded.comments[0]._links.user.href").toString().endsWith("/api/users/user_3"));
     }
 

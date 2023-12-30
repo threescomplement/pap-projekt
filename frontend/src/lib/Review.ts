@@ -29,12 +29,12 @@ async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: 
         .then(r => r.json());
 }
 
-async function postReview(request: ReviewRequest, courseId: string) {
+async function postReview(request: ReviewRequest, courseId: string): Promise<void> {
     api.post(("/courses/" + courseId + "/reviews"), request)
         .catch(e => console.log(e));
 }
 
-async function deleteReview(courseId: string, username: string) {
+async function deleteReview(courseId: string, username: string): Promise<boolean> {
     const response = await api.delete(("/courses/" + courseId + "/reviews/" + username));
     console.log(response);
     return response.ok;

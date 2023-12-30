@@ -32,6 +32,7 @@ public class CommentService {
                 .text(comment.getText())
                 .created(comment.getCreated())
                 .courseId(comment.getReview().getCourse().getId())
+                .edited(comment.getEdited())
                 .build();
     }
 
@@ -118,6 +119,7 @@ public class CommentService {
             throw(new ForbiddenException(("You are not permitted to delete that comment")));
         }
         comment.setText(request.text());
+        comment.setEdited(true);
         commentRepository.save(comment);
         return convertToDto(comment);
     }

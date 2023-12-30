@@ -18,5 +18,7 @@ public class CommentDTO extends RepresentationModel<CommentDTO> {
     private Timestamp created;
     @JsonIgnore
     private Long courseId;
+    private String reviewAuthorUsername;
+    private Boolean edited;
 
 }

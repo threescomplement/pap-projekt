@@ -21,6 +21,7 @@ public class Comment {
     private Long id;
 
     private String text;
+    private Boolean edited;
     @CreationTimestamp
     private Timestamp created;
     @JsonIgnore
@@ -33,6 +34,7 @@ public class Comment {
 
     public Comment(String text, Review review, User user) {
         this.text = text;
+        this.edited = false;
         review.addComment(this);
         user.addComment(this);
     }
@@ -41,7 +43,7 @@ public class Comment {
     }
 
     @PreRemove
-    public void preRemove(){
+    public void preRemove() {
         if (this.user != null) {
             this.user.removeComment(this);
         }
@@ -55,6 +57,7 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
+                ", edited='" + edited + '\'' +
                 ", created=" + created.toString() +
                 ", review=" + review.getId() +
                 ", user=" + user.getId() +

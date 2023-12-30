@@ -20,4 +20,5 @@ public class TeacherService {
     public List<TeacherDTO> getTeachersMatchingFilters(String name, String language) {
         return teacherRepository.findTeachersMatchingFilters(name, language.equals(ALL) ? null : language);
     }
+
 }

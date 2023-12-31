@@ -12,3 +12,5 @@ spring:
 email-verification:
   confirm-base-url: "https://pap.mgarbowski.pl/user/verify/"
   reset-password-base-url: "https://pap.mgarbowski.pl/user/reset-password/"
+app:
+  website-base-url: "https://pap.mgarbowski.pl"

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import pl.edu.pw.pap.comment.CommentRepository;
+import pl.edu.pw.pap.common.AppProperties;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.security.JwtProperties;
@@ -26,7 +27,8 @@ public class PapApplication {
 
     @Bean
     public CommandLineRunner reportStatus(
-            JwtProperties jwtProperties
+            JwtProperties jwtProperties,
+            AppProperties appProperties
     ) {
         return (args) -> {
             if (jwtProperties.getSecretKey() != null) {
@@ -34,10 +36,12 @@ public class PapApplication {
             } else {
                 log.error("Missing JWT signing secret key");
             }
+
+            log.info(String.format("Frontend app available on %s", appProperties.getWebsiteBaseUrl()));
         };
     }
 
-    //    @Bean
+    @Bean
     @Profile({"dev", "dev-postgres"})
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,

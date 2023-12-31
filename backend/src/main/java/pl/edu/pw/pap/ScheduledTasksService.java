@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordToken;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
@@ -19,9 +18,7 @@ public class ScheduledTasksService {
 
     @Scheduled(cron = "${app.delete-tokens-cron-expression}")
     public void deleteExpiredEmailVerificationTokens() {
-        var expiredTokens = emailTokenRepository.findAll().stream()
-                .filter(EmailVerificationToken::isExpired)
-                .toList();
+        var expiredTokens = emailTokenRepository.findAllExpired();
 
         if (!expiredTokens.isEmpty()) {
             log.info(String.format("Found %d expired email verification tokens: %s", expiredTokens.size(), expiredTokens));
@@ -32,9 +29,7 @@ public class ScheduledTasksService {
 
     @Scheduled(cron = "${app.delete-tokens-cron-expression}")
     public void deleteExpiredPasswordResetTokens() {
-        var expiredTokens = passwordTokenRepository.findAll().stream()
-                .filter(ResetPasswordToken::isExpired)
-                .toList();
+        var expiredTokens = passwordTokenRepository.findAllExpired();
 
         if (!expiredTokens.isEmpty()) {
             log.info(String.format("Found %d expired password reset tokens: %s", expiredTokens.size(), expiredTokens));

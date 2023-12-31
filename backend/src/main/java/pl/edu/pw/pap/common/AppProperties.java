@@ -11,4 +11,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("app")
 public class AppProperties {
     private String websiteBaseUrl;
+    private String confirmEmailUrl;
+    private String resetPasswordUrl;
 }

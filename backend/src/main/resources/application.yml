@@ -5,7 +5,6 @@ spring:
     rest:
       base-path: "/api"
   mail:
-    #    password: "app password goes here"
     username: "mg.puppet@gmail.com"
     host: "smtp.gmail.com"
     port: "587"
@@ -17,3 +16,6 @@ spring:
             enable: "true"
 server:
   forward-headers-strategy: framework
+app:
+  confirm-email-url: "/user/verify/"
+  reset-password-url: "/user/reset-password/"

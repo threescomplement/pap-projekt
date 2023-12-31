@@ -1,6 +1,3 @@
-security:
-  jwt:
-    secret-key: "ksadjfioajisbdfauhsvfavsfgasvfgafc6rhasvfgyasf"
 spring:
   jpa:
     hibernate:

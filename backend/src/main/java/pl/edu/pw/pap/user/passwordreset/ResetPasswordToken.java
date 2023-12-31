@@ -26,6 +26,6 @@ public class ResetPasswordToken {
     }
 
     public boolean isExpired() {
-        return this.expires.isAfter(Instant.now());
+        return Instant.now().isAfter(expires);
     }
 }

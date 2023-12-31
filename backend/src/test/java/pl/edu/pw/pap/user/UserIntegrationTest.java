@@ -14,10 +14,13 @@ import pl.edu.pw.pap.email.EmailSender;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationRequest;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordRequest;
+import pl.edu.pw.pap.user.passwordreset.ResetPasswordToken;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
 import pl.edu.pw.pap.user.passwordreset.SendResetPasswordEmailRequest;
 import pl.edu.pw.pap.utils.DummyData;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -185,5 +188,31 @@ public class UserIntegrationTest {
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
     }
 
-    //TODO reset password expired token
+    @Test
+    public void resetPasswordWithExpiredToken() {
+        var user = new User(
+                "user_1",
+                "user@example.com",
+                passwordEncoder.encode("password"),
+                "ROLE_USER",
+                true
+        );
+        userRepository.save(user);
+
+        passwordTokenRepository.save(
+                ResetPasswordToken.builder()
+                        .expires(Instant.now().minus(1L, ChronoUnit.DAYS))
+                        .email(user.getEmail())
+                        .token("token")
+                        .build()
+        );
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/reset-password", port),
+                HttpMethod.POST,
+                new HttpEntity<>(new ResetPasswordRequest("newPassword", "token")),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
 }

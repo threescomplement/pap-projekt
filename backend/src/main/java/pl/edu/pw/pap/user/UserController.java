@@ -48,7 +48,7 @@ public class UserController {
         try {
             userService.resetPassword(request.passwordResetToken(), request.newPassword());
             return ResponseEntity.ok("Password has been reset successfully");
-        } catch (Exception e ) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.toString());
         }
     }

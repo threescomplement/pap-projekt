@@ -184,4 +184,6 @@ public class UserIntegrationTest {
         );
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
     }
+
+    //TODO reset password expired token
 }

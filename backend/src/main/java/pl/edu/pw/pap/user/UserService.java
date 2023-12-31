@@ -101,6 +101,10 @@ public class UserService {
         var resetToken = passwordTokenRepository.findByToken(passwordTokenStr)
                 .orElseThrow();
 
+        if (resetToken.isExpired()) {
+            throw new PasswordResetException("Token expired");
+        }
+
         var user = userRepository.findByEmail(resetToken.getEmail())
                 .orElseThrow();
 
@@ -119,6 +123,7 @@ public class UserService {
                 ResetPasswordToken.builder()
                         .token(UUID.randomUUID().toString())
                         .email(email)
+                        .expires(Instant.now().plus(1L, ChronoUnit.DAYS))
                         .build()
         );
     }

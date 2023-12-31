@@ -13,8 +13,12 @@ import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
+import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 
 /**
@@ -79,6 +83,9 @@ public class DummyData {
         comment_5 = commentRepository.save(new Comment("oj tak", review_2, user_3));
 
         reviewRepository.saveAll(List.of(review_1, review_2, review_3, review_4));  // Will not work otherwise FIXME
+
+        emailVerificationTokenRepository.save(new EmailVerificationToken("token", Instant.now().minus(1L, ChronoUnit.MINUTES), user_1));
+        emailVerificationTokenRepository.save(new EmailVerificationToken("token", Instant.now().plus(1L, ChronoUnit.DAYS), user_2));
     }
 
     public void deleteAll() {

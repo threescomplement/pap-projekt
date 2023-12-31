@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.time.Instant;
+
 @Entity
 @Builder
 @Data
@@ -17,8 +19,13 @@ public class ResetPasswordToken {
     private Long id;
     private String token;
     private String email;
+    private Instant expires;
 
     public ResetPasswordToken() {
 
+    }
+
+    public boolean isExpired() {
+        return this.expires.isAfter(Instant.now());
     }
 }

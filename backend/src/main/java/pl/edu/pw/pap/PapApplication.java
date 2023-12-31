@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.ReviewRepository;
+import pl.edu.pw.pap.security.JwtProperties;
 import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.utils.DummyData;
@@ -23,7 +24,20 @@ public class PapApplication {
         SpringApplication.run(PapApplication.class, args);
     }
 
-//    @Bean
+    @Bean
+    public CommandLineRunner reportStatus(
+            JwtProperties jwtProperties
+    ) {
+        return (args) -> {
+            if (jwtProperties.getSecretKey() != null) {
+                log.info("Loaded secret key for signing JWT tokens");
+            } else {
+                log.error("Missing JWT signing secret key");
+            }
+        };
+    }
+
+    //    @Bean
     @Profile({"dev", "dev-postgres"})
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,

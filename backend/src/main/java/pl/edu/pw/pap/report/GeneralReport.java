@@ -9,14 +9,16 @@ import pl.edu.pw.pap.user.User;
 
 
 @MappedSuperclass
+@Getter
+@Setter
 public abstract class GeneralReport {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
-    protected User reportingUser;
-    protected String reason; // TODO: change to enum
+    private User reportingUser;
+    private String reason; // TODO: change to enum
 
 
 }

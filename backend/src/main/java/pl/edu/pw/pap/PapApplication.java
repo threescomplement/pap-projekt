@@ -37,6 +37,7 @@ public class PapApplication {
                 log.error("Missing JWT signing secret key");
             }
 
+            log.info(String.format("Frontend app available on %s", appConfiguration.getWebsiteBaseUrl()));
             log.info(String.format("Schedule for deleting expired tokens (cron): %s", appConfiguration.getDeleteTokensCronExpression()));
         };
     }

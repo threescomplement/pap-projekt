@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import pl.edu.pw.pap.comment.CommentRepository;
-import pl.edu.pw.pap.common.AppProperties;
 import pl.edu.pw.pap.config.AppConfiguration;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.ReviewRepository;
@@ -29,7 +28,6 @@ public class PapApplication {
     @Bean
     public CommandLineRunner reportStatus(
             JwtProperties jwtProperties,
-            AppProperties appProperties,
             AppConfiguration appConfiguration
     ) {
         return (args) -> {
@@ -39,12 +37,12 @@ public class PapApplication {
                 log.error("Missing JWT signing secret key");
             }
 
-            log.info(String.format("Frontend app available on %s", appProperties.getWebsiteBaseUrl()));
+            log.info(String.format("Frontend app available on %s", appConfiguration.getWebsiteBaseUrl()));
             log.info(String.format("Schedule for deleting expired tokens (cron): %s", appConfiguration.getDeleteTokensCronExpression()));
         };
     }
 
-//    @Bean
+    //    @Bean
     @Profile({"dev", "dev-postgres"})
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,

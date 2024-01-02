@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.common.AppProperties;
+import pl.edu.pw.pap.config.AppConfiguration;
 import pl.edu.pw.pap.email.EmailSender;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationException;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
@@ -30,7 +30,7 @@ public class UserService {
     private final ResetPasswordTokenRepository passwordTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
-    private final AppProperties appProperties;
+    private final AppConfiguration appConfiguration;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -80,8 +80,8 @@ public class UserService {
         var token = generateVerificationToken(user);
         var url = String.format(
                 "%s%s%s",
-                appProperties.getWebsiteBaseUrl(),
-                appProperties.getConfirmEmailUrl(),
+                appConfiguration.getWebsiteBaseUrl(),
+                appConfiguration.getConfirmEmailUrl(),
                 token.getToken()
         );
         emailSender.sendEmail(
@@ -96,8 +96,8 @@ public class UserService {
         var token = generatePasswordResetToken(email);
         var url = String.format(
                 "%s%s%s",
-                appProperties.getWebsiteBaseUrl(),
-                appProperties.getResetPasswordUrl(),
+                appConfiguration.getWebsiteBaseUrl(),
+                appConfiguration.getResetPasswordUrl(),
                 token.getToken()
         );
         emailSender.sendEmail(

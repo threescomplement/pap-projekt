@@ -16,10 +16,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import pl.edu.pw.pap.common.AppProperties;
+import pl.edu.pw.pap.config.AppConfiguration;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Configuration
@@ -68,9 +66,9 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    CorsConfigurationSource corsConfigurationSource(AppProperties properties) {
+    CorsConfigurationSource corsConfigurationSource(AppConfiguration appConfiguration) {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of(properties.getWebsiteBaseUrl()));
+        configuration.setAllowedOrigins(List.of(appConfiguration.getWebsiteBaseUrl()));
         configuration.setAllowedMethods(List.of("*"));
         configuration.setAllowedHeaders(List.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

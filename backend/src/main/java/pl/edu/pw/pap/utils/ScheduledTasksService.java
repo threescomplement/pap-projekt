@@ -1,4 +1,4 @@
-package pl.edu.pw.pap;
+package pl.edu.pw.pap.utils;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
-import pl.edu.pw.pap.user.passwordreset.ResetPasswordToken;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
 
 @Service

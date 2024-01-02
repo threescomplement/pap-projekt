@@ -10,6 +10,7 @@ import pl.edu.pw.pap.email.EmailSenderProperties;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationException;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
+import pl.edu.pw.pap.user.passwordreset.PasswordResetException;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordToken;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
 
@@ -101,6 +102,10 @@ public class UserService {
         var resetToken = passwordTokenRepository.findByToken(passwordTokenStr)
                 .orElseThrow();
 
+        if (resetToken.isExpired()) {
+            throw new PasswordResetException("Token expired");
+        }
+
         var user = userRepository.findByEmail(resetToken.getEmail())
                 .orElseThrow();
 
@@ -119,6 +124,7 @@ public class UserService {
                 ResetPasswordToken.builder()
                         .token(UUID.randomUUID().toString())
                         .email(email)
+                        .expires(Instant.now().plus(1L, ChronoUnit.DAYS))
                         .build()
         );
     }

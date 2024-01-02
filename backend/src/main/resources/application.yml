@@ -17,6 +17,8 @@ spring:
             enable: "true"
 server:
   forward-headers-strategy: framework
+app:
+  delete-tokens-cron-expression: "0 0 0 * * *" # Every day at midnight
 security:
   jwt:
     valid-for-seconds: 3600

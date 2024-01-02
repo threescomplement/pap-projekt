@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.common.AppProperties;
+import pl.edu.pw.pap.config.AppConfiguration;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.security.JwtProperties;
@@ -28,7 +29,8 @@ public class PapApplication {
     @Bean
     public CommandLineRunner reportStatus(
             JwtProperties jwtProperties,
-            AppProperties appProperties
+            AppProperties appProperties,
+            AppConfiguration appConfiguration
     ) {
         return (args) -> {
             if (jwtProperties.getSecretKey() != null) {
@@ -38,6 +40,7 @@ public class PapApplication {
             }
 
             log.info(String.format("Frontend app available on %s", appProperties.getWebsiteBaseUrl()));
+            log.info(String.format("Schedule for deleting expired tokens (cron): %s", appConfiguration.getDeleteTokensCronExpression()));
         };
     }
 

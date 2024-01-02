@@ -152,4 +152,58 @@ public class TeacherIntegrationTests {
 //        var json = JsonPath.parse(response.getBody());
 //        assertEquals(0, (int) json.read("$.numRatings"));
 //    }
+
+    @Test
+    public void getTeachersCourses() {
+        var response = restTemplate.exchange(buildUrl("/api/teachers/1/courses", port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+        assertEquals(2, ((JSONArray) json.read("$._embedded.courses")).size());
+        assertTrue(json.read("$._embedded.courses[?(@.id == 1)].name").toString().contains(data.course_1.getName()));
+        assertTrue(json.read("$._embedded.courses[?(@.id == 2)].name").toString().contains(data.course_2.getName()));
+    }
+
+    @Test
+    public void getTeacherCoursesEmpty() {
+        var response = restTemplate.exchange(
+                buildUrl("/api/teachers/3/courses", port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+
+        JSONArray courses = json.read("$._embedded.courses");
+        assertEquals(0, courses.size());
+    }
+
+    @Test
+    public void getTeacherCoursesFollowTeacherLink() {
+        var response = restTemplate.exchange(
+                buildUrl("/api/teachers/1/courses", port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+
+        JSONArray courses = json.read("$._embedded.courses");
+        assertEquals(2, courses.size());
+
+        var teacherLink = json.read("$._links.teacher.href").toString();
+
+        var response2 = restTemplate.exchange(
+                teacherLink,
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(200), response2.getStatusCode());
+        var jsonTeacher = JsonPath.parse(response2.getBody());
+        assertEquals(teacherLink, jsonTeacher.read("$._links.self.href").toString());
+    }
 }

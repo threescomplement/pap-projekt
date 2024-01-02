@@ -17,5 +17,9 @@ spring:
 server:
   forward-headers-strategy: framework
 app:
+  delete-tokens-cron-expression: "0 0 0 * * *" # Every day at midnight
   confirm-email-url: "/user/verify/"
   reset-password-url: "/user/reset-password/"
+security:
+  jwt:
+    valid-for-seconds: 3600

@@ -21,10 +21,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 public class ReportService {
 
-    private final ReviewReportRepository reviewReportRepostiory;
+    private final ReviewReportRepository reviewReportRepository;
     private final CommentReportRepository commentReportRepository;
 
-    public ReportDTO convertReviewRaportToDto(ReviewReport report) {
+    public ReportDTO convertReviewReportToDto(ReviewReport report) {
 
         var reportDTO = ReportDTO.builder()
                 .reportedText(report.getReported().getOpinion())
@@ -40,7 +40,7 @@ public class ReportService {
         );
     }
 
-    public ReportDTO convertCommentRaportToDto(CommentReport report) {
+    public ReportDTO convertCommentReportToDto(CommentReport report) {
 
         var reportDTO = ReportDTO.builder()
                 .reportedText(report.getReported().getText())
@@ -57,15 +57,15 @@ public class ReportService {
 
 
     public List<ReportDTO> getAllReports() {
-        var reviewReports = reviewReportRepostiory.findAll();
+        var reviewReports = reviewReportRepository.findAll();
         var commentReports = commentReportRepository.findAll();
         ArrayList<ReportDTO> allReports = new ArrayList<>(reviewReports
                 .stream()
-                .map(this::convertReviewRaportToDto)
+                .map(this::convertReviewReportToDto)
                 .toList());
         allReports.addAll(commentReports
                 .stream()
-                .map(this::convertCommentRaportToDto)
+                .map(this::convertCommentReportToDto)
                 .toList());
         return allReports.stream().toList();
     }

@@ -2,9 +2,13 @@ package pl.edu.pw.pap.report;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -29,4 +33,31 @@ public class ReportService {
         return reportDTO.add();
     }
 
+    public ReportDTO convertCommentRaportToDto(CommentReport report){
+
+        var reportDTO = ReportDTO.builder()
+                .reportedText(report.getReported().getText())
+                .reportingUsername(report.getReportingUser().getUsername())
+                .reason(report.getReason())
+                .build();
+
+        // TODO: Add links once controller is done
+        return reportDTO.add();
+    }
+
+
+
+    public List<ReportDTO> getAllReports() {
+        var reviewReports = reviewReportRepostiory.findAll();
+        var commentReports = commentReportRepository.findAll();
+        ArrayList<ReportDTO> allReports = new ArrayList<>(reviewReports
+                .stream()
+                .map(this::convertReviewRaportToDto)
+                .toList());
+        allReports.addAll(commentReports
+                .stream()
+                .map(this::convertCommentRaportToDto)
+                .toList());
+        return allReports.stream().toList();
+    }
 }

@@ -54,25 +54,6 @@ public class CourseController {
                 .build();
     }
 
-
-    @GetMapping("/api/courses/teachers/{teacherId}")
-    public RepresentationModel<CourseDTO> getTeacherCourses( @PathVariable Long teacherId){
-        var courses = courseService.getTeacherCourses(teacherId);
-
-        if (courses.isEmpty()) {
-            return HalModelBuilder.emptyHalModel()
-                    .embed(Collections.emptyList(), LinkRelation.of("courses"))
-                    .build();
-        }
-
-        return HalModelBuilder.emptyHalModel()
-                .embed(courses, LinkRelation.of("courses"))
-                .link(linkTo(methodOn(CourseController.class).getTeacherCourses(teacherId)).withSelfRel())
-                .link(linkTo(methodOn(TeacherController.class).getTeacherById(teacherId)).withRel("teacher"))
-                .build();
-    }
-
-
     private CourseDTO addLinks(CourseDTO course) {
         return course.add(
                 linkTo(methodOn(CourseController.class).getCourseById(course.getId())).withSelfRel(),
@@ -81,9 +62,9 @@ public class CourseController {
                 linkTo(methodOn(ReviewController.class).getCourseReviews(course.getId())).withRel("reviews")
         );
     }
+
     @ExceptionHandler({TeacherNotFoundException.class, CourseNotFoundException.class})
     public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
     }
-
 }

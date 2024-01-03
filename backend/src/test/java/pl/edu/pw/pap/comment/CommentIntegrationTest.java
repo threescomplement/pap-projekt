@@ -97,7 +97,7 @@ public class CommentIntegrationTest {
         // check links
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rdeckard/comments"));
         assertTrue(json.read("$._embedded.comments[0]._links.self.href").toString().endsWith("/api/comments/1"));
-        assertTrue(json.read("$._embedded.comments[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/user_3"));
+        assertTrue(json.read("$._embedded.comments[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(json.read("$._embedded.comments[0]._links.user.href").toString().endsWith("/api/users/user_3"));
     }
 
@@ -209,6 +209,13 @@ public class CommentIntegrationTest {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var commentJson = JsonPath.parse(response.getBody());
+
+        // check links
+        assertTrue(commentJson.read("$._links.self.href").toString().endsWith("/api/comments/6"));
+        assertTrue(commentJson.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(commentJson.read("$._links.review.href").toString().endsWith("/api/courses/4/reviews/rbatty"));
+
 
         response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.GET, new HttpEntity<>(request, headers), String.class);
@@ -219,6 +226,7 @@ public class CommentIntegrationTest {
         assertEquals("rdeckard", com.get("authorUsername"));
         assertTrue(com.containsKey("id"));
         assertTrue(com.containsKey("created"));
+
     }
 
     @Test
@@ -228,6 +236,13 @@ public class CommentIntegrationTest {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var commentJson = JsonPath.parse(response.getBody());
+
+        // check links
+        assertTrue(commentJson.read("$._links.self.href").toString().endsWith("/api/comments/6"));
+        assertTrue(commentJson.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(commentJson.read("$._links.review.href").toString().endsWith("/api/courses/3/reviews/rdeckard"));
+
 
         response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.GET, new HttpEntity<>(request, headers), String.class);
@@ -284,6 +299,110 @@ public class CommentIntegrationTest {
                 HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
     }
+
+
+    @Test
+    public void updateCommentByAuthor() {
+        String endpoint = "/api/comments/3"; // by user 1 rdeckard
+        var request = new UpdateCommentRequest("nowy tekscik");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var returnedComment = JsonPath.parse(response.getBody());
+        assertEquals("nowy tekscik", returnedComment.read("text"));
+        assertEquals("rdeckard", returnedComment.read("authorUsername"));
+        assertEquals(true, returnedComment.read("edited"));
+
+        // check links
+        assertTrue(returnedComment.read("$._links.self.href").toString().endsWith("/api/comments/3"));
+        assertTrue(returnedComment.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(returnedComment.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var commentJson = JsonPath.parse(response.getBody());
+
+        assertEquals("nowy tekscik", commentJson.read("text"));
+        assertEquals("rdeckard", commentJson.read("authorUsername"));
+
+
+        // check links
+        assertTrue(commentJson.read("$._links.self.href").toString().endsWith("/api/comments/3"));
+        assertTrue(commentJson.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(commentJson.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+
+    }
+
+    @Test
+    public void updateCommentByOtherUser() {
+        String endpoint = "/api/comments/1"; // by user 3 user_3
+        var request = new UpdateCommentRequest("nowy tekscik");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var commentJson = JsonPath.parse(response.getBody());
+
+        // make sure nothing was changed
+        assertEquals("rel", commentJson.read("text"));
+        assertEquals("user_3", commentJson.read("authorUsername"));
+        assertEquals(false, commentJson.read("edited"));
+
+
+    }
+
+
+    @Test
+    public void updateCommentByAdmin() {
+        adminLogin();
+
+        String endpoint = "/api/comments/1"; // by user 3 user_3
+        var request = new UpdateCommentRequest("nowy tekscik");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var commentJson = JsonPath.parse(response.getBody());
+
+        // make sure nothing was changed
+        assertEquals("rel", commentJson.read("text"));
+        assertEquals("user_3", commentJson.read("authorUsername"));
+        assertEquals(false, commentJson.read("edited"));
+
+
+    }
+
+    @Test
+    public void updateCommentNotExist() {
+        String endpoint = "/api/comments/6"; // doesnt exist
+        var request = new UpdateCommentRequest("nowy tekscik");
+
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+    @Test
+    public void updateCommentNotExistByAdmin() {
+        adminLogin();
+        String endpoint = "/api/comments/6"; // doesnt exist
+        var request = new UpdateCommentRequest("nowy tekscik");
+
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+
 }
 
 

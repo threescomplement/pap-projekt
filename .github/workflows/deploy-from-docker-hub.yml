@@ -20,6 +20,7 @@ jobs:
           SERVER_PORT: ${{ secrets.SERVER_PORT }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           GMAIL_PASSWORD: ${{ secrets.GMAIL_PASSWORD }}
+          JWT_SIGNING_SECRET: ${{ secrets.JWT_SIGNING_SECRET }}
         run: |
           chmod 755 ./deploy.sh
           set -e

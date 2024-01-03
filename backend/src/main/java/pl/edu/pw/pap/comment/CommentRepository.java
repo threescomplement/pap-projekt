@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByReview_Id(ReviewKey reviewKey);
     List<Comment> findCommentsByUser_Username(String username);
+
 }

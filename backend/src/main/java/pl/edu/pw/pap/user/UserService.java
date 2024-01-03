@@ -5,11 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.config.AppConfiguration;
 import pl.edu.pw.pap.email.EmailSender;
-import pl.edu.pw.pap.email.EmailSenderProperties;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationException;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
+import pl.edu.pw.pap.user.passwordreset.PasswordResetException;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordToken;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
 
@@ -29,7 +30,7 @@ public class UserService {
     private final ResetPasswordTokenRepository passwordTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailSender emailSender;
-    private final EmailSenderProperties emailProperties;
+    private final AppConfiguration appConfiguration;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -61,9 +62,6 @@ public class UserService {
     }
 
     public User verifyEmailWithToken(String token) {
-        emailTokenRepository.findAll().forEach(t -> log.info(t.toString()));
-
-
         var verificationToken = emailTokenRepository.findByTokenEquals(token)
                 .orElseThrow(() -> new EmailVerificationException("Verification token not found"));
 
@@ -80,9 +78,15 @@ public class UserService {
 
     private void sendVerificationEmail(User user) {
         var token = generateVerificationToken(user);
+        var url = String.format(
+                "%s%s%s",
+                appConfiguration.getWebsiteBaseUrl(),
+                appConfiguration.getConfirmEmailUrl(),
+                token.getToken()
+        );
         emailSender.sendEmail(
                 user.getEmail(),
-                String.format("Click here to confirm your email: %s%s", emailProperties.getConfirmBaseUrl(), token.getToken()),
+                String.format("Click here to confirm your email: %s", url),
                 "Verify your email"
         );
     }
@@ -90,9 +94,15 @@ public class UserService {
 
     public void sendPasswordResetEmail(String email) {
         var token = generatePasswordResetToken(email);
+        var url = String.format(
+                "%s%s%s",
+                appConfiguration.getWebsiteBaseUrl(),
+                appConfiguration.getResetPasswordUrl(),
+                token.getToken()
+        );
         emailSender.sendEmail(
                 email,
-                String.format("Click here to reset your password: %s%s", emailProperties.getResetPasswordBaseUrl(), token.getToken()),
+                String.format("Click here to reset your password: %s", url),
                 "Reset your password"
         );
     }
@@ -100,6 +110,10 @@ public class UserService {
     public void resetPassword(String passwordTokenStr, String newPassword) {
         var resetToken = passwordTokenRepository.findByToken(passwordTokenStr)
                 .orElseThrow();
+
+        if (resetToken.isExpired()) {
+            throw new PasswordResetException("Token expired");
+        }
 
         var user = userRepository.findByEmail(resetToken.getEmail())
                 .orElseThrow();
@@ -119,6 +133,7 @@ public class UserService {
                 ResetPasswordToken.builder()
                         .token(UUID.randomUUID().toString())
                         .email(email)
+                        .expires(Instant.now().plus(1L, ChronoUnit.DAYS))
                         .build()
         );
     }

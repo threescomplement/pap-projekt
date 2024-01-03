@@ -1,4 +1,4 @@
-import api from "../../lib/api";
+import api from "./api";
 
 export interface ImporterRecord {
     usos_code: string,

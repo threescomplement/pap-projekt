@@ -1,5 +1,7 @@
 import {Link} from "./utils";
 import api from "./api";
+import {Review} from "./Review";
+import {ReviewComment} from "./ReviewComment";
 
 export interface Report {
     reportedText: string,
@@ -11,6 +13,11 @@ export interface Report {
     }
 }
 
+export interface ReportRequest {
+    reason: string
+}
+
+// TODO make sure this works when the backend gets implemented
 async function getAllReports(): Promise<Report[]> {
     const response = await api.get("/api/admin/reports");
     const json = await response.json();
@@ -27,9 +34,16 @@ async function deleteReportedEntity(report: Report): Promise<boolean> {
     return response.ok;
 }
 
+async function reportEntity(entity: Review | ReviewComment, reason: string): Promise<boolean> {
+    const body: ReportRequest = {reason};
+    const response = await api.post(`${entity._links.self.href}/reports`, body);
+    return response.ok;
+}
+
 const ReportService = {
     getAllReports,
     deleteReport,
-    deleteReportedEntity
+    deleteReportedEntity,
+    reportEntity
 };
 export default ReportService;

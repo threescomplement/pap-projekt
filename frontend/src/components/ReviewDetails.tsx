@@ -1,14 +1,16 @@
 import {Review} from "../lib/Review";
-import React, {useEffect, useState, useCallback} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewComment";
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
 import {useParams} from "react-router-dom";
+import ReportBox from "./ReportBox";
 
 interface ReviewDetailsProps {
     review: Review
 }
 
+// TODO styling
 export function ReviewDetails({review}: ReviewDetailsProps) {
     const {courseId, authorUsername} = useParams();
     const [comments, setComments] = useState<ReviewComment[]>([]);
@@ -43,6 +45,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 
     return <div>
         <ReviewCardWithoutLink review={review}/>
+        <ReportBox reportedEntity={review}/>
         <CommentList comments={comments}/>
         <div className="add-comment-container">
             <textarea
@@ -63,18 +66,19 @@ export function CommentList({comments}: CommentListProps) {
     return <ul>
         {comments //todo: sort
             .map(c => <li
-                key={c.id}><CommentCard review={c}/>
+                key={c.id}><CommentCard comment={c}/>
             </li>)}
     </ul>
 }
 
 interface CommentCardProps {
-    review: ReviewComment;
+    comment: ReviewComment;
 }
 
-function CommentCard({review}: CommentCardProps) {
+function CommentCard({comment}: CommentCardProps) {
     return <>
-        <div>{review.authorUsername}</div>
-        <div>{review.text}</div>
+        <p>{comment.authorUsername}</p>
+        <p>{comment.text}</p>
+        <ReportBox reportedEntity={comment}/>
     </>
 }

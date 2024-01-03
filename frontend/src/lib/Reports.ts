@@ -17,6 +17,14 @@ export interface ReportRequest {
     reason: string
 }
 
+// TODO more reasonable options
+export const reasons = [
+    "nieprawdziwe informacje",
+    "naruszenie ochrony danych osobowych",
+    "nieodpowiedni język",
+    "inne"
+];
+
 // TODO make sure this works when the backend gets implemented
 async function getAllReports(): Promise<Report[]> {
     const response = await api.get("/api/admin/reports");

@@ -17,8 +17,15 @@ public abstract class GeneralReport {
     @GeneratedValue
     private Long id;
 
-    private User reportingUser;
+
+    private User reportingUser; // TODO model relation with user
     private String reason; // TODO: change to enum
 
+    public GeneralReport(User reportingUser, String reason){
+        this.reportingUser = reportingUser;
+        this.reason = reason;
+    }
+    protected GeneralReport(){
+    }
 
 }

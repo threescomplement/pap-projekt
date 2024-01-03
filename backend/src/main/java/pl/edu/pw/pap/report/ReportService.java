@@ -23,7 +23,7 @@ public class ReportService {
     private final ReviewReportRepository reviewReportRepostiory;
     private final CommentReportRepository commentReportRepository;
 
-    public ReportDTO convertReviewRaportToDto(ReviewReport report){
+    public ReportDTO convertReviewRaportToDto(ReviewReport report) {
 
         var reportDTO = ReportDTO.builder()
                 .reportedText(report.getReported().getOpinion())
@@ -40,7 +40,7 @@ public class ReportService {
         );
     }
 
-    public ReportDTO convertCommentRaportToDto(CommentReport report){
+    public ReportDTO convertCommentRaportToDto(CommentReport report) {
 
         var reportDTO = ReportDTO.builder()
                 .reportedText(report.getReported().getText())
@@ -55,7 +55,6 @@ public class ReportService {
                 linkTo(methodOn(ReviewController.class).getReview(review.getCourse().getId(), review.getUser().getUsername())).withRel("review")
         );
     }
-
 
 
     public List<ReportDTO> getAllReports() {

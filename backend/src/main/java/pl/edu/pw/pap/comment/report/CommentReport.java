@@ -12,7 +12,5 @@ import pl.edu.pw.pap.report.GeneralReport;
 @Getter
 @Entity
 public class CommentReport extends GeneralReport {
-
-
     private Comment reported;
 }

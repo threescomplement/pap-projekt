@@ -16,5 +16,4 @@ public class ReportDTO extends RepresentationModel<ReportDTO>{
     private String reportedText;
     private String reason;
     //data
-    // add links
 }

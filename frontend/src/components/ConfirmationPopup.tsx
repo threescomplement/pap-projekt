@@ -1,32 +1,26 @@
-import React from 'react';
+import React, {MouseEventHandler} from 'react';
 import styles from './ConfirmationPopup.module.css';
 
 export interface ConfirmationPopupProps {
     query: string,
-    handleConfirmation: () => void
+    handleConfirmation:MouseEventHandler
+    setVisibility: Function
 }
 
-export function ConfirmationPopup({query, handleConfirmation}: ConfirmationPopupProps) {
-    const [visible, setVisible] = React.useState(true);
-
-    const handleConfirmationClick = () => {
-        handleConfirmation();
-        setVisible(false);
-    }
+export function ConfirmationPopup({query, handleConfirmation, setVisibility}: ConfirmationPopupProps) {
 
     const handleCancelClick = () => {
-        setVisible(false);
-    }
-
-    if (!visible) {
-        return null;
+        setVisibility(false);
     }
 
     return (
         <div className={styles.confirmationPopup}>
             <p>{query}</p>
             <div className={styles.buttonContainer}>
-                <button className={styles.confirmButton} onClick={handleConfirmationClick}>Yes</button>
+                <button className={styles.confirmButton} onClick={e=> {
+                    handleConfirmation(e);
+                    setVisibility(false);
+                }}>Yes</button>
                 <button className={styles.cancelButton} onClick={handleCancelClick}>No</button>
             </div>
         </div>

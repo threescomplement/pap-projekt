@@ -5,7 +5,7 @@ import React, {useState} from "react";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
-import MessageBox from "./MessageBox";
+import {ConfirmationPopup} from "./ConfirmationPopup";
 
 interface ReviewCardProps {
     review: Review;
@@ -22,16 +22,21 @@ export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
 export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) {
     const {courseId} = useParams()
     const [errorMessage, setErrorMessage] = useState<string>("")
-    const [deleted, setDeleted] = useState<boolean>(false)
     const user: User = useUser().user!;
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
         <EditBar
-            handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent, setErrorMessage, setDeleted)}/> : null;
+            handleDelete={createDeleteHandler(courseId!, user.username, refreshParent, setErrorMessage)}/> : null;
 
-    if (deleted) {
-        return <MessageBox message={'Opinia została usunięta.'}/>
+    async function handleCommentRemoval() {
+        ReviewService.deleteReview(courseId!, user.username)
+            .then(deleted => {
+                if (!deleted) {
+                    setErrorMessage('Przy usuwaniu opinii wystąpił błąd. ' + 'Spróbuj ponownie lub skontaktuj się z administracją...');
+                }
+                refreshParent();
+            });
     }
 
     return <>
@@ -43,18 +48,14 @@ export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) 
 }
 
 
-function createDeleteHandler(courseId: string, username: string, afterDeleting: Function, errorBoxSetter: Function,
-                             setDeleted: Function): React.MouseEventHandler {
+function createDeleteHandler(courseId: string, username: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
-        if (window.confirm("Czy na pewno chcesz usunąć swoją opinię?")) {
-            ReviewService.deleteReview(courseId, username)
-                .then(deleted => {
-                    deleted ? setDeleted(true)
-                        : errorBoxSetter('Przy usuwaniu opinii wystąpił błąd. ' +
-                            'Spróbuj ponownie lub skontaktuj się z administracją...');
-                    afterDeleting();
-                })
-        }
+        ReviewService.deleteReview(courseId, username)
+            .then(deleted => {
+                if (!deleted) errorBoxSetter('Przy usuwaniu opinii wystąpił błąd. ' +
+                    'Spróbuj ponownie lub skontaktuj się z administracją...');
+                afterDeleting();
+            })
     }
 }

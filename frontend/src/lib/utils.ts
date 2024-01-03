@@ -65,3 +65,7 @@ export function getDummyComments(): ReviewComment[] {
         _links: null
     }]
 }
+
+export interface Link {
+    href: string
+}

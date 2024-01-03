@@ -3,6 +3,7 @@
 import {ChangeEvent} from "react";
 import {Review} from "./Review";
 import {ReviewComment} from "./ReviewComment";
+import {Report} from "./Reports";
 
 
 /**
@@ -63,6 +64,26 @@ export function getDummyComments(): ReviewComment[] {
         text: "Zgadzam się!",
         created: "2023-12-06T22:56:36.585+00:00",
         _links: null
+    }]
+}
+
+export function getDummyReports(): Report[] {
+    return [{
+        reportedText: "lorem ipsum",
+        reportingUsername: "username",
+        reason: "spam",
+        _links: {
+            self: {href: "https://example.com"},
+            entity: {href: "https://example.com"},
+        }
+    }, {
+        reportedText: "asohdfiuashfuiashdfs",
+        reportingUsername: "username2",
+        reason: "inappropriate language",
+        _links: {
+            self: {href: "https://example.com"},
+            entity: {href: "https://example.com"},
+        }
     }]
 }
 

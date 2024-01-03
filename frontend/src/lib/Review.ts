@@ -1,5 +1,5 @@
 import {Course} from "./Course";
-import {getDummyReviews} from "./utils";
+import {getDummyReviews, Link} from "./utils";
 import api from "./api";
 
 
@@ -9,7 +9,12 @@ export interface Review {
     opinion: string;
     created: string
     overallRating: string;
-    _links: any;
+    _links: {
+        self: Link,
+        user: Link,
+        comments: Link,
+        course: Link
+    };
 }
 
 export interface ReviewRequest {

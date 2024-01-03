@@ -2,8 +2,10 @@ package pl.edu.pw.pap.report;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.CommentController;
 import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
+import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
 
@@ -30,7 +32,12 @@ public class ReportService {
                 .build();
 
         // TODO: Add links once controller is done
-        return reportDTO.add();
+        var review = report.getReported();
+        return reportDTO.add(
+                linkTo(methodOn(ReportController.class).getReviewReport(report.getId())).withSelfRel(),
+                linkTo(methodOn(ReviewController.class).getReview(review.getCourse().getId(), review.getUser().getUsername())).withRel("entity"),
+                linkTo(methodOn(ReviewController.class).getReview(review.getCourse().getId(), review.getUser().getUsername())).withRel("review")
+        );
     }
 
     public ReportDTO convertCommentRaportToDto(CommentReport report){
@@ -40,9 +47,13 @@ public class ReportService {
                 .reportingUsername(report.getReportingUser().getUsername())
                 .reason(report.getReason())
                 .build();
-
+        var review = report.getReported().getReview();
         // TODO: Add links once controller is done
-        return reportDTO.add();
+        return reportDTO.add(
+                linkTo(methodOn(ReportController.class).getCommentReport(report.getId())).withSelfRel(),
+                linkTo(methodOn(CommentController.class).getCommentById(report.getReported().getId())).withRel("entity"),
+                linkTo(methodOn(ReviewController.class).getReview(review.getCourse().getId(), review.getUser().getUsername())).withRel("review")
+        );
     }
 
 

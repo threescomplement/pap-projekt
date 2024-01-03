@@ -8,6 +8,7 @@ import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
+import pl.edu.pw.pap.security.UserPrincipal;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,6 @@ public class ReportService {
                 .reason(report.getReason())
                 .build();
 
-        // TODO: Add links once controller is done
         var review = report.getReported();
         return reportDTO.add(
                 linkTo(methodOn(ReportController.class).getReviewReport(report.getId())).withSelfRel(),
@@ -48,7 +48,6 @@ public class ReportService {
                 .reason(report.getReason())
                 .build();
         var review = report.getReported().getReview();
-        // TODO: Add links once controller is done
         return reportDTO.add(
                 linkTo(methodOn(ReportController.class).getCommentReport(report.getId())).withSelfRel(),
                 linkTo(methodOn(CommentController.class).getCommentById(report.getReported().getId())).withRel("entity"),
@@ -70,4 +69,29 @@ public class ReportService {
                 .toList());
         return allReports.stream().toList();
     }
+
+    public void deleteCommentReport(Long commentReportId){
+        return;
+    }
+    public void deleteReviewReport(Long commentReportId){
+        return;
+    }
+
+    public ReportDTO getReviewReport(Long reviewReportId){
+        return null;
+    }
+
+    public ReportDTO getCommentReport(Long commentReportId){
+        return null;
+    }
+
+    public ReportDTO reportReview(Long courseId, String reviewerUsername, UserPrincipal userPrincipal){
+        return null;
+    }
+
+    public ReportDTO reportComment(Long commentId, UserPrincipal userPrincipal){
+        return null;
+    }
+
+
 }

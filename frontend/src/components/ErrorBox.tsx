@@ -1,4 +1,4 @@
-import styles from "./ErrorBox.module.css";
+import styles from "./InformationBoxes.module.css";
 
 export interface ErrorBoxProps {
     message: string

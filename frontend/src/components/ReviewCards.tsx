@@ -31,8 +31,8 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
-        <div>{"Ocena: " + review.overallRating}</div>
-        <div>{review.opinion}</div>
+        <p>{"Ocena: " + review.overallRating}</p>
+        <p>{review.opinion}</p>
         <ErrorBox message={errorMessage}/>
     </>
 }

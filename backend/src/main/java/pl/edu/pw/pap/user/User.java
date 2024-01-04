@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
+import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.review.Review;
 
 import java.util.HashSet;
@@ -87,5 +88,9 @@ public class User {
                 ", role='" + role + '\'' +
                 ", enabled=" + enabled +
                 '}';
+    }
+
+    public void addCommentReport(CommentReport commentReport) {
+
     }
 }

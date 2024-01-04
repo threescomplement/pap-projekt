@@ -93,7 +93,7 @@ public class ReviewController {
 
     //TODO get all reviews about given teacher
     @GetMapping("api/teachers/{teacherId}/reviews")
-    public RepresentationModel<ReviewDTO> getTeacherReviews(@PathVariable Long teacherId){
+    public RepresentationModel<ReviewDTO> getTeacherReviews(@PathVariable Long teacherId) {
         List<ReviewDTO> reviews = reviewService.getTeacherReviews(teacherId);
 
         var reviewModelList = reviews

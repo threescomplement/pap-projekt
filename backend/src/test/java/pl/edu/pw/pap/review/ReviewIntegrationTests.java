@@ -197,7 +197,6 @@ public class ReviewIntegrationTests {
     }
 
 
-
     // POST TESTS
 
     @Test
@@ -264,9 +263,6 @@ public class ReviewIntegrationTests {
         response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
-
-
-
 
 
 }

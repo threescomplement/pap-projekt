@@ -16,13 +16,11 @@ import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
-import pl.edu.pw.pap.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @Service
 @RequiredArgsConstructor
@@ -111,10 +109,10 @@ public class ReviewService {
 
     public List<ReviewDTO> getTeacherReviews(Long teacherId) {
         var teacher = teacherRepository.findById(teacherId)
-                .orElseThrow(()-> new TeacherNotFoundException("No teacher with id: " + teacherId));
+                .orElseThrow(() -> new TeacherNotFoundException("No teacher with id: " + teacherId));
         var courses = teacher.getCourses();
         ArrayList<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
-        for (var course: courses){
+        for (var course : courses) {
             reviewDTOs.addAll(
                     course.getReviews()
                             .stream()

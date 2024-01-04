@@ -2,22 +2,24 @@ package pl.edu.pw.pap.review;
 
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentController;
+import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.comment.UnauthorizedException;
-import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.course.CourseController;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserController;
-import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
+import pl.edu.pw.pap.user.UserRepository;
 
 import java.util.Collections;
 import java.util.List;

@@ -3,10 +3,12 @@ package pl.edu.pw.pap.user;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentController;
+import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationRequest;
@@ -45,10 +47,17 @@ public class UserController {
 //    }
 
 
-//    @DeleteMapping("/api/users/{username}")
-//    public ResponseEntity deleteUser(@AuthenticationPrincipal UserPrincipal principal, @PathVariable String username) {
-//
-//    }
+    @DeleteMapping("/api/users/{username}")
+    public ResponseEntity<String> deleteUser(@AuthenticationPrincipal UserPrincipal principal, @PathVariable String username) {
+        try {
+            userService.deleteUser(username, principal);
+            return ResponseEntity.ok("Deleted successfully");
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (ForbiddenException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 
     @PostMapping("/api/users/verify")
     public UserDTO verifyEmail(@RequestBody EmailVerificationRequest request) {

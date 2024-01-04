@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.config.AppConfiguration;
 import pl.edu.pw.pap.email.EmailSender;
+import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationException;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
@@ -147,5 +149,16 @@ public class UserService {
                 .role(user.getRole())
                 .enabled(user.getEnabled())
                 .build();
+    }
+
+    public void deleteUser(String username, UserPrincipal principal) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s does not exist", username)));
+
+        if (!principal.getUserId().equals(user.getId()) && !principal.isAdmin()) {
+            throw new ForbiddenException("You are not permitted to delete this account");
+        }
+
+        userRepository.delete(user);
     }
 }

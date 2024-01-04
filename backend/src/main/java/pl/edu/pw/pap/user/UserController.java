@@ -3,6 +3,9 @@ package pl.edu.pw.pap.user;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.hateoas.LinkRelation;
+import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +17,8 @@ import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationRequest;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordRequest;
 import pl.edu.pw.pap.user.passwordreset.SendResetPasswordEmailRequest;
+
+import java.util.Collections;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -38,6 +43,17 @@ public class UserController {
                 .map(this::addLinks)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/api/users")
+    public RepresentationModel<UserDTO> getAllUsers() {
+        var users = userService.getAllUsers().stream()
+                .map(this::addLinks)
+                .toList();
+
+        return HalModelBuilder.emptyHalModel()
+                .embed(users.isEmpty() ? Collections.emptyList() : users, LinkRelation.of("users"))
+                .build();
     }
 
 

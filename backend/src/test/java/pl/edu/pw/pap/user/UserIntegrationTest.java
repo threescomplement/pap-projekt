@@ -406,4 +406,23 @@ public class UserIntegrationTest {
         );
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
     }
+
+    @Test
+    public void getAllUsers() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users", port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        var json = JsonPath.parse(response.getBody());
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(4, (int) json.read("$._embedded.users.length()"));
+        assertTrue(json.read("$._embedded.users[0]._links.self.href").toString().contains("/api/users/"));
+        assertTrue(json.read("$._embedded.users[0]._links.reviews.href").toString().contains("/api/reviews/"));
+        assertTrue(json.read("$._embedded.users[0]._links.comments.href").toString().contains("/api/users/"));
+    }
 }

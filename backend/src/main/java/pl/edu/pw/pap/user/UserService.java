@@ -18,6 +18,7 @@ import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -184,5 +185,11 @@ public class UserService {
         user.setRole(request.role());
         user.setEnabled(request.enabled());
         return convertToDto(userRepository.save(user));
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToDto)
+                .toList();
     }
 }

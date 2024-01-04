@@ -5,13 +5,14 @@ import {ConfirmationPopup} from './ConfirmationPopup';
 
 interface EditBarProps {
     handleDelete: MouseEventHandler
+    deleteConfirmationQuery: string
 }
 
 
-export function EditBar({handleDelete}: EditBarProps) {
+export function EditBar({handleDelete, deleteConfirmationQuery}: EditBarProps) {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const whenDeleteConfirmation = <ConfirmationPopup
-        query={"Czy na pewno chcesz usunąć opinię?"}
+        query={deleteConfirmationQuery}
         handleConfirmation={handleDelete}
         setVisibility={setShowDeleteConfirmation}
     />

@@ -25,8 +25,8 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
-        <EditBar
-            handleDelete={createDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}/> : null;
+        <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}
+                  deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}/> : null;
 
 
     return <>

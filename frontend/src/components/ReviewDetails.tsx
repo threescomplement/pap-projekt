@@ -85,7 +85,8 @@ function CommentCard({comment, refreshParent}: CommentCardProps) {
     const isAdmin = user.roles[0] === "ROLE_ADMIN";
     const isCommentAuthor = user.username === comment.authorUsername;
     const modificationContent = (isAdmin || isCommentAuthor) ?
-        <EditBar handleDelete={createCommentDeleteHandler(comment.id, refreshParent)}/> : null;
+        <EditBar handleDelete={createCommentDeleteHandler(comment.id, refreshParent)}
+                 deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}/> : null;
 
     return <>
         <div>{comment.authorUsername} {modificationContent}</div>
@@ -97,14 +98,12 @@ function CommentCard({comment, refreshParent}: CommentCardProps) {
 function createCommentDeleteHandler(commentId: string, afterDeleting: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
-        if (window.confirm("Czy na pewno chcesz usunąć swój komentarz?")) {
-            CommentService.deleteComment(commentId)
-                .then(deleted => {
-                    //todo: should we even display the feedback? is it frustrating to click through the popups?
-                    let feedback = deleted ? 'Comment deleted successfully!' : 'Failed to delete comment! Please try again...';
-                    alert(feedback);
-                    afterDeleting();
-                })
-        }
+        CommentService.deleteComment(commentId)
+            .then(deleted => {
+                //todo: should we even display the feedback? is it frustrating to click through the popups?
+                let feedback = deleted ? 'Comment deleted successfully!' : 'Failed to delete comment! Please try again...';
+                alert(feedback);
+                afterDeleting();
+            })
     }
 }

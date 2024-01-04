@@ -24,7 +24,7 @@ import java.util.UUID;
 public class UserService {
     private static final String DEFAULT_ROLE = "ROLE_USER";
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final Logger log = LoggerFactory.getLogger(UserService.class);  //TODO proper logging
     private final UserRepository userRepository;
     private final EmailVerificationTokenRepository emailTokenRepository;
     private final ResetPasswordTokenRepository passwordTokenRepository;
@@ -32,11 +32,12 @@ public class UserService {
     private final EmailSender emailSender;
     private final AppConfiguration appConfiguration;
 
-    public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public Optional<UserDTO> findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(this::convertToDto);
     }
 
-    public User registerNewUser(RegisterRequest request) {
+    public UserDTO registerNewUser(RegisterRequest request) {
         if (userRepository.existsUserByEmail(request.email())) {
             throw new UserRegistrationException("Email address is already being used");
         }
@@ -48,7 +49,7 @@ public class UserService {
         var user = new User(request.username(), request.email(), passwordEncoder.encode(request.password()), DEFAULT_ROLE, false);
         user = userRepository.save(user);
         sendVerificationEmail(user);
-        return user;
+        return convertToDto(user);
     }
 
     public EmailVerificationToken generateVerificationToken(User user) {
@@ -61,7 +62,7 @@ public class UserService {
         return emailTokenRepository.save(token);
     }
 
-    public User verifyEmailWithToken(String token) {
+    public UserDTO verifyEmailWithToken(String token) {
         var verificationToken = emailTokenRepository.findByTokenEquals(token)
                 .orElseThrow(() -> new EmailVerificationException("Verification token not found"));
 
@@ -73,7 +74,7 @@ public class UserService {
         user.setEnabled(true);
         user = userRepository.save(user);
         emailTokenRepository.delete(verificationToken);
-        return user;
+        return convertToDto(user);
     }
 
     private void sendVerificationEmail(User user) {
@@ -136,5 +137,15 @@ public class UserService {
                         .expires(Instant.now().plus(1L, ChronoUnit.DAYS))
                         .build()
         );
+    }
+
+    private UserDTO convertToDto(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .enabled(user.getEnabled())
+                .build();
     }
 }

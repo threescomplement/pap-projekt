@@ -34,7 +34,7 @@ public class UserController {
     @GetMapping("/api/users/{username}")
     public ResponseEntity<UserDTO> getUser(@PathVariable String username) {
         return userService
-                .findByUsername(username)
+                .findByUsernameDTO(username)
                 .map(this::addLinks)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());

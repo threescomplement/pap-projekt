@@ -34,8 +34,12 @@ public class UserService {
     private final EmailSender emailSender;
     private final AppConfiguration appConfiguration;
 
-    public Optional<UserDTO> findByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public Optional<UserDTO> findByUsernameDTO(String username) {
+        return findByUsername(username)
                 .map(this::convertToDto);
     }
 

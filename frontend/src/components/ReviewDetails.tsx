@@ -7,6 +7,8 @@ import {useParams, useNavigate} from "react-router-dom";
 import {EditBar} from "./EditBar";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
+import MessageBox from "./MessageBox";
+import ErrorBox from "./ErrorBox";
 
 interface ReviewDetailsProps {
     review: Review
@@ -16,6 +18,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     const {courseId, authorUsername} = useParams();
     const [comments, setComments] = useState<ReviewComment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
     const memorizedReloadComments = useCallback(reloadComments, [review]);
     const navigate = useNavigate();
 
@@ -45,11 +48,19 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
             .catch(e => console.log(e));
     }
 
-    function afterDeletingReview() {navigate("/courses/" + courseId + "/reviewDeleted")}
+    function afterDeletingReview() {
+        navigate("/courses/" + courseId + "/reviewDeleted")
+    }
+
+    function afterDeletingComment() {
+        reloadComments();
+        setMessage("Komentarz został usunięty.")
+    }
 
     return <div>
         <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
-        <CommentList comments={comments} refreshParent={reloadComments}/>
+        <MessageBox message={message}/>
+        <CommentList comments={comments} afterDeleting={afterDeletingComment}/>
         <div className="add-comment-container">
             <textarea
                 placeholder="Twój komentarz"
@@ -63,47 +74,48 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 
 interface CommentListProps {
     comments: ReviewComment[],
-    refreshParent: Function
+    afterDeleting: Function
 }
 
-export function CommentList({comments, refreshParent}: CommentListProps) {
+export function CommentList({comments, afterDeleting}: CommentListProps) {
     return <ul>
         {comments //todo: sort
             .map(c => <li
-                key={c.id}><CommentCard comment={c} refreshParent={refreshParent}/>
+                key={c.id}><CommentCard comment={c} afterDeleting={afterDeleting}/>
             </li>)}
     </ul>
 }
 
 interface CommentCardProps {
     comment: ReviewComment;
-    refreshParent: Function;
+    afterDeleting: Function;
 }
 
-function CommentCard({comment, refreshParent}: CommentCardProps) {
+function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const user: User = useUser().user!
     const isAdmin = user.roles[0] === "ROLE_ADMIN";
     const isCommentAuthor = user.username === comment.authorUsername;
+    const [errorMessage, setErrorMessage] = useState<string>("");
     const modificationContent = (isAdmin || isCommentAuthor) ?
-        <EditBar handleDelete={createCommentDeleteHandler(comment.id, refreshParent)}
+        <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
                  deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}/> : null;
 
     return <>
+
         <div>{comment.authorUsername} {modificationContent}</div>
         <div>{comment.text}</div>
+        <ErrorBox message={errorMessage}/>
     </>
 }
 
 
-function createCommentDeleteHandler(commentId: string, afterDeleting: Function): React.MouseEventHandler {
+function createCommentDeleteHandler(commentId: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
         CommentService.deleteComment(commentId)
             .then(deleted => {
-                //todo: should we even display the feedback? is it frustrating to click through the popups?
-                let feedback = deleted ? 'Comment deleted successfully!' : 'Failed to delete comment! Please try again...';
-                alert(feedback);
-                afterDeleting();
+                deleted ? afterDeleting() : errorBoxSetter("'Przy usuwaniu opinii wystąpił błąd. " +
+                    "Spróbuj ponownie lub skontaktuj się z administracją...");
             })
     }
 }

@@ -25,7 +25,7 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
-        <EditBar handleDelete={createDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}
+        <EditBar handleDelete={createReviewDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}
                   deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}/> : null;
 
 
@@ -38,7 +38,7 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
 }
 
 
-function createDeleteHandler(courseId: string, username: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
+function createReviewDeleteHandler(courseId: string, username: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
         ReviewService.deleteReview(courseId, username)

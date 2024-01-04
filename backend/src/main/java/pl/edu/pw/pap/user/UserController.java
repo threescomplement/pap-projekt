@@ -41,10 +41,17 @@ public class UserController {
     }
 
 
-//    @PutMapping("/api/users/{username}")
-//    public UserDTO updateUser(@AuthenticationPrincipal UserPrincipal principal, @PathVariable String username, @RequestBody) {
-//
-//    }
+    @PutMapping("/api/users/{username}")
+    public ResponseEntity<UserDTO> updateUser(@AuthenticationPrincipal UserPrincipal principal, @PathVariable String username, @RequestBody UpdateUserRequest request) {
+        try {
+            var user = userService.updateUser(username, request, principal);
+            return ResponseEntity.ok(user);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (ForbiddenException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
 
 
     @DeleteMapping("/api/users/{username}")

@@ -161,4 +161,24 @@ public class UserService {
 
         userRepository.delete(user);
     }
+
+    /**
+     * Only admin can modify the user record directly
+     * Normal users can change some of their account's properties via specific endpoints (reset password, confirm email etc.)
+     * @return DTO of updated user
+     */
+    public UserDTO updateUser(String username, UpdateUserRequest request, UserPrincipal principal) {
+        if (!principal.isAdmin()) {
+            throw new ForbiddenException("Only allowed for administrators");
+        }
+
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s does not exist", username)));
+
+        user.setUsername(request.username());
+        user.setEmail(request.email());
+        user.setRole(request.role());
+        user.setEnabled(request.enabled());
+        return convertToDto(userRepository.save(user));
+    }
 }

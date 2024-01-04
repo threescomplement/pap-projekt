@@ -45,7 +45,7 @@ public class UserController {
     public ResponseEntity<UserDTO> updateUser(@AuthenticationPrincipal UserPrincipal principal, @PathVariable String username, @RequestBody UpdateUserRequest request) {
         try {
             var user = userService.updateUser(username, request, principal);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(addLinks(user));
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().build();
         } catch (ForbiddenException e) {
@@ -58,7 +58,7 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@AuthenticationPrincipal UserPrincipal principal, @PathVariable String username) {
         try {
             userService.deleteUser(username, principal);
-            return ResponseEntity.ok("Deleted successfully");
+            return ResponseEntity.noContent().build();
         } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().build();
         } catch (ForbiddenException e) {

@@ -13,6 +13,8 @@ import pl.edu.pw.pap.comment.UnauthorizedException;
 import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.course.CourseController;
 import pl.edu.pw.pap.security.UserPrincipal;
+import pl.edu.pw.pap.teacher.TeacherController;
+import pl.edu.pw.pap.teacher.TeacherNotFoundException;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserController;
 import pl.edu.pw.pap.user.UserRepository;
@@ -88,6 +90,25 @@ public class ReviewController {
                 .build();
     }
 
+    //TODO get all reviews about given teacher
+    @GetMapping("api/teachers/{teacherId}/reviews")
+    public RepresentationModel<ReviewDTO> getTeacherReviews(@PathVariable Long teacherId){
+        List<ReviewDTO> reviews = reviewService.getTeacherReviews(teacherId);
+
+        var reviewModelList = reviews
+                .stream()
+                .map(this::addLinks)
+                .toList();
+
+        return HalModelBuilder.emptyHalModel()
+                .embed(reviewModelList.isEmpty() ? Collections.emptyList() : reviewModelList, LinkRelation.of("reviews"))
+                .links(List.of(
+                        linkTo(methodOn(ReviewController.class).getTeacherReviews(teacherId)).withSelfRel(),
+                        linkTo(methodOn(TeacherController.class).getTeacherById(teacherId)).withRel("teacher")
+                ))
+                .build();
+    }
+
 
     @PostMapping("/api/courses/{courseId}/reviews")
     public ReviewDTO addReview(@PathVariable Long courseId, @RequestBody AddReviewRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
@@ -101,10 +122,8 @@ public class ReviewController {
         return ResponseEntity.noContent().build();
     }
 
-    //TODO get all reviews about given teacher
 
-
-    @ExceptionHandler({CommentNotFoundException.class, UserNotFoundException.class, ReviewNotFoundException.class})
+    @ExceptionHandler({CommentNotFoundException.class, UserNotFoundException.class, ReviewNotFoundException.class, TeacherNotFoundException.class})
     public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
     }

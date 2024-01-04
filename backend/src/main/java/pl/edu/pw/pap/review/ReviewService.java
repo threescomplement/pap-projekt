@@ -9,10 +9,13 @@ import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
+import pl.edu.pw.pap.teacher.TeacherNotFoundException;
+import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +28,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    public final TeacherRepository teacherRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
@@ -96,4 +100,19 @@ public class ReviewService {
         );
     }
 
+    public List<ReviewDTO> getTeacherReviews(Long teacherId) {
+        var teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(()-> new TeacherNotFoundException("No teacher with id: " + teacherId));
+        var courses = teacher.getCourses();
+        ArrayList<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
+        for (var course: courses){
+            reviewDTOs.addAll(
+                    course.getReviews()
+                            .stream()
+                            .map(this::convertToDTO)
+                            .toList()
+            );
+        }
+        return reviewDTOs;
+    }
 }

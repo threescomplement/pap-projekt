@@ -2,6 +2,9 @@ import {decodeToken} from "react-jwt";
 
 import api from "./api";
 
+/**
+ * The user logged in on the website
+ */
 export interface User {
     id: number,
     username: string,
@@ -9,6 +12,23 @@ export interface User {
     password: string,
     token: string,
     roles: string[],
+}
+
+/**
+ * Represents user of the application for admin management functionality
+ * TODO: these should not be separate classes
+ */
+export interface AppUser {
+    id: number,
+    username: string,
+    email: string,
+    role: string,
+    enabled: boolean
+    // _links: {
+    //     self: Link,
+    //     comments: Link,
+    //     reviews: Link,
+    // }
 }
 
 interface AccessToken {
@@ -103,6 +123,12 @@ async function resetPassword(newPassword: string, resetPasswordToken: string): P
 
 }
 
+async function getAllUsers(): Promise<AppUser[]> {
+    const response = await api.get("/users");
+    const json = await response.json();
+    return json._embedded.users;
+}
+
 const UserService = {
     storeUser,
     getStoredUser,
@@ -110,7 +136,8 @@ const UserService = {
     attemptRegister,
     verifyEmail,
     sendResetPasswordEmail,
-    resetPassword
+    resetPassword,
+    getAllUsers
 }
 
 export default UserService;

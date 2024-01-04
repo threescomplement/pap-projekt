@@ -42,10 +42,10 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
             .catch(e => console.log(e));
     }
 
-    function afterDeletingComment() {navigate("/courses/" + courseId + "/reviewDeleted")}
+    function afterDeleting() {navigate("/courses/" + courseId + "/reviewDeleted")}
 
     return <div>
-        <ReviewCardWithoutLink review={review} refreshParent={afterDeletingComment}/>
+        <ReviewCardWithoutLink review={review} afterDeleting={afterDeleting}/>
         <CommentList comments={comments}/>
         <div className="add-comment-container">
             <textarea

@@ -8,17 +8,17 @@ import ErrorBox from "./ErrorBox";
 
 interface ReviewCardProps {
     review: Review;
-    refreshParent: Function
+    afterDeleting: Function
 }
 
-export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
+export function ReviewCardWithLink(props: ReviewCardProps) {
     return <div>
-        <ReviewCardWithoutLink review={review} refreshParent={refreshParent}/>
-        {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
+        <ReviewCardWithoutLink {...props}/>
+        {<Link to={"reviews/" + props.review.authorUsername}> Czytaj więcej </Link>}
     </div>
 }
 
-export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) {
+export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) {
     const {courseId} = useParams()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const user: User = useUser().user!;
@@ -26,7 +26,7 @@ export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) 
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
         <EditBar
-            handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent, setErrorMessage)}/> : null;
+            handleDelete={createDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}/> : null;
 
 
     return <>
@@ -43,9 +43,8 @@ function createDeleteHandler(courseId: string, username: string, afterDeleting: 
         event.preventDefault()
         ReviewService.deleteReview(courseId, username)
             .then(deleted => {
-                if (!deleted) errorBoxSetter('Przy usuwaniu opinii wystąpił błąd. ' +
+                (deleted) ? afterDeleting() : errorBoxSetter('Przy usuwaniu opinii wystąpił błąd. ' +
                     'Spróbuj ponownie lub skontaktuj się z administracją...');
-                afterDeleting();
             })
     }
 }

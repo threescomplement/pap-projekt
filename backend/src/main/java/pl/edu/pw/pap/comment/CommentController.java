@@ -64,7 +64,12 @@ public class CommentController {
             @RequestBody AddCommentRequest request,
             @AuthenticationPrincipal UserPrincipal principal
     ) {
-        return commentService.addNewComment(courseId, reviewerUsername, request, principal);
+        return addLinks(commentService.addNewComment(courseId, reviewerUsername, request, principal));
+    }
+
+    @PutMapping("/api/comments/{commentId}")
+    public CommentDTO updateComment(@PathVariable Long commentId, @RequestBody UpdateCommentRequest request, @AuthenticationPrincipal UserPrincipal principal) {
+        return addLinks(commentService.updateComment(commentId, request, principal));
     }
 
 
@@ -93,7 +98,7 @@ public class CommentController {
     private CommentDTO addLinks(CommentDTO comment) {
         return comment.add(
                 linkTo(methodOn(CommentController.class).getCommentById(comment.getId())).withSelfRel(),
-                linkTo(methodOn(ReviewController.class).getReview(comment.getCourseId(), comment.getAuthorUsername())).withRel("review"),
+                linkTo(methodOn(ReviewController.class).getReview(comment.getCourseId(), comment.getReviewAuthorUsername())).withRel("review"),
                 linkTo(methodOn(UserController.class).getUser(comment.getAuthorUsername())).withRel("user")
         );
     }

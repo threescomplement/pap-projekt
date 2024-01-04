@@ -11,7 +11,7 @@ cd /srv/pap
 cat<<EOF > /srv/pap/docker-compose.deployment.yml
 services:
   backend:
-    command: "--spring.mail.password=$GMAIL_PASSWORD"
+    command: "--spring.mail.password=$GMAIL_PASSWORD --security.jwt.secret-key=$JWT_SIGNING_SECRET"
 EOF
 
 docker compose down

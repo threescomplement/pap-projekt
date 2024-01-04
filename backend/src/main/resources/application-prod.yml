@@ -1,6 +1,3 @@
-security:
-  jwt:
-    secret-key: "ksadjfioajisbdfauhsvfavsfgasvfgafc6rhasvfgyasf"
 spring:
   jpa:
     hibernate:
@@ -12,5 +9,5 @@ spring:
     username: admin
     password: admin
     url: jdbc:postgresql://pap-database:5432/pap
-email-verification:
-  confirm-base-url: "https://pap.mgarbowski.pl/user/verify/"
+app:
+  website-base-url: "https://pap.mgarbowski.pl"

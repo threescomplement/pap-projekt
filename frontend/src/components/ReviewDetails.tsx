@@ -4,9 +4,9 @@ import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewCommen
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
 import {useParams, useNavigate} from "react-router-dom";
+import {EditBar} from "./EditBar";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
-import {EditBar} from "./EditBar";
 
 interface ReviewDetailsProps {
     review: Review
@@ -45,10 +45,10 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
             .catch(e => console.log(e));
     }
 
-    function goBack() {navigate(-1)}
+    function afterDeletingReview() {navigate("/courses/" + courseId + "/reviewDeleted")}
 
     return <div>
-        <ReviewCardWithoutLink review={review} refreshParent={goBack}/>
+        <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
         <CommentList comments={comments} refreshParent={reloadComments}/>
         <div className="add-comment-container">
             <textarea

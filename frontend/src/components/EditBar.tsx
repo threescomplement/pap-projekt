@@ -1,16 +1,32 @@
 import {MdDeleteForever, MdEdit} from "react-icons/md";
-import React, {MouseEventHandler} from "react";
+import React, {MouseEventHandler, useState} from "react";
+import { ConfirmationPopup } from './ConfirmationPopup';
 
 
 interface EditBarProps {
-    handleDelete: MouseEventHandler<HTMLButtonElement>
+    handleDelete:MouseEventHandler
 }
 
-export function EditBar({handleDelete}: EditBarProps) {
-    return <div>
-        <button><MdEdit/></button>
-        <button onClick={(event) => {
-            handleDelete(event);
-        }}><MdDeleteForever/></button>
-    </div>
+
+export function EditBar({ handleDelete }: EditBarProps) {
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+    return (
+        <div>
+            {showDeleteConfirmation &&
+                <ConfirmationPopup
+                    query={"Czy na pewno chcesz usunąć opinię?"}
+                    handleConfirmation={handleDelete}
+                    setVisibility={setShowDeleteConfirmation}
+                />}
+            <button><MdEdit/></button>
+            <button
+                onClick={(event) => {
+                    event.stopPropagation();
+                    setShowDeleteConfirmation(true);
+                }}
+            ><MdDeleteForever/>
+            </button>
+        </div>
+    )
 }

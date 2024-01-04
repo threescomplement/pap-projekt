@@ -5,7 +5,6 @@ import React, {useState} from "react";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
-import {ConfirmationPopup} from "./ConfirmationPopup";
 
 interface ReviewCardProps {
     review: Review;
@@ -27,17 +26,8 @@ export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) 
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
         <EditBar
-            handleDelete={createDeleteHandler(courseId!, user.username, refreshParent, setErrorMessage)}/> : null;
+            handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent, setErrorMessage)}/> : null;
 
-    async function handleCommentRemoval() {
-        ReviewService.deleteReview(courseId!, user.username)
-            .then(deleted => {
-                if (!deleted) {
-                    setErrorMessage('Przy usuwaniu opinii wystąpił błąd. ' + 'Spróbuj ponownie lub skontaktuj się z administracją...');
-                }
-                refreshParent();
-            });
-    }
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>

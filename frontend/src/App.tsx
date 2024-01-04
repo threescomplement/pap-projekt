@@ -19,6 +19,7 @@ import {ReviewForm} from "./pages/review/ReviewForm";
 import {ThankYouPage} from "./pages/review/ThankYou";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
+import {ReviewDeleted} from "./pages/review/ReviewDeleted";
 
 /**
  * Top level component for the entire application
@@ -50,6 +51,7 @@ export default function App() {
                                 <Route path="reviews/:authorUsername" element={<SingleReview/>}/>
                                 <Route path="writeReview" element={<ReviewForm/>}/>
                                 <Route path="thankyou" element={<ThankYouPage/>}/>
+                                <Route path="reviewDeleted" element={<ReviewDeleted/>}/>
                             </Route>
                         </Route>
                         <Route path="teachers">

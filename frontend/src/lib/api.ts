@@ -55,7 +55,7 @@ function apiPut(endpoint: string, body: any, headers: any = null): Promise<Respo
     return myFetch(endpoint, headers, body, "PUT");
 }
 
-function apiDelete(endpoint: string, body: any, headers: any = null): Promise<Response> {
+function apiDelete(endpoint: string, body: any = null, headers: any = null): Promise<Response> {
     return myFetch(endpoint, headers, body, "DELETE");
 }
 

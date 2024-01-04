@@ -6,7 +6,7 @@ export interface Course {
     language: string,
     type: string,
     level: string,
-    module: string | null, //TODO: make api return teacher id
+    module: string | null,
     averageRating: string,
     teacherId: string,
     _links: any

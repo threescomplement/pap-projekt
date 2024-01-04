@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.mediatype.hal.HalModelBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.teacher.TeacherController;
+import pl.edu.pw.pap.teacher.TeacherNotFoundException;
 
 import java.util.Collections;
 
@@ -63,5 +61,10 @@ public class CourseController {
                 linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, "")).withRel("all"),
                 linkTo(methodOn(ReviewController.class).getCourseReviews(course.getId())).withRel("reviews")
         );
+    }
+
+    @ExceptionHandler({TeacherNotFoundException.class, CourseNotFoundException.class})
+    public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
     }
 }

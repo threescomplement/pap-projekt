@@ -2,7 +2,7 @@ import {Course} from "../lib/Course";
 import React from "react";
 import {Link} from "react-router-dom";
 import {NUM_REVIEWS_PLACEHOLDER} from "../lib/utils";
-import "./CourseList.css"
+import styles from "./CourseList.module.css"
 
 interface CourseListProps {
     courses: Course[]
@@ -10,7 +10,7 @@ interface CourseListProps {
 
 export default function CourseList({courses}: CourseListProps) {
 
-    return <table>
+    return <table className={styles.courseList}>
         <tbody>
         <tr id="headers">
             <th>Nazwa</th>
@@ -28,10 +28,10 @@ interface CourseProps {
 }
 
 export function CourseRow({course}: CourseProps) {
-    return <tr id={course.id}>
-        <td><Link to={"/courses/" + course.id}> {course.name}</Link></td>
-        <td className="numTableEntry">{course.averageRating}</td>
-        <td className="numTableEntry">{NUM_REVIEWS_PLACEHOLDER}</td>
-        {/*TODO: replace placeholder*/}
-    </tr>
+    return (
+        <tr id={course.id} className={styles.courseRow}>
+            <td><Link to={"/courses/" + course.id} className={styles.courseLink}> {course.name}</Link></td>
+            <td className={`${styles.numTableEntry} ${styles.courseAvgRating}`}>{course.averageRating}</td>
+            <td className={`${styles.numTableEntry} ${styles.courseNumReviews}`}>{NUM_REVIEWS_PLACEHOLDER}</td>
+        </tr>)
 }

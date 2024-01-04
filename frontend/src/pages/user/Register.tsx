@@ -1,7 +1,8 @@
 import {FormEvent, useReducer, useState} from "react";
-import {attemptRegister, RegisterRequest} from "../../lib/User";
+import UserService, {RegisterRequest} from "../../lib/User";
 import {Link} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
+import styles from "./Register.module.css"
 
 const initialFormData: RegisterRequest = {
     username: "",
@@ -16,7 +17,7 @@ export default function Register() {
     function handleFormSubmit(event: FormEvent) {
         event.preventDefault();
         console.log(formData);
-        attemptRegister(formData)
+        UserService.attemptRegister(formData)
             .then(() => setIsRegistered(true));
     }
 
@@ -28,7 +29,7 @@ export default function Register() {
         </>;
     }
 
-    return <>
+    return <div className={styles.registerContainer}>
         <h1>Register new account</h1>
 
         <form onSubmit={handleFormSubmit}>
@@ -46,5 +47,5 @@ export default function Register() {
             </label>
             <input type="submit" value="Rejestracja"/>
         </form>
-    </>
+    </div>
 }

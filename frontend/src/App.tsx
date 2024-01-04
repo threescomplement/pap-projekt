@@ -8,7 +8,7 @@ import {NoPage} from "./pages/NoPage";
 import Login from "./pages/user/Login";
 import SingleCourse from "./pages/courses/SingleCourse";
 import SingleTeacher from "./pages/teachers/SingleTeacher";
-import {getStoredUser, storeUser, User} from "./lib/User";
+import UserService, {User} from "./lib/User";
 import {CurrentUserContext} from "./hooks/useUser";
 import Register from "./pages/user/Register";
 import Profile from "./pages/user/Profile";
@@ -17,6 +17,9 @@ import AdminPanel from "./pages/admin/AdminPanel";
 import {SingleReview} from "./pages/review/SingleReview";
 import {ReviewForm} from "./pages/review/ReviewForm";
 import {ThankYouPage} from "./pages/review/ThankYou";
+import ForgotPassword from "./pages/user/ForgotPassword";
+import ResetPassword from "./pages/user/ResetPassword";
+import {ReviewDeleted} from "./pages/review/ReviewDeleted";
 
 /**
  * Top level component for the entire application
@@ -28,11 +31,11 @@ import {ThankYouPage} from "./pages/review/ThankYou";
  * @constructor
  */
 export default function App() {
-    const [user, setUser] = useState<User | null>(getStoredUser());
+    const [user, setUser] = useState<User | null>(UserService.getStoredUser());
 
     function setAndStoreUser(user: User | null) {
         setUser(user);
-        storeUser(user);
+        UserService.storeUser(user);
     }
 
     return (
@@ -48,6 +51,7 @@ export default function App() {
                                 <Route path="reviews/:authorUsername" element={<SingleReview/>}/>
                                 <Route path="writeReview" element={<ReviewForm/>}/>
                                 <Route path="thankyou" element={<ThankYouPage/>}/>
+                                <Route path="reviewDeleted" element={<ReviewDeleted/>}/>
                             </Route>
                         </Route>
                         <Route path="teachers">
@@ -59,6 +63,8 @@ export default function App() {
                             <Route path="login" element={<Login/>}/>
                             <Route path="register" element={<Register/>}/>
                             <Route path="verify/:token" element={<ConfirmEmail/>}/>
+                            <Route path="forgot-password" element={<ForgotPassword/>}/>
+                            <Route path="reset-password/:token" element={<ResetPassword/>}/>
                         </Route>
                         <Route path="admin">
                             <Route index element={<AdminPanel />}/>

@@ -21,6 +21,7 @@ public class Comment {
     private Long id;
 
     private String text;
+    private Boolean edited;
     @CreationTimestamp
     private Timestamp created;
     @JsonIgnore
@@ -30,19 +31,25 @@ public class Comment {
     @ManyToOne
     private User user;
 
+
     public Comment(String text, Review review, User user) {
         this.text = text;
-        this.review = review;
-        this.user = user;
+        this.edited = false;
+        review.addComment(this);
+        user.addComment(this);
     }
 
     protected Comment() {
     }
 
     @PreRemove
-    public void removeFromUser(){
-        this.user.removeComment(this);
-        this.review.removeComment(this);
+    public void preRemove() {
+        if (this.user != null) {
+            this.user.removeComment(this);
+        }
+        if (this.review != null) {
+            this.review.removeComment(this);
+        }
     }
 
     @Override
@@ -50,6 +57,7 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
+                ", edited='" + edited + '\'' +
                 ", created=" + created.toString() +
                 ", review=" + review.getId() +
                 ", user=" + user.getId() +

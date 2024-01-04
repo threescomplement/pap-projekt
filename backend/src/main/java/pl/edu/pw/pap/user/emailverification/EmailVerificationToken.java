@@ -1,4 +1,4 @@
-package pl.edu.pw.pap.user;
+package pl.edu.pw.pap.user.emailverification;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -6,6 +6,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.ToString;
+import pl.edu.pw.pap.user.User;
 
 import java.time.Instant;
 

@@ -1,0 +1,16 @@
+security:
+  jwt:
+    secret-key: "dupa"
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: admin
+    password: admin
+    url: jdbc:postgresql://localhost:5432/pap
+email-verification:
+  confirm-base-url: "http://localhost:3000/user/verify/"

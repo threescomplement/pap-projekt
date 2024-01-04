@@ -5,7 +5,6 @@ spring:
     rest:
       base-path: "/api"
   mail:
-    #    password: "app password goes here"
     username: "mg.puppet@gmail.com"
     host: "smtp.gmail.com"
     port: "587"
@@ -15,3 +14,12 @@ spring:
           auth: "true"
           starttls:
             enable: "true"
+server:
+  forward-headers-strategy: framework
+app:
+  delete-tokens-cron-expression: "0 0 0 * * *" # Every day at midnight
+  confirm-email-url: "/user/verify/"
+  reset-password-url: "/user/reset-password/"
+security:
+  jwt:
+    valid-for-seconds: 3600

@@ -14,4 +14,5 @@ public class JwtProperties {
      * For signing issued JWT tokens using HMAC256 algorithm
      */
     private String secretKey;
+    private Integer validForSeconds;
 }

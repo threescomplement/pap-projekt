@@ -3,8 +3,10 @@ package pl.edu.pw.pap.review;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.comment.UnauthorizedException;
+import pl.edu.pw.pap.comment.CommentRepository;
+import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
@@ -14,6 +16,7 @@ import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
+import pl.edu.pw.pap.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +31,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     public final TeacherRepository teacherRepository;
 
 
@@ -72,8 +76,10 @@ public class ReviewService {
 
         log.debug("Found user of review being deleted");
         User user = maybeUser.get();
-        if (!user.getId().equals(userPrincipal.getUserId())) {
-            return;  // TODO its not ok, should be Forbidden 403 unless admin
+        if (!user.getId().equals(userPrincipal.getUserId())
+                && !userPrincipal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            // not author and not admin, results in 403 forbidden
+            throw (new ForbiddenException("You are not permitted to delete this review"));
         }
 
         Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey(user.getId(), courseId));
@@ -94,7 +100,10 @@ public class ReviewService {
         var course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CourseNotFoundException("No course with id: " + userPrincipal.getUsername()));
 
-
+        var duplicate = reviewRepository.findByCourse_IdAndUser_Username(courseId, userPrincipal.getUsername());
+        if (duplicate.isPresent()) {
+            throw (new DuplicateReviewException("Cannot add more than one review to a course"));
+        }
         return convertToDTO(
                 reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()))
         );

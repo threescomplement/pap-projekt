@@ -10,9 +10,9 @@ import pl.edu.pw.pap.teacher.Teacher;
 @Configuration
 public class RestConfigurer implements RepositoryRestConfigurer {
     @Override
-    public void configureRepositoryRestConfiguration(
-            RepositoryRestConfiguration config, CorsRegistry cors) {
+    public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config, CorsRegistry cors) {
         config.exposeIdsFor(Course.class);
         config.exposeIdsFor(Teacher.class);
+        config.disableDefaultExposure();
     }
 }

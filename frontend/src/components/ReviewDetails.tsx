@@ -47,7 +47,8 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
         <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
         <MessageBox message={message}/>
         <CommentList comments={comments} afterDeleting={afterDeletingComment} afterEditing={reloadComments}/>
-        <CommentInputForm afterPosting={reloadComments}/>
+        <CommentInputForm afterPosting={reloadComments} courseId={courseId!}
+                          reviewAuthorUsername={review.authorUsername}/>
     </div>
 }
 
@@ -108,18 +109,20 @@ function CommentCard({comment, afterDeleting, afterEditing}: CommentCardProps) {
 
 interface CommentInputFormProps {
     afterPosting: Function
+    courseId: string
+    reviewAuthorUsername: string
 }
 
-function CommentInputForm({afterPosting}: CommentInputFormProps) {
+function CommentInputForm({afterPosting, courseId, reviewAuthorUsername}: CommentInputFormProps) {
     const [comment, setComment] = useState<string>("");
-    const {courseId, authorUsername} = useParams(); // todo: should they be set here or above and passed down?
+
     function handleCommentSubmit() {
         if (comment === "") return; //todo: inform user comment can't be blank
         const request: CommentRequest = {
             text: comment
         }
 
-        CommentService.postComment(request, courseId!, authorUsername!)
+        CommentService.postComment(request, courseId, reviewAuthorUsername)
             .then(() => {
                 afterPosting();
                 setComment("")
@@ -147,7 +150,6 @@ interface CommentEditFormProps {
 function CommentEditForm({afterPosting, commentId, setEditingForParent, oldContent}: CommentEditFormProps) {
     const [comment, setComment] = useState<string>(oldContent);
 
-    // todo: fetch the contents of the comment for the inital state
     function handleCommentSubmit() {
         if (comment === "") return; //todo: inform user comment can't be blank
         const request: CommentRequest = {

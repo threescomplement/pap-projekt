@@ -25,7 +25,7 @@ async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
 }
 
 async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review | null> {
-    const response = await api.get("/courses/" + courseId + "/reviews/" + authorUsername)
+    const response = await api.get(`/courses/${courseId}/reviews/${authorUsername}`)
     // todo: better error handling
     console.log(response)
     if (response.status === 404) {
@@ -35,12 +35,12 @@ async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: 
 }
 
 async function postReview(request: ReviewRequest, courseId: string): Promise<void> {
-    api.post("/courses/" + courseId + "/reviews", request)
+    api.post(`/courses/${courseId}/reviews`, request)
         .catch(e => console.log(e));
 }
 
 async function deleteReview(courseId: string, username: string): Promise<boolean> {
-    const response = await api.delete("/courses/" + courseId + "/reviews/" + username);
+    const response = await api.delete(`/courses/${courseId}/reviews/${username}`);
     console.log(response);
     return response.ok;
 }

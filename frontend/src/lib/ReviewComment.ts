@@ -23,14 +23,14 @@ async function fetchCommentsByReview(review: Review): Promise<ReviewComment[]> {
 
 async function postComment(request: CommentRequest, courseId: string, reviewAuthor: string) {
     try {
-        await api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + reviewAuthor + "/comments"), request)
+        await api.post(`/courses/${courseId}/reviews/${reviewAuthor}/comments`, request)
     } catch (e) {
         console.log(e)
     }
 }
 
 async function deleteComment(commentId: string) {
-    const response = await api.delete((process.env.REACT_APP_API_ROOT + "/comments/" + commentId));
+    const response = await api.delete(`/comments/${commentId}`);
     console.log(response);
     return response.ok;
 }

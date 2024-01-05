@@ -74,7 +74,10 @@ public class ReviewIntegrationTests {
         var json = JsonPath.parse(response.getBody());
 
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", json.read("$.opinion"));
-        assertEquals(8, (int) json.read("$.overallRating"));
+        assertEquals(8, (int) json.read("$.easeRating"));
+        assertEquals(7, (int) json.read("$.interestRating"));
+        assertEquals(6, (int) json.read("$.interactiveRating"));
+
         assertEquals("rdeckard", json.read("$.authorUsername"));
         assertTrue(json.read("$.created").toString().endsWith("+00:00"));
 
@@ -204,7 +207,7 @@ public class ReviewIntegrationTests {
     @Test
     public void addNewReview() {
         String endpoint = "/api/courses/2/reviews";
-        var request = new AddReviewRequest("test_opinion", 6);
+        var request = new AddReviewRequest("test_opinion", 6, 7, 8);
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
 
@@ -213,13 +216,15 @@ public class ReviewIntegrationTests {
         response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         var json = JsonPath.parse(response.getBody());
         assertEquals("test_opinion", json.read("$.opinion"));
-        assertEquals(6, (int) json.read("$.overallRating"));
+        assertEquals(6, (int) json.read("$.easeRating"));
+        assertEquals(7, (int) json.read("$.interestRating"));
+        assertEquals(8, (int) json.read("$.interactiveRating"));
     }
 
     @Test
     public void addDuplicateReview() {
         String endpoint = "/api/courses/1/reviews";
-        var request = new AddReviewRequest("test_opinion", 6);
+        var request = new AddReviewRequest("test_opinion", 6, 7, 8);
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode()); // 400 BAD REQUEST
     }

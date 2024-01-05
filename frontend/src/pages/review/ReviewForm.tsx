@@ -23,12 +23,14 @@ export function ReviewForm() {
 
         ReviewService.fetchReviewByCourseIdAndAuthor(courseId!, username)
             .then(r => setPreviousReview(r))
+    }, [courseId, username]);
 
+    useEffect(() => {
         if (previousReview !== null) {
             setOpinion(previousReview.opinion);
             setRating(Number(previousReview.overallRating));
         }
-    }, [courseId, previousReview, username]);
+    }, [previousReview]);
 
     function RatingSlider() { // todo: swap this for a nicer one
         const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

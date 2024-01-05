@@ -113,10 +113,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("No comment with given ID: " + commentId + " found for edit"));
 
-        // the throw shouldn't ever happen but we need the role in UserPrincipal to avoid this check
-        User editingUser = userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("User asking for update doesn't exist"));
-        if (!comment.getUser().getId().equals(editingUser.getId())) {
+        if (!comment.getUser().getId().equals(principal.getUserId())) {
             throw (new ForbiddenException(("You are not permitted to edit that comment")));
         }
         comment.setText(request.text());

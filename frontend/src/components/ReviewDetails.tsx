@@ -78,9 +78,9 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const [duringEditing, setDuringEditing] = useState<boolean>(false)
     const modificationContent = (isAdmin || isCommentAuthor)
         ? <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
-            deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
+                   deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
                    handleEdit={(_) => setDuringEditing(true)}
-                 canEdit={isCommentAuthor}/> : null; //todo, different issue though
+                   canEdit={isCommentAuthor}/> : null; //todo, different issue though
 
     return <>
         <div>{comment.authorUsername} {modificationContent}</div>
@@ -90,15 +90,16 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
 }
 
 interface CommentInputFormProps {
-   afterPosting: Function
+    afterPosting: Function
 }
 
 function CommentInputForm({afterPosting}: CommentInputFormProps) {
     const [comment, setComment] = useState<string>("");
+    const {courseId, authorUsername} = useParams(); // todo: should they be set here or above and passed down?
     function handleCommentSubmit() {
         if (comment === "") return; //todo: inform user comment can't be blank
         const request: CommentRequest = {
-            text:comment
+            text: comment
         }
 
         CommentService.postComment(request, courseId!, authorUsername!)
@@ -115,9 +116,44 @@ function CommentInputForm({afterPosting}: CommentInputFormProps) {
         onChange={e => setComment(e.target.value)}
         value={comment}
     />
-    <button onClick={handleCommentSubmit}>Dodaj komentarz</button>
+        <button onClick={handleCommentSubmit}>Dodaj komentarz</button>
     </div>
 }
+
+interface CommentEditFormProps {
+    afterPosting: Function
+    commentId: string
+    setEditingForParent: Function
+}
+
+function CommentEcitForm({afterPosting, commentId, setEditingForParent}: CommentEditFormProps) {
+    const [comment, setComment] = useState<string>("");
+    const {courseId, authorUsername} = useParams(); // todo: should they be set here or above and passed down?
+    function handleCommentSubmit() {
+        if (comment === "") return; //todo: inform user comment can't be blank
+        const request: CommentRequest = {
+            text: comment
+        }
+        //todo: different post probably
+        CommentService.postComment(request, courseId!, authorUsername!)
+            .then(() => {
+                afterPosting();
+                setEditingForParent(false);
+            })
+            .catch(e => console.log(e));
+    }
+
+    return <div>
+    <textarea
+        placeholder="Twój komentarz"
+        onChange={e => setComment(e.target.value)}
+        value={comment}
+    />
+        <button onClick={handleCommentSubmit}>Edytuj komentarz</button>
+        <button onClick={setEditingForParent(false)}>Anuluj</button>
+    </div>
+}
+
 
 function createCommentDeleteHandler(commentId: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
     return async event => {

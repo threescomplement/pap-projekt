@@ -173,6 +173,32 @@ public class ReviewIntegrationTests {
         assertTrue(reviews.isEmpty());
     }
 
+
+    @Test
+    public void getTeacherReviews() {
+        String endpoint = "/api/teachers/1/reviews";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+        List<String> reviews = json.read("$._embedded.reviews");
+        assertEquals(2, reviews.size());
+        assertTrue(json.read("$._embedded.reviews[?(@.authorUsername == 'rdeckard')].opinion").toString().contains("Dobrze prowadzony kurs, wymagający nauczyciel"));
+        assertTrue(json.read("$._embedded.reviews[?(@.authorUsername == 'rbatty')].opinion").toString().contains("Zbyt duże wymagania do studentów"));
+
+        //links
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("/api/teachers/1/reviews")));
+        assertTrue(json.read("$._links.teacher.href").toString().endsWith(("/api/teachers/1")));
+    }
+
+
+    @Test
+    public void getNonExistentTeacherReviews() {
+        String endpoint = "/api/teachers/4/reviews";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+
     // POST TESTS
 
     @Test
@@ -239,5 +265,6 @@ public class ReviewIntegrationTests {
         response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
+
 
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.edu.pw.pap.course.CourseController;
 import pl.edu.pw.pap.course.CourseDTO;
 import pl.edu.pw.pap.course.CourseService;
+import pl.edu.pw.pap.review.ReviewController;
 
 import java.util.Collections;
 
@@ -69,7 +70,8 @@ public class TeacherController {
         return teacher.add(
                 linkTo(methodOn(TeacherController.class).getTeacherById(teacher.getId())).withSelfRel(),
                 linkTo(methodOn(CourseController.class).getAllCourses("", ALL, ALL, ALL, ALL, teacher.getName())).withRel("courses"),
-                linkTo(methodOn(TeacherController.class).getAllTeachers("", ALL)).withRel("all")  // TODO review links
+                linkTo(methodOn(TeacherController.class).getAllTeachers("", ALL)).withRel("all"),
+                linkTo(methodOn(ReviewController.class).getTeacherReviews(teacher.getId())).withRel("reviews")
         );
     }
 }

@@ -271,6 +271,15 @@ public class ReviewIntegrationTests {
     @Test
     public void updateReviewByAuthor() {
         String endpoint = "/api/courses/1/reviews/rdeckard"; // by user 1 rdeckard
+        var getResponse = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), getResponse.getStatusCode());
+        var json = JsonPath.parse(getResponse.getBody());
+        var oldDate = json.read("$.created");
+
+
+
+
+
         var request = new EditReviewRequest("nowy tekscik",5 );
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
@@ -280,6 +289,7 @@ public class ReviewIntegrationTests {
         assertEquals("rdeckard", returnedReview.read("authorUsername"));
         assertEquals(true, returnedReview.read("edited"));
         assertEquals(5, (int) returnedReview.read("overallRating"));
+        assertEquals(oldDate, returnedReview.read("created"));
 
         // check links
         assertTrue(returnedReview.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -302,6 +312,8 @@ public class ReviewIntegrationTests {
         assertTrue(reviewJson.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
         assertTrue(reviewJson.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/rdeckard/comments"));
         assertTrue(reviewJson.read("$._links.course.href").toString().endsWith("/api/courses/1"));
+        assertEquals(oldDate, returnedReview.read("created"));
+
 
 
     }

@@ -17,7 +17,6 @@ interface ReviewDetailsProps {
 export function ReviewDetails({review}: ReviewDetailsProps) {
     const {courseId, authorUsername} = useParams();
     const [comments, setComments] = useState<ReviewComment[]>([]);
-    const [newComment, setNewComment] = useState<string>("");
     const [message, setMessage] = useState<string>("");
     const memorizedReloadComments = useCallback(reloadComments, [review]);
     const navigate = useNavigate();
@@ -34,19 +33,6 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
             .catch(e => console.log(e));
     }
 
-    function handleCommentSubmit() {
-        if (newComment === "") return; //todo: inform user comment can't be blank
-        const request: CommentRequest = {
-            text: newComment
-        }
-
-        CommentService.postComment(request, courseId!, authorUsername!)
-            .then(() => {
-                reloadComments();
-                setNewComment("")
-            })
-            .catch(e => console.log(e));
-    }
 
     function afterDeletingReview() {
         navigate("/courses/" + courseId + "/reviewDeleted")
@@ -61,14 +47,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
         <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
         <MessageBox message={message}/>
         <CommentList comments={comments} afterDeleting={afterDeletingComment}/>
-        <div className="add-comment-container">
-            <textarea
-                placeholder="Twój komentarz"
-                onChange={e => setNewComment(e.target.value)}
-                value={newComment}
-            />
-            <button onClick={handleCommentSubmit}>Dodaj komentarz</button>
-        </div>
+        <CommentInputForm afterPosting={reloadComments}/>
     </div>
 }
 
@@ -96,10 +75,11 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const isAdmin = user.roles[0] === "ROLE_ADMIN";
     const isCommentAuthor = user.username === comment.authorUsername;
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const [duringEditing, setDuringEditing] = useState<boolean>(false)
     const modificationContent = (isAdmin || isCommentAuthor)
         ? <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
             deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
-                   handleEdit={(_) => true}
+                   handleEdit={(_) => setDuringEditing(true)}
                  canEdit={isCommentAuthor}/> : null; //todo, different issue though
 
     return <>
@@ -109,6 +89,35 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     </>
 }
 
+interface CommentInputFormProps {
+   afterPosting: Function
+}
+
+function CommentInputForm({afterPosting}: CommentInputFormProps) {
+    const [comment, setComment] = useState<string>("");
+    function handleCommentSubmit() {
+        if (comment === "") return; //todo: inform user comment can't be blank
+        const request: CommentRequest = {
+            text:comment
+        }
+
+        CommentService.postComment(request, courseId!, authorUsername!)
+            .then(() => {
+                afterPosting();
+                setComment("")
+            })
+            .catch(e => console.log(e));
+    }
+
+    return <div>
+    <textarea
+        placeholder="Twój komentarz"
+        onChange={e => setComment(e.target.value)}
+        value={comment}
+    />
+    <button onClick={handleCommentSubmit}>Dodaj komentarz</button>
+    </div>
+}
 
 function createCommentDeleteHandler(commentId: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
     return async event => {

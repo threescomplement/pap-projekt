@@ -99,8 +99,8 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const modificationContent = (isAdmin || isCommentAuthor)
         ? <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
             deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
-                   handleEdit={(e) => true}
-                 canEdit={isCommentAuthor}/> : null; //todo
+                   handleEdit={(_) => true}
+                 canEdit={isCommentAuthor}/> : null; //todo, different issue though
 
     return <>
         <div>{comment.authorUsername} {modificationContent}</div>

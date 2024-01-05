@@ -28,7 +28,7 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     const modificationContent = (isReviewAuthor || isAdmin)
         ? <EditBar handleDelete={createReviewDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}
                   deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}
-                 handleEdit={(e)=> navigate("/courses/"+courseId+"/writeReview")}
+                 handleEdit={(_)=> navigate("/courses/"+courseId+"/writeReview")}
                  canEdit={isReviewAuthor}
         /> : null;
 

@@ -78,6 +78,7 @@ public class Review {
                 ", course=" + course.getName() +
                 ", opinion='" + opinion + '\'' +
                 ", overallRating=" + overallRating +
+                ", edited='" + edited +
                 ", created=" + created.toString() +
                 '}';
     }

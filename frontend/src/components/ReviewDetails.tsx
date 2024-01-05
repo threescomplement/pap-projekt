@@ -49,7 +49,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     }
 
     function afterDeletingReview() {
-        navigate("/courses/" + courseId + "/reviewDeleted")
+        navigate(`/courses/${courseId}/reviewDeleted`)
     }
 
     function afterDeletingComment() {

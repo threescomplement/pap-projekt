@@ -62,7 +62,7 @@ interface TeacherProps {
 export function TeacherRow({teacher}: TeacherProps) {
     return <tr id={teacher.id}>
         <td>
-            <Link to={"/teachers/" + teacher.id}> {teacher.name}</Link>
+            <Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link>`
         </td>
         <td className="numTableEntry">
             {teacher.averageRating}

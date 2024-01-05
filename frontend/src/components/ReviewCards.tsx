@@ -14,7 +14,7 @@ interface ReviewCardProps {
 export function ReviewCardWithLink(props: ReviewCardProps) {
     return <div>
         <ReviewCardWithoutLink {...props}/>
-        {<Link to={"reviews/" + props.review.authorUsername}> Czytaj więcej </Link>}
+        {<Link to={`reviews/${props.review.authorUsername}`}> Czytaj więcej </Link>}
     </div>
 }
 
@@ -31,7 +31,7 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
-        <p>{"Ocena: " + review.overallRating}</p>
+        <p>{`Ocena: ${review.overallRating}`}</p>
         <p>{review.opinion}</p>
         <ErrorBox message={errorMessage}/>
     </>

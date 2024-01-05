@@ -18,6 +18,7 @@ import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,16 +111,11 @@ public class ReviewService {
     public List<ReviewDTO> getTeacherReviews(Long teacherId) {
         var teacher = teacherRepository.findById(teacherId)
                 .orElseThrow(() -> new TeacherNotFoundException("No teacher with id: " + teacherId));
-        var courses = teacher.getCourses();
-        ArrayList<ReviewDTO> reviewDTOs = new ArrayList<ReviewDTO>();
-        for (var course : courses) {
-            reviewDTOs.addAll(
-                    course.getReviews()
-                            .stream()
-                            .map(this::convertToDTO)
-                            .toList()
-            );
-        }
-        return reviewDTOs;
+
+        return teacher.getCourses().stream()
+                .map(Course::getReviews)
+                .flatMap(Collection::stream)
+                .map(this::convertToDTO)
+                .toList();
     }
 }

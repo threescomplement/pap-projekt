@@ -117,6 +117,11 @@ public class ReviewController {
         return reviewService.addReview(courseId, request, userPrincipal);
     }
 
+    @PutMapping("api/courses/{courseId}/reviews/{username}")
+    public ReviewDTO editReview(@PathVariable Long courseId, @PathVariable String username, @RequestBody EditReviewRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return reviewService.editReview(courseId, username, request, userPrincipal);
+    }
+
 
     @DeleteMapping("/api/courses/{courseId}/reviews/{username}")
     public ResponseEntity<Review> deleteReview(@PathVariable Long courseId, @PathVariable String username, @AuthenticationPrincipal UserPrincipal userPrincipal) {

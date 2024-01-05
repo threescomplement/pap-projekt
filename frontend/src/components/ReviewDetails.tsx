@@ -46,7 +46,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     return <div>
         <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
         <MessageBox message={message}/>
-        <CommentList comments={comments} afterDeleting={afterDeletingComment}/>
+        <CommentList comments={comments} afterDeleting={afterDeletingComment} afterEditing={reloadComments}/>
         <CommentInputForm afterPosting={reloadComments}/>
     </div>
 }
@@ -54,13 +54,14 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 interface CommentListProps {
     comments: ReviewComment[],
     afterDeleting: Function
+    afterEditing: Function
 }
 
-export function CommentList({comments, afterDeleting}: CommentListProps) {
+export function CommentList({comments, afterDeleting, afterEditing}: CommentListProps) {
     return <ul>
         {comments //todo: sort
             .map(c => <li
-                key={c.id}><CommentCard comment={c} afterDeleting={afterDeleting}/>
+                key={c.id}><CommentCard comment={c} afterDeleting={afterDeleting} afterEditing={afterEditing}/>
             </li>)}
     </ul>
 }
@@ -68,9 +69,10 @@ export function CommentList({comments, afterDeleting}: CommentListProps) {
 interface CommentCardProps {
     comment: ReviewComment;
     afterDeleting: Function;
+    afterEditing: Function;
 }
 
-function CommentCard({comment, afterDeleting}: CommentCardProps) {
+function CommentCard({comment, afterDeleting, afterEditing}: CommentCardProps) {
     const user: User = useUser().user!
     const isAdmin = user.roles[0] === "ROLE_ADMIN";
     const isCommentAuthor = user.username === comment.authorUsername;
@@ -79,14 +81,19 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const modificationContent = (isAdmin || isCommentAuthor)
         ? <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
                    deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
-                   handleEdit={(_) => setDuringEditing(true)}
-                   canEdit={isCommentAuthor}/> : null; //todo, different issue though
+                   handleEdit={() => {
+                       setDuringEditing(true);
+                   }}
+                   canEdit={isCommentAuthor}/> : null;
 
-    return <>
-        <div>{comment.authorUsername} {modificationContent}</div>
-        <div>{comment.text}</div>
-        <ErrorBox message={errorMessage}/>
-    </>
+    return duringEditing
+        ? <CommentEditForm afterPosting={afterEditing} commentId={comment.id} setEditingForParent={setDuringEditing}
+                           oldContent={comment.text}/>
+        : <div>
+            <div>{comment.authorUsername} {modificationContent}</div>
+            <div>{comment.text}</div>
+            <ErrorBox message={errorMessage}/>
+        </div>
 }
 
 interface CommentInputFormProps {
@@ -124,18 +131,19 @@ interface CommentEditFormProps {
     afterPosting: Function
     commentId: string
     setEditingForParent: Function
+    oldContent: string
 }
 
-function CommentEcitForm({afterPosting, commentId, setEditingForParent}: CommentEditFormProps) {
-    const [comment, setComment] = useState<string>("");
-    const {courseId, authorUsername} = useParams(); // todo: should they be set here or above and passed down?
+function CommentEditForm({afterPosting, commentId, setEditingForParent, oldContent}: CommentEditFormProps) {
+    const [comment, setComment] = useState<string>(oldContent);
+
+    // todo: fetch the contents of the comment for the inital state
     function handleCommentSubmit() {
         if (comment === "") return; //todo: inform user comment can't be blank
         const request: CommentRequest = {
             text: comment
         }
-        //todo: different post probably
-        CommentService.postComment(request, courseId!, authorUsername!)
+        CommentService.editComment(commentId, request)
             .then(() => {
                 afterPosting();
                 setEditingForParent(false);
@@ -150,7 +158,7 @@ function CommentEcitForm({afterPosting, commentId, setEditingForParent}: Comment
         value={comment}
     />
         <button onClick={handleCommentSubmit}>Edytuj komentarz</button>
-        <button onClick={setEditingForParent(false)}>Anuluj</button>
+        <button onClick={() => setEditingForParent(false)}>Anuluj</button>
     </div>
 }
 

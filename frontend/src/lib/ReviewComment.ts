@@ -37,7 +37,7 @@ async function deleteComment(commentId: string) {
 
 async function editComment(commentId: string, request: CommentRequest) {
     try {
-        await api.post(`/comments/${commentId}`, request)
+        await api.put(`/comments/${commentId}`, request)
     } catch (e) {
         console.log(e)
     }

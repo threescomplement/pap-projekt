@@ -77,7 +77,6 @@ function UserTableRow(props: UserTableRowProps) {
             .catch(e => console.error(e))
     }
 
-    //TODO editing user
     return <tr>
         <td>{props.user.id}</td>
         <td>{props.user.username}</td>

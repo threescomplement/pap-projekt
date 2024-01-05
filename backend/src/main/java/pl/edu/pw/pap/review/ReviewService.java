@@ -38,7 +38,9 @@ public class ReviewService {
         return ReviewDTO.builder()
                 .authorUsername(review.getUser().getUsername())
                 .opinion(review.getOpinion())
-                .overallRating(review.getOverallRating())
+                .easeRating(review.getEaseRating())
+                .interestRating(review.getInterestRating())
+                .interactiveRating(review.getInteractiveRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
                 .build();
@@ -104,7 +106,7 @@ public class ReviewService {
             throw (new DuplicateReviewException("Cannot add more than one review to a course"));
         }
         return convertToDTO(
-                reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()))
+                reviewRepository.save(new Review(addingUser, course, request.text(), request.easeRating(), request.interestingRating(), request.interactiveRating()))
         );
     }
 

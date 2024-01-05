@@ -58,17 +58,17 @@ export function ReviewForm() {
             rating: rating
         }
         ReviewService.postReview(request, courseId!);
-        navigate(("/courses/" + courseId + "/thankyou"));
+        navigate(`/courses/${courseId}/thankyou`);
         // todo: remove this page from history so that clicking back doesn't return to it
     }
 
     return <div className="review-form">
-        <h1>{previousReview === null ? "Napisz opinię" : "Edytuj swoją opinię"} {course !== null && ("kursu " + course.name)}</h1>
+        <h1>{previousReview === null ? "Napisz opinię" : "Edytuj swoją opinię"} {course !== null && `do kursu ${course.name}`}</h1>
         <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"
                   onChange={e => setOpinion(e.target.value)}
                   value={opinion}>
         </textarea>
-        <p>{rating !== null ? "Twoja ocena: " + rating : "Wybierz ocenę:"} </p>
+        <p>{rating !== null ? `Twoja ocena: ${rating}` : "Wybierz ocenę:"} </p>
         <div><RatingSlider/></div>
         <div>
             <button onClick={handleClick}>Zatwierdź</button>

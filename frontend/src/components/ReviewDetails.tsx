@@ -4,11 +4,11 @@ import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewCommen
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
 import {useParams, useNavigate} from "react-router-dom";
+import {EditBar} from "./EditBar";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import MessageBox from "./MessageBox";
 import ErrorBox from "./ErrorBox";
-import {EditBar} from "./EditBar";
 
 interface ReviewDetailsProps {
     review: Review
@@ -35,7 +35,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 
 
     function afterDeletingReview() {
-        navigate("/courses/" + courseId + "/reviewDeleted")
+        navigate(`/courses/${courseId}/reviewDeleted`)
     }
 
     function afterDeletingComment() {
@@ -79,12 +79,21 @@ function CommentCard({comment, afterDeleting, afterEditing}: CommentCardProps) {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [duringEditing, setDuringEditing] = useState<boolean>(false)
     const modificationContent = (isAdmin || isCommentAuthor)
-        ? <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
+        ? <EditBar handleDelete={(e) => handleDeleteComment(e)}
                    deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
                    handleEdit={() => {
                        setDuringEditing(true);
                    }}
                    canEdit={isCommentAuthor}/> : null;
+
+    function handleDeleteComment(e: React.MouseEvent) {
+        e.preventDefault()
+        CommentService.deleteComment(comment.id)
+            .then(deleted => {
+                deleted ? afterDeleting() : setErrorMessage("'Przy usuwaniu opinii wystąpił błąd. " +
+                    "Spróbuj ponownie lub skontaktuj się z administracją...");
+            })
+    }
 
     return duringEditing
         ? <CommentEditForm afterPosting={afterEditing} commentId={comment.id} setEditingForParent={setDuringEditing}
@@ -94,6 +103,7 @@ function CommentCard({comment, afterDeleting, afterEditing}: CommentCardProps) {
             <div>{comment.text}</div>
             <ErrorBox message={errorMessage}/>
         </div>
+
 }
 
 interface CommentInputFormProps {
@@ -160,16 +170,4 @@ function CommentEditForm({afterPosting, commentId, setEditingForParent, oldConte
         <button onClick={handleCommentSubmit}>Edytuj komentarz</button>
         <button onClick={() => setEditingForParent(false)}>Anuluj</button>
     </div>
-}
-
-
-function createCommentDeleteHandler(commentId: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
-    return async event => {
-        event.preventDefault()
-        CommentService.deleteComment(commentId)
-            .then(deleted => {
-                deleted ? afterDeleting() : errorBoxSetter("'Przy usuwaniu opinii wystąpił błąd. " +
-                    "Spróbuj ponownie lub skontaktuj się z administracją...");
-            })
-    }
 }

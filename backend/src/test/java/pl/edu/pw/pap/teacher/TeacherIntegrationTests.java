@@ -77,6 +77,8 @@ public class TeacherIntegrationTests {
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/teachers/1"));
         assertTrue(json.read("$._links.courses.href").toString().contains("/api/courses?name=&language=all&module=all&type=all&level=all&teacherName=mgr.%20Jan%20Kowalski"));
         assertTrue(json.read("$._links.all.href").toString().endsWith("/api/teachers?name=&language=all"));
+        assertTrue(json.read("$._links.reviews.href").toString().endsWith("/api/teachers/1/reviews"));
+
 
     }
 

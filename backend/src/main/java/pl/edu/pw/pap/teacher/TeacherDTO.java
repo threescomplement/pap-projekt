@@ -11,5 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 public class TeacherDTO extends RepresentationModel<TeacherDTO> {
     private Long id;
     private String name;
-    private Double averageRating;
+    private Double averageEaseRating;
+    private Double averageInterestRating;
+    private Double averageInteractiveRating;
 }

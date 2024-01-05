@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
-    @Query("SELECT new pl.edu.pw.pap.teacher.TeacherDTO(t.id, t.name, AVG(r.overallRating))" +
+    @Query("SELECT new pl.edu.pw.pap.teacher.TeacherDTO(t.id, t.name, AVG(r.easeRating), AVG(r.interestRating), AVG(r.interactiveRating))" +
             "FROM Teacher t LEFT JOIN Review r ON t.id = r.course.teacher.id " +
             "WHERE (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))" +
             "AND (:language IS NULL OR r.course.language = :language)" +
@@ -23,7 +23,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     );
 
     // TODO: querying for number of reviews
-    @Query("SELECT new pl.edu.pw.pap.teacher.TeacherDTO(t.id, t.name, AVG(r.overallRating))" +
+    @Query("SELECT new pl.edu.pw.pap.teacher.TeacherDTO(t.id, t.name, AVG(r.easeRating), AVG(r.interestRating), AVG(r.interactiveRating))" +
             "FROM Teacher t LEFT JOIN Review r ON t.id = r.course.teacher.id " +
             "WHERE t.id = :id " +
             "GROUP BY t.id, t.name"

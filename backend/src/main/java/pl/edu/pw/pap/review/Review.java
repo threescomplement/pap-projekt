@@ -32,6 +32,7 @@ public class Review {
     private Course course;
 
     private String opinion;
+    private Boolean edited;
     private int overallRating; // TODO: Decide which parameters should be included in the review
     @CreationTimestamp
     private Timestamp created;
@@ -42,6 +43,7 @@ public class Review {
     public Review(User user, Course course, String opinion, int overallRating) {
         this.opinion = opinion;
         this.overallRating = overallRating;
+        edited = false;
         course.addReview(this);
         user.addReview(this);
     }

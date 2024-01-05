@@ -41,6 +41,7 @@ public class ReviewService {
                 .overallRating(review.getOverallRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
+                .edited(review.getEdited())
                 .build();
     }
 

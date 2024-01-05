@@ -129,6 +129,11 @@ async function getAllUsers(): Promise<AppUser[]> {
     return json._embedded.users;
 }
 
+async function deleteUser(user: AppUser): Promise<boolean> {
+    const response = await api.delete(`/users/${user.username}`);
+    return response.ok;
+}
+
 const UserService = {
     storeUser,
     getStoredUser,
@@ -137,7 +142,8 @@ const UserService = {
     verifyEmail,
     sendResetPasswordEmail,
     resetPassword,
-    getAllUsers
+    getAllUsers,
+    deleteUser
 }
 
 export default UserService;

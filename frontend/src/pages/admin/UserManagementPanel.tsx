@@ -3,7 +3,6 @@ import UserService, {AppUser} from "../../lib/User";
 import {MdDeleteForever, MdSave} from "react-icons/md";
 import ErrorBox from "../../components/ErrorBox";
 import EditableText from "../../components/EditableText";
-import user from "../../lib/User";
 
 export default function UserManagementPanel() {
     const [users, setUsers] = useState<AppUser[]>([]);
@@ -27,15 +26,13 @@ export default function UserManagementPanel() {
                 <th>Email</th>
                 <th>Role</th>
                 <th>Enabled</th>
-                {/*for the buttons*/}
-                <th>Delete</th>
             </tr>
             </thead>
             <tbody>
             {users.map(u => <UserTableRow
                 key={u.id}
                 user={u}
-                afterDelete={() => reloadUsers()}
+                refreshParent={() => reloadUsers()}
                 displayError={setErrorMessage}
             />)}
             </tbody>
@@ -47,7 +44,7 @@ export default function UserManagementPanel() {
 interface UserTableRowProps {
     user: AppUser
     displayError: (msg: string) => void,
-    afterDelete: () => void
+    refreshParent: () => void
 }
 
 function UserTableRow(props: UserTableRowProps) {
@@ -67,11 +64,17 @@ function UserTableRow(props: UserTableRowProps) {
 
     function handleDeleteUser() {
         UserService.deleteUser(props.user)
-            .then(ok => ok ? props.afterDelete() : props.displayError("Operacja nie powiodła się"))
+            .then(ok => ok ? props.refreshParent() : props.displayError("Operacja nie powiodła się"))
             .catch(e => {
                 console.error(e);
                 props.displayError("Operacja nie powiodła się")
             })
+    }
+
+    function handleUpdateUser() {
+        UserService.updateUser(editedUser)
+            .then(() => props.refreshParent())
+            .catch(e => console.error(e))
     }
 
     //TODO editing user
@@ -81,7 +84,14 @@ function UserTableRow(props: UserTableRowProps) {
         <td>
             <EditableText text={editedUser.email} setText={editEmail}/>
         </td>
-        <td>{props.user.role}</td>
+        <td>
+            <select value={editedUser.role}
+                    onChange={e => setEditedUser({...editedUser, role: e.target.value})}
+            >
+                <option value="ROLE_USER">ROLE_USER</option>
+                <option value="ROLE_ADMIN">ROLE_ADMIN</option>
+            </select>
+        </td>
         <td>
             <input type="checkbox"
                    checked={editedUser.enabled}
@@ -92,7 +102,7 @@ function UserTableRow(props: UserTableRowProps) {
             <button onClick={handleDeleteUser}><MdDeleteForever/></button>
         </td>
         <td>
-            {wasEdited(editedUser) ? <button><MdSave/></button> : <p>not edited</p>}
+            {wasEdited(editedUser) ? <button onClick={handleUpdateUser}><MdSave/></button> : <p>not edited</p>}
         </td>
     </tr>
 }

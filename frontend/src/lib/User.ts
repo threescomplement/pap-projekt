@@ -129,6 +129,11 @@ async function getAllUsers(): Promise<AppUser[]> {
     return json._embedded.users;
 }
 
+async function updateUser(user: AppUser): Promise<AppUser> {
+    const response = await api.put(`/users/${user.username}`, user);
+    return response.json();
+}
+
 async function deleteUser(user: AppUser): Promise<boolean> {
     const response = await api.delete(`/users/${user.username}`);
     return response.ok;
@@ -143,6 +148,7 @@ const UserService = {
     sendResetPasswordEmail,
     resetPassword,
     getAllUsers,
+    updateUser,
     deleteUser
 }
 

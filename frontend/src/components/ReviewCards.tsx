@@ -14,7 +14,7 @@ interface ReviewCardProps {
 export function ReviewCardWithLink(props: ReviewCardProps) {
     return <div>
         <ReviewCardWithoutLink {...props}/>
-        <Link to={"reviews/" + props.review.authorUsername}> Czytaj więcej </Link>
+        <Link to={`reviews/${props.review.authorUsername}`}> Czytaj więcej </Link>
     </div>
 }
 
@@ -26,25 +26,23 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
         <EditBar
-            handleDelete={createDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}/> : null;
+            handleDelete={(e) => handleDeleteReview(e)}
+            deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}/> : null;
 
+    function handleDeleteReview(e: React.MouseEvent) {
+        e.preventDefault()
+        ReviewService.deleteReview(courseId!, review.authorUsername)
+            .then(deleted => {
+                (deleted) ? afterDeleting() : setErrorMessage('Przy usuwaniu opinii wystąpił błąd. ' +
+                    'Spróbuj ponownie lub skontaktuj się z administracją...');
+            })
+    }
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
-        <div>{"Ocena: " + review.overallRating}</div>
-        <div>{review.opinion}</div>
+        <p>{`Ocena: ${review.overallRating}`}</p>
+        <p>{review.opinion}</p>
         <ErrorBox message={errorMessage}/>
     </>
 }
 
-
-function createDeleteHandler(courseId: string, username: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
-    return async event => {
-        event.preventDefault()
-        ReviewService.deleteReview(courseId, username)
-            .then(deleted => {
-                (deleted) ? afterDeleting() : errorBoxSetter('Przy usuwaniu opinii wystąpił błąd. ' +
-                    'Spróbuj ponownie lub skontaktuj się z administracją...');
-            })
-    }
-}

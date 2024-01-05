@@ -20,8 +20,8 @@ export function ConfirmationPopup({query, handleConfirmation, setVisibility}: Co
                 <button className={styles.confirmButton} onClick={e=> {
                     handleConfirmation(e);
                     setVisibility(false);
-                }}>Yes</button>
-                <button className={styles.cancelButton} onClick={handleCancelClick}>No</button>
+                }}>Tak</button>
+                <button className={styles.cancelButton} onClick={handleCancelClick}>Nie</button>
             </div>
         </div>
     );

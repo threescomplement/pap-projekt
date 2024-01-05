@@ -3,6 +3,7 @@ package pl.edu.pw.pap.comment;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
@@ -31,6 +32,8 @@ public class CommentService {
                 .text(comment.getText())
                 .created(comment.getCreated())
                 .courseId(comment.getReview().getCourse().getId())
+                .reviewAuthorUsername(comment.getReview().getUser().getUsername())
+                .edited(comment.getEdited())
                 .build();
     }
 
@@ -60,7 +63,7 @@ public class CommentService {
         var comment = maybeComment.get();
         var user = maybeUser.get();
         if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN")))) {
-            throw(new ForbiddenException(("You are not permitted to delete that comment")));
+            throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
         commentRepository.delete(comment);
@@ -100,8 +103,24 @@ public class CommentService {
 
 
         Comment comment = new Comment(text, review, addingUser);
-        return convertToDto(
-                commentRepository.save(comment)
-        );
+        comment = commentRepository.save(comment);
+        reviewRepository.save(review);
+        return convertToDto(comment);
+    }
+
+    public CommentDTO updateComment(Long commentId, UpdateCommentRequest request, UserPrincipal principal) {
+        // check if user has proper privileges
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("No comment with given ID: " + commentId + " found for edit"));
+
+        // the throw shouldn't ever happen but we need the role in UserPrincipal to avoid this check
+        User editingUser = userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User asking for update doesn't exist"));
+        if (!comment.getUser().getId().equals(editingUser.getId())) {
+            throw (new ForbiddenException(("You are not permitted to edit that comment")));
+        }
+        comment.setText(request.text());
+        comment.setEdited(true);
+        return convertToDto(commentRepository.save(comment));
     }
 }

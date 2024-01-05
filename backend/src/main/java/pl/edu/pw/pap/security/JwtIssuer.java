@@ -16,7 +16,7 @@ public class JwtIssuer {
     public String issue(long userId, String username, String email, List<String> roles) { // TODO: role enum
         return JWT.create()
                 .withSubject(String.valueOf(userId))
-                .withExpiresAt(Instant.now().plus(1, ChronoUnit.DAYS))
+                .withExpiresAt(Instant.now().plus(properties.getValidForSeconds(), ChronoUnit.SECONDS))
                 .withClaim("u", username)
                 .withClaim("e", email)
                 .withClaim("a", roles)

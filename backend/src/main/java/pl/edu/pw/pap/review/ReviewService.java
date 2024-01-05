@@ -5,14 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
-import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
+import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.User;
-import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
+import pl.edu.pw.pap.user.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
@@ -70,7 +72,7 @@ public class ReviewService {
         if (!user.getId().equals(userPrincipal.getUserId())
                 && !userPrincipal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
             // not author and not admin, results in 403 forbidden
-            throw(new ForbiddenException("You are not permitted to delete this review"));
+            throw (new ForbiddenException("You are not permitted to delete this review"));
         }
 
         Optional<Review> maybeReview = reviewRepository.findById(new ReviewKey(user.getId(), courseId));

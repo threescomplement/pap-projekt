@@ -1,55 +1,53 @@
 import {Review, ReviewService} from "../lib/Review";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {EditBar} from "./EditBar";
-import React from "react";
+import React, {useState} from "react";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
+import ErrorBox from "./ErrorBox";
 
 interface ReviewCardProps {
     review: Review;
-    refreshParent: Function
+    afterDeleting: Function
 }
 
-export function ReviewCardWithLink({review, refreshParent}: ReviewCardProps) {
+export function ReviewCardWithLink(props: ReviewCardProps) {
     return <div>
-        <ReviewCardWithoutLink review={review} refreshParent={refreshParent}/>
-        {<Link to={"reviews/" + review.authorUsername}> Czytaj więcej </Link>}
+        <ReviewCardWithoutLink {...props}/>
+        {<Link to={"reviews/" + props.review.authorUsername}> Czytaj więcej </Link>}
     </div>
 }
 
-export function ReviewCardWithoutLink({review, refreshParent}: ReviewCardProps) {
+export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) {
     const {courseId} = useParams()
+    const [errorMessage, setErrorMessage] = useState<string>("")
     const user: User = useUser().user!;
     const navigate = useNavigate();
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
-    /* todo: should admins be able to edit comments or just delete them? if they can edit, the way things are edited
-        have to be changed quite a bit since posting as useUser() will not work here...*/
     const isReviewAuthor: boolean = review.authorUsername === user.username;
-    const modificationContent = (isReviewAuthor || isAdmin) ?
-        <EditBar
-            handleDelete={createDeleteHandler(courseId!, review.authorUsername, refreshParent)}
-            handleEdit={(e)=> navigate("/courses/"+courseId+"/writeReview")}
-            canEdit={isReviewAuthor}
+    const modificationContent = (isReviewAuthor || isAdmin)
+        ? <EditBar handleDelete={createReviewDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}
+                  deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}
+                 handleEdit={(e)=> navigate("/courses/"+courseId+"/writeReview")}
+                 canEdit={isReviewAuthor}
         /> : null;
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
-        <div>{"Ocena: " + review.overallRating}</div>
-        <div>{review.opinion}</div>
+        <p>{"Ocena: " + review.overallRating}</p>
+        <p>{review.opinion}</p>
+        <ErrorBox message={errorMessage}/>
     </>
 }
 
 
-function createDeleteHandler(courseId: string, username: string, afterDeleting: Function): React.MouseEventHandler {
+function createReviewDeleteHandler(courseId: string, username: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
-        if (window.confirm("Czy na pewno chcesz usunąć swoją opinię?")) {
-            ReviewService.deleteReview(courseId, username)
-                .then(deleted => {
-                    let feedback = deleted ? 'Review deleted successfully!' : 'Failed to delete review! Please try again...';
-                    alert(feedback);
-                    afterDeleting();
-                })
-        }
+        ReviewService.deleteReview(courseId, username)
+            .then(deleted => {
+                (deleted) ? afterDeleting() : errorBoxSetter('Przy usuwaniu opinii wystąpił błąd. ' +
+                    'Spróbuj ponownie lub skontaktuj się z administracją...');
+            })
     }
 }

@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from "react-router-dom";
-import {verifyEmail} from "../../lib/User";
+import UserService from "../../lib/User";
 
 /**
  * Confirm user's email address and redirect to login page
@@ -17,7 +17,7 @@ export default function ConfirmEmail() {
     }
 
     function handleConfirm() {
-        verifyEmail(token!)
+        UserService.verifyEmail(token!)
             .then(() => navigate("/user/login"))
     }
 

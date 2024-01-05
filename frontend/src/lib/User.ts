@@ -32,11 +32,11 @@ export interface RegisterRequest {
 
 const USER_STORAGE_HANDLE = "user";
 
-export function storeUser(user: User | null) {
+function storeUser(user: User | null) {
     localStorage.setItem(USER_STORAGE_HANDLE, JSON.stringify(user));
 }
 
-export function getStoredUser(): User | null {
+function getStoredUser(): User | null {
     const content = localStorage.getItem(USER_STORAGE_HANDLE);
     if (content == null) {
         return null;
@@ -49,7 +49,7 @@ export function getStoredUser(): User | null {
  * Log in user - acquire JWT token
  * @param loginRequest - login credentials
  */
-export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
+async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
     const response = await api.post("/auth/login", loginRequest);
     const json = await response.json();
     const token = json.accessToken as string;
@@ -68,7 +68,7 @@ export async function attemptLogin(loginRequest: LoginRequest): Promise<User> {
  *
  * @param request - credentials of new user
  */
-export async function attemptRegister(request: RegisterRequest): Promise<User> {
+async function attemptRegister(request: RegisterRequest): Promise<User> {
     const response = await api.post("/users", request)
     return await response.json() as User;
 }
@@ -77,7 +77,40 @@ export async function attemptRegister(request: RegisterRequest): Promise<User> {
  * Confirm user's email address
  * @param emailVerificationToken
  */
-export async function verifyEmail(emailVerificationToken: string): Promise<User> {
+async function verifyEmail(emailVerificationToken: string): Promise<User> {
     const response = await api.post("/users/verify", {token: emailVerificationToken});
     return await response.json() as User;
 }
+
+/**
+ * Return bool whether sending email succeeded
+ */
+async function sendResetPasswordEmail(email: string): Promise<boolean> {
+    const response = await api.post("/users/send-reset-email", {email: email});
+    return response.ok;
+}
+
+/**
+ * Return bool whether password reset succeeded
+ */
+async function resetPassword(newPassword: string, resetPasswordToken: string): Promise<boolean> {
+    const response = await api.post("/users/reset-password", {
+        newPassword: newPassword,
+        passwordResetToken: resetPasswordToken
+    })
+
+    return response.ok;
+
+}
+
+const UserService = {
+    storeUser,
+    getStoredUser,
+    attemptLogin,
+    attemptRegister,
+    verifyEmail,
+    sendResetPasswordEmail,
+    resetPassword
+}
+
+export default UserService;

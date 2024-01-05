@@ -4,11 +4,13 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import {Review, ReviewService} from "../lib/Review";
 import {ReviewCardWithLink} from "./ReviewCards";
+import MessageBox from "./MessageBox";
 
 export default function CourseDetails(course: Course) {
     const [teacher, setTeacher] = useState<Teacher | null>(null);
     const [teacherLoaded, setTeacherLoaded] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
+    const [message, setMessage] = useState<string>("");
     const memorizedReloadReviews = useCallback(reloadReviews, [course])
 
     function reloadReviews() {
@@ -17,6 +19,11 @@ export default function CourseDetails(course: Course) {
                 setReviews(r);
             })
             .catch(e => console.log(e));
+    }
+
+    function afterReviewDelete() {
+        reloadReviews();
+        setMessage("Opinia została usunięta.");
     }
 
     useEffect(() => {
@@ -42,7 +49,7 @@ export default function CourseDetails(course: Course) {
 
     const reviewContent = reviews.length === 0
         ? <div>Ten kurs nie ma jeszcze opinii</div>
-        : <div>{<ReviewList reviews={reviews} refreshParent={reloadReviews}/>}</div>
+        : <div>{<ReviewList reviews={reviews} refreshParent={afterReviewDelete}/>}</div>
 
     return <>
         <h1>{course.name}</h1>
@@ -52,6 +59,7 @@ export default function CourseDetails(course: Course) {
         <p className="CourseInfo">Poziom: {course.level}</p>
         <p className="CourseInfo">Typ kursu: {course.type}</p>
         <h2 className="OpinionsSection">Opinie</h2>
+        <MessageBox message={message}/>
         {reviewContent}
     </>
 }
@@ -68,7 +76,7 @@ function ReviewList({reviews, refreshParent}: ReviewListProps) {
             //todo .sort by timestamps
             .map((r) => (
                 <li key={r.authorUsername}>
-                    <ReviewCardWithLink review={r} refreshParent={refreshParent}/>
+                    <ReviewCardWithLink review={r} afterDeleting={refreshParent}/>
                 </li>
             ))}
     </ul>

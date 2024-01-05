@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import "./ThankYouPage.css";
+import styles from "./IntermediatePage.module.css";
 
 export function ThankYouPage() {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ export function ThankYouPage() {
     }, [courseId, navigate]);
 
     return (
-        <div className="thank-you-page">
+        <div className={styles.intermediatePage}>
             <h1>Dziękujemy!</h1>
             <p>Twoja opinia została zarejestrowana.</p>
             <p>Wkrótce zostaniesz przekierowany...</p>

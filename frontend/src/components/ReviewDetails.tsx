@@ -6,6 +6,8 @@ import "./ReviewDetails.css"
 import {useParams, useNavigate} from "react-router-dom";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
+import MessageBox from "./MessageBox";
+import ErrorBox from "./ErrorBox";
 import {EditBar} from "./EditBar";
 
 interface ReviewDetailsProps {
@@ -16,6 +18,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     const {courseId, authorUsername} = useParams();
     const [comments, setComments] = useState<ReviewComment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
+    const [message, setMessage] = useState<string>("");
     const memorizedReloadComments = useCallback(reloadComments, [review]);
     const navigate = useNavigate();
 
@@ -45,11 +48,19 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
             .catch(e => console.log(e));
     }
 
-    function goBack() {navigate(-1)}
+    function afterDeletingReview() {
+        navigate("/courses/" + courseId + "/reviewDeleted")
+    }
+
+    function afterDeletingComment() {
+        reloadComments();
+        setMessage("Komentarz został usunięty.")
+    }
 
     return <div>
-        <ReviewCardWithoutLink review={review} refreshParent={goBack}/>
-        <CommentList comments={comments} refreshParent={reloadComments}/>
+        <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
+        <MessageBox message={message}/>
+        <CommentList comments={comments} afterDeleting={afterDeletingComment}/>
         <div className="add-comment-container">
             <textarea
                 placeholder="Twój komentarz"
@@ -63,50 +74,49 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 
 interface CommentListProps {
     comments: ReviewComment[],
-    refreshParent: Function
+    afterDeleting: Function
 }
 
-export function CommentList({comments, refreshParent}: CommentListProps) {
+export function CommentList({comments, afterDeleting}: CommentListProps) {
     return <ul>
         {comments //todo: sort
             .map(c => <li
-                key={c.id}><CommentCard comment={c} refreshParent={refreshParent}/>
+                key={c.id}><CommentCard comment={c} afterDeleting={afterDeleting}/>
             </li>)}
     </ul>
 }
 
 interface CommentCardProps {
     comment: ReviewComment;
-    refreshParent: Function;
+    afterDeleting: Function;
 }
 
-function CommentCard({comment, refreshParent}: CommentCardProps) {
+function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const user: User = useUser().user!
     const isAdmin = user.roles[0] === "ROLE_ADMIN";
     const isCommentAuthor = user.username === comment.authorUsername;
-    const modificationContent = (isAdmin || isCommentAuthor) ?
-        <EditBar handleDelete={createCommentDeleteHandler(comment.id, refreshParent)}
-                 handleEdit={(e) => true}
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const modificationContent = (isAdmin || isCommentAuthor)
+        ? <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
+            deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
+                   handleEdit={(e) => true}
                  canEdit={isCommentAuthor}/> : null; //todo
 
     return <>
         <div>{comment.authorUsername} {modificationContent}</div>
         <div>{comment.text}</div>
+        <ErrorBox message={errorMessage}/>
     </>
 }
 
 
-function createCommentDeleteHandler(commentId: string, afterDeleting: Function): React.MouseEventHandler {
+function createCommentDeleteHandler(commentId: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
     return async event => {
         event.preventDefault()
-        if (window.confirm("Czy na pewno chcesz usunąć swój komentarz?")) {
-            CommentService.deleteComment(commentId)
-                .then(deleted => {
-                    //todo: should we even display the feedback? is it frustrating to click through the popups?
-                    let feedback = deleted ? 'Comment deleted successfully!' : 'Failed to delete comment! Please try again...';
-                    alert(feedback);
-                    afterDeleting();
-                })
-        }
+        CommentService.deleteComment(commentId)
+            .then(deleted => {
+                deleted ? afterDeleting() : errorBoxSetter("'Przy usuwaniu opinii wystąpił błąd. " +
+                    "Spróbuj ponownie lub skontaktuj się z administracją...");
+            })
     }
 }

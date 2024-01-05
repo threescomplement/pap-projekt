@@ -1,7 +1,9 @@
 import {useEffect, useState} from "react";
 import UserService, {AppUser} from "../../lib/User";
-import {MdDeleteForever} from "react-icons/md";
+import {MdDeleteForever, MdSave} from "react-icons/md";
 import ErrorBox from "../../components/ErrorBox";
+import EditableText from "../../components/EditableText";
+import user from "../../lib/User";
 
 export default function UserManagementPanel() {
     const [users, setUsers] = useState<AppUser[]>([]);
@@ -49,6 +51,20 @@ interface UserTableRowProps {
 }
 
 function UserTableRow(props: UserTableRowProps) {
+    const [editedUser, setEditedUser] = useState(props.user);
+
+    function wasEdited(user: AppUser) {
+        return JSON.stringify(user) !== JSON.stringify(props.user);
+    }
+
+    function editEmail(newEmail: string) {
+        setEditedUser({
+            ...editedUser,
+            email: newEmail,
+        })
+    }
+
+
     function handleDeleteUser() {
         UserService.deleteUser(props.user)
             .then(ok => ok ? props.afterDelete() : props.displayError("Operacja nie powiodła się"))
@@ -62,11 +78,14 @@ function UserTableRow(props: UserTableRowProps) {
     return <tr>
         <td>{props.user.id}</td>
         <td>{props.user.username}</td>
-        <td>{props.user.email}</td>
+        <td><EditableText text={editedUser.email} setText={editEmail}/></td>
         <td>{props.user.role}</td>
         <td>{props.user.enabled ? "enabled" : "disabled"}</td>
         <td>
             <button onClick={handleDeleteUser}><MdDeleteForever/></button>
+        </td>
+        <td>
+            {wasEdited(editedUser) ? <button><MdSave/></button> : <p>not edited</p>}
         </td>
     </tr>
 }

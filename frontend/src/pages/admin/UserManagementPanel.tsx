@@ -78,9 +78,16 @@ function UserTableRow(props: UserTableRowProps) {
     return <tr>
         <td>{props.user.id}</td>
         <td>{props.user.username}</td>
-        <td><EditableText text={editedUser.email} setText={editEmail}/></td>
+        <td>
+            <EditableText text={editedUser.email} setText={editEmail}/>
+        </td>
         <td>{props.user.role}</td>
-        <td>{props.user.enabled ? "enabled" : "disabled"}</td>
+        <td>
+            <input type="checkbox"
+                   checked={editedUser.enabled}
+                   onChange={() => setEditedUser({...editedUser, enabled: !editedUser.enabled})}
+            />
+        </td>
         <td>
             <button onClick={handleDeleteUser}><MdDeleteForever/></button>
         </td>

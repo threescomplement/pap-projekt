@@ -182,10 +182,12 @@ public class ReviewIntegrationTests {
         var json = JsonPath.parse(response.getBody());
         List<String> reviews = json.read("$._embedded.reviews");
         assertEquals(2, reviews.size());
-        //links
+        assertTrue(json.read("$._embedded.reviews[?(@.authorUsername == 'rdeckard')].opinion").toString().contains("Dobrze prowadzony kurs, wymagający nauczyciel"));
+        assertTrue(json.read("$._embedded.reviews[?(@.authorUsername == 'rbatty')].opinion").toString().contains("Zbyt duże wymagania do studentów"));
 
-        assertTrue(json.read("$._links.self.href").toString().endsWith(("api/teachers/1/reviews")));
-        assertTrue(json.read("$._links.teacher.href").toString().endsWith(("api/teachers/1")));
+        //links
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("/api/teachers/1/reviews")));
+        assertTrue(json.read("$._links.teacher.href").toString().endsWith(("/api/teachers/1")));
     }
 
 

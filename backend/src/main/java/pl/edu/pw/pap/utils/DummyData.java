@@ -82,11 +82,11 @@ public class DummyData {
     }
 
     public void deleteAll() {
+        emailVerificationTokenRepository.deleteAll();
         userRepository.deleteAll();
         teacherRepository.deleteAll();
         courseRepository.deleteAll();
         reviewRepository.deleteAll();
         commentRepository.deleteAll();
-        emailVerificationTokenRepository.deleteAll();
     }
 }

@@ -19,13 +19,21 @@ public class CourseService {
 
     public CourseDTO convertToDto(Course course) {
         var reviews = course.getReviews();
-        double averageRating = 0;
-        int ratingSum = 0;
+        double averageEaseRating = 0;
+        double averageInterestRating = 0;
+        double averageInteractiveRating = 0;
+        int easeRatingSum = 0;
+        int interestRatingSum = 0;
+        int interactiveRatingSum = 0;
         for (var review : reviews) {
-            ratingSum += review.getOverallRating();
+            easeRatingSum += review.getEaseRating();
+            interestRatingSum += review.getInterestRating();
+            interactiveRatingSum += review.getInteractiveRating();
         }
         if (!reviews.isEmpty()) {
-            averageRating = (double) ratingSum / (reviews.size());
+            averageEaseRating = (double) easeRatingSum / (reviews.size());
+            averageInterestRating = (double) interestRatingSum / (reviews.size());
+            averageInteractiveRating= (double) interactiveRatingSum / (reviews.size());
         }
 
 
@@ -36,7 +44,9 @@ public class CourseService {
                 .type(course.getType())
                 .level(course.getLevel())
                 .module(course.getModule())
-                .averageRating(averageRating)
+                .averageEaseRating(averageEaseRating)
+                .averageInterestRating(averageInterestRating)
+                .averageInteractiveRating(averageInteractiveRating)
                 .teacherId(course.getTeacher().getId())
                 .build();
     }

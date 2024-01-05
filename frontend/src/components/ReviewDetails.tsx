@@ -97,8 +97,17 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const isCommentAuthor = user.username === comment.authorUsername;
     const [errorMessage, setErrorMessage] = useState<string>("");
     const modificationContent = (isAdmin || isCommentAuthor) ?
-        <EditBar handleDelete={createCommentDeleteHandler(comment.id, afterDeleting, setErrorMessage)}
+        <EditBar handleDelete={(e)=>handleDeleteComment(e)}
                  deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}/> : null;
+
+    function handleDeleteComment(e: React.MouseEvent){
+        e.preventDefault()
+        CommentService.deleteComment(comment.id)
+            .then(deleted => {
+                deleted ? afterDeleting() : setErrorMessage("'Przy usuwaniu opinii wystąpił błąd. " +
+                    "Spróbuj ponownie lub skontaktuj się z administracją...");
+            })
+    }
 
     return <>
 
@@ -108,14 +117,3 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     </>
 }
 
-
-function createCommentDeleteHandler(commentId: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
-    return async event => {
-        event.preventDefault()
-        CommentService.deleteComment(commentId)
-            .then(deleted => {
-                deleted ? afterDeleting() : errorBoxSetter("'Przy usuwaniu opinii wystąpił błąd. " +
-                    "Spróbuj ponownie lub skontaktuj się z administracją...");
-            })
-    }
-}

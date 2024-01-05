@@ -26,18 +26,16 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
         <EditBar
-            handleDelete={createReviewDeleteHandler(courseId!, review.authorUsername, afterDeleting, setErrorMessage)}
+            handleDelete={(e) => handleDeleteReview(e)}
             deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}/> : null;
 
-    function createReviewDeleteHandler(courseId: string, username: string, afterDeleting: Function, errorBoxSetter: Function): React.MouseEventHandler {
-        return async event => {
-            event.preventDefault()
-            ReviewService.deleteReview(courseId, username)
-                .then(deleted => {
-                    (deleted) ? afterDeleting() : errorBoxSetter('Przy usuwaniu opinii wystąpił błąd. ' +
-                        'Spróbuj ponownie lub skontaktuj się z administracją...');
-                })
-        }
+    function handleDeleteReview(e: React.MouseEvent) {
+        e.preventDefault()
+        ReviewService.deleteReview(courseId!, review.authorUsername)
+            .then(deleted => {
+                (deleted) ? afterDeleting() : setErrorMessage('Przy usuwaniu opinii wystąpił błąd. ' +
+                    'Spróbuj ponownie lub skontaktuj się z administracją...');
+            })
     }
 
     return <>

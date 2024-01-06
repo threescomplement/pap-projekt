@@ -114,7 +114,7 @@ public class ReviewController {
 
     @PostMapping("/api/courses/{courseId}/reviews")
     public ReviewDTO addReview(@PathVariable Long courseId, @RequestBody AddReviewRequest request, @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return reviewService.addReview(courseId, request, userPrincipal);
+        return addLinks(reviewService.addReview(courseId, request, userPrincipal));
     }
 
     @PutMapping("api/courses/{courseId}/reviews/{username}")

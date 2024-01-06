@@ -12,6 +12,7 @@ import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import pl.edu.pw.pap.PapApplication;
+import pl.edu.pw.pap.review.EditReviewRequest;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.security.AuthService;
 import pl.edu.pw.pap.teacher.TeacherRepository;
@@ -264,6 +265,150 @@ public class ReviewIntegrationTests {
         // check if review was not deleted
         response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+    }
+
+
+    @Test
+    public void updateReviewByAuthor() {
+        String endpoint = "/api/courses/1/reviews/rdeckard"; // by user 1 rdeckard
+        var getResponse = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), getResponse.getStatusCode());
+        var json = JsonPath.parse(getResponse.getBody());
+        var oldDate = json.read("$.created");
+
+
+
+
+
+        var request = new EditReviewRequest("sysy knyszy crazyfrog",5 );
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var returnedReview = JsonPath.parse(response.getBody());
+        assertEquals("sysy knyszy crazyfrog", returnedReview.read("opinion"));
+        assertEquals("rdeckard", returnedReview.read("authorUsername"));
+        assertEquals(true, returnedReview.read("edited"));
+        assertEquals(5, (int) returnedReview.read("overallRating"));
+        assertEquals(oldDate, returnedReview.read("created"));
+
+        // check links
+        assertTrue(returnedReview.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+        assertTrue(returnedReview.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(returnedReview.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/rdeckard/comments"));
+        assertTrue(returnedReview.read("$._links.course.href").toString().endsWith("/api/courses/1"));
+
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var reviewJson = JsonPath.parse(response.getBody());
+
+        assertEquals("sysy knyszy crazyfrog", reviewJson.read("opinion"));
+        assertEquals("rdeckard", reviewJson.read("authorUsername"));
+        assertEquals(true, reviewJson.read("edited"));
+        assertEquals(5, (int) reviewJson.read("overallRating"));
+
+        // check links
+        assertTrue(reviewJson.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+        assertTrue(reviewJson.read("$._links.user.href").toString().endsWith("/api/users/rdeckard"));
+        assertTrue(reviewJson.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/rdeckard/comments"));
+        assertTrue(reviewJson.read("$._links.course.href").toString().endsWith("/api/courses/1"));
+        assertEquals(oldDate, returnedReview.read("created"));
+
+
+
+    }
+
+    @Test
+    public void editReviewByOtherUser() {
+        String endpoint = "/api/courses/1/reviews/rbatty"; //
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        // Forbidden
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var reviewJson = JsonPath.parse(response.getBody());
+
+        // make sure nothing was changed
+        assertEquals("Zbyt duże wymagania do studentów", reviewJson.read("opinion"));
+        assertEquals("rbatty", reviewJson.read("authorUsername"));
+        assertEquals(false, reviewJson.read("edited"));
+        assertEquals(3, (int) reviewJson.read("overallRating"));
+
+        // check links
+        assertTrue(reviewJson.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(reviewJson.read("$._links.user.href").toString().endsWith("/api/users/rbatty"));
+        assertTrue(reviewJson.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/rbatty/comments"));
+        assertTrue(reviewJson.read("$._links.course.href").toString().endsWith("/api/courses/1"));
+
+    }
+
+
+    @Test
+    public void editReviewByAdmin() {
+        adminLogin();
+
+        String endpoint = "/api/courses/1/reviews/rbatty"; //
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        // Forbidden
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var reviewJson = JsonPath.parse(response.getBody());
+
+        // make sure nothing was changed
+        assertEquals("Zbyt duże wymagania do studentów", reviewJson.read("opinion"));
+        assertEquals("rbatty", reviewJson.read("authorUsername"));
+        assertEquals(false, reviewJson.read("edited"));
+        assertEquals(3, (int) reviewJson.read("overallRating"));
+
+        // check links
+        assertTrue(reviewJson.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(reviewJson.read("$._links.user.href").toString().endsWith("/api/users/rbatty"));
+        assertTrue(reviewJson.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/rbatty/comments"));
+        assertTrue(reviewJson.read("$._links.course.href").toString().endsWith("/api/courses/1"));
+
+
+    }
+
+    @Test
+    public void editReviewCourseNotExist() {
+        String endpoint = "/api/courses/6/reviews/rdeckard"; // doesnt exist
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
+
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+
+    @Test
+    public void editReviewUserNotExist() {
+        String endpoint = "/api/courses/1/reviews/sysomat"; // doesnt exist
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
+
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+
+    @Test
+    public void editReviewCourseNotExistByAdmin() {
+        adminLogin();
+        String endpoint = "/api/courses/5/reviews/rbatty"; // doesnt exist
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
+
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
     }
 
 

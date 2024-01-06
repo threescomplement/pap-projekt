@@ -24,4 +24,5 @@ public class ReviewDTO extends RepresentationModel<ReviewDTO> {
     private Timestamp created;
     @JsonIgnore
     private Long courseId;
+    private Boolean edited;
 }

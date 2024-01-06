@@ -18,8 +18,8 @@ public abstract class GeneralReport {
     private Long id;
 
 
-    private User reportingUser; // TODO model relation with user
-    private String reason; // TODO: change to enum
+    protected User reportingUser; // TODO model relation with user
+    protected String reason; // TODO: change to enum
 
     public GeneralReport(User reportingUser, String reason){
         this.reportingUser = reportingUser;

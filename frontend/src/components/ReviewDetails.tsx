@@ -114,7 +114,7 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
 
     return <>
         <div>{comment.authorUsername} {modificationContent}</div>
-        <div>{comment.text}</div>
+        <p>{comment.text}</p>
         <ErrorBox message={errorMessage}/>
     </>
 }

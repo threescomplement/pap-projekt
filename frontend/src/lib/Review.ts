@@ -4,11 +4,10 @@ import api from "./api";
 
 
 export interface Review {
-    id: string;
     authorUsername: string;
     opinion: string;
-    created: string
     overallRating: string;
+    created: string
     _links: any;
 }
 
@@ -26,13 +25,19 @@ async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
 }
 
 async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review> {
-    return api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
+    return api.get(`/courses/${courseId}/reviews/${authorUsername}`)
         .then(r => r.json());
 }
 
-async function postReview(request: ReviewRequest, courseId: string) {
-    api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews"), request)
+async function postReview(request: ReviewRequest, courseId: string): Promise<void> {
+    api.post(`/courses/${courseId}/reviews`, request)
         .catch(e => console.log(e));
+}
+
+async function deleteReview(courseId: string, username: string): Promise<boolean> {
+    const response = await api.delete(`/courses/${courseId}/reviews/${username}`);
+    console.log(response);
+    return response.ok;
 }
 
 async function fetchReviewsByTeacher(): Promise<Review[]> {
@@ -47,6 +52,7 @@ export const ReviewService = {
     fetchReviewsByCourse,
     fetchReviewByCourseIdAndAuthor,
     postReview,
+    deleteReview,
     fetchReviewsByTeacher,
     fetchReviewsByUser
 }

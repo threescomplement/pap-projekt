@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import {useNavigate, useParams} from "react-router-dom";
 import styles from "./IntermediatePage.module.css";
 
-export function ThankYouPage() {
+export function ReviewDeleted() {
     const navigate = useNavigate();
     const {courseId }= useParams();
 
@@ -16,8 +16,7 @@ export function ThankYouPage() {
 
     return (
         <div className={styles.intermediatePage}>
-            <h1>Dziękujemy!</h1>
-            <p>Twoja opinia została zarejestrowana.</p>
+            <p>Ocena została usunięta</p>
             <p>Wkrótce zostaniesz przekierowany...</p>
         </div>
     );

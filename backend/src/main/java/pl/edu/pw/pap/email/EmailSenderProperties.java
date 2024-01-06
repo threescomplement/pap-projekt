@@ -9,10 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Getter
 @Configuration
-@ConfigurationProperties("email-verification")
 public class EmailSenderProperties {
-    private String confirmBaseUrl;
-    private String resetPasswordBaseUrl;
     @Value("${spring.mail.username}")
     private String senderEmail;
 }

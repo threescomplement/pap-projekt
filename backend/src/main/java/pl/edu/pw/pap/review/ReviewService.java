@@ -8,15 +8,20 @@ import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
-import pl.edu.pw.pap.course.CourseNotFoundException;
 import pl.edu.pw.pap.course.CourseRepository;
+import pl.edu.pw.pap.course.CourseNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
+import pl.edu.pw.pap.teacher.TeacherNotFoundException;
+import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
-import pl.edu.pw.pap.user.UserNotFoundException;
 import pl.edu.pw.pap.user.UserRepository;
+import pl.edu.pw.pap.user.UserNotFoundException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +31,7 @@ public class ReviewService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    public final TeacherRepository teacherRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
@@ -35,6 +41,7 @@ public class ReviewService {
                 .overallRating(review.getOverallRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
+                .edited(review.getEdited())
                 .build();
     }
 
@@ -102,4 +109,34 @@ public class ReviewService {
         );
     }
 
+    public List<ReviewDTO> getTeacherReviews(Long teacherId) {
+        var teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new TeacherNotFoundException("No teacher with id: " + teacherId));
+
+        return teacher.getCourses().stream()
+                .map(Course::getReviews)
+                .flatMap(Collection::stream)
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public ReviewDTO editReview(Long courseId, String username, EditReviewRequest request, UserPrincipal userPrincipal) {
+        User reviewerUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("No user (reviewer) with username: " + username));
+
+        // this is better to throw before the author check to not imply that a review exists if just the users dont match
+        Review review = reviewRepository.findById(new ReviewKey(reviewerUser.getId(), courseId))
+                .orElseThrow(() -> new ReviewNotFoundException("No review of course" + courseId + " by " + username));
+
+        if (!reviewerUser.getId().equals(userPrincipal.getUserId())) {
+            // review exists but caller is not author, results in 403 forbidden
+            throw (new ForbiddenException("You are not permitted to edit this review"));
+        }
+
+        review.setOpinion(request.text());
+        review.setOverallRating(request.rating());
+        review.setEdited(true);
+        return convertToDTO(reviewRepository.save(review));
+
+    }
 }

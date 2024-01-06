@@ -3,7 +3,12 @@ import React, {useEffect, useState, useCallback} from "react";
 import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewComment";
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
+import {EditBar} from "./EditBar";
+import useUser from "../hooks/useUser";
+import {User} from "../lib/User";
+import MessageBox from "./MessageBox";
+import ErrorBox from "./ErrorBox";
 
 interface ReviewDetailsProps {
     review: Review
@@ -13,7 +18,9 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     const {courseId, authorUsername} = useParams();
     const [comments, setComments] = useState<ReviewComment[]>([]);
     const [newComment, setNewComment] = useState<string>("");
-    const memorizedReloadComments = useCallback(reloadComments, [review])
+    const [message, setMessage] = useState<string>("");
+    const memorizedReloadComments = useCallback(reloadComments, [review]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         memorizedReloadComments()
@@ -41,9 +48,19 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
             .catch(e => console.log(e));
     }
 
+    function afterDeletingReview() {
+        navigate(`/courses/${courseId}/reviewDeleted`)
+    }
+
+    function afterDeletingComment() {
+        reloadComments();
+        setMessage("Komentarz został usunięty.")
+    }
+
     return <div>
-        <ReviewCardWithoutLink review={review}/>
-        <CommentList comments={comments}/>
+        <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
+        <MessageBox message={message}/>
+        <CommentList comments={comments} afterDeleting={afterDeletingComment}/>
         <div className="add-comment-container">
             <textarea
                 placeholder="Twój komentarz"
@@ -56,25 +73,47 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
 }
 
 interface CommentListProps {
-    comments: ReviewComment[]
+    comments: ReviewComment[],
+    afterDeleting: Function
 }
 
-export function CommentList({comments}: CommentListProps) {
+export function CommentList({comments, afterDeleting}: CommentListProps) {
     return <ul>
         {comments //todo: sort
             .map(c => <li
-                key={c.id}><CommentCard review={c}/>
+                key={c.id}><CommentCard comment={c} afterDeleting={afterDeleting}/>
             </li>)}
     </ul>
 }
 
 interface CommentCardProps {
-    review: ReviewComment;
+    comment: ReviewComment;
+    afterDeleting: Function;
 }
 
-function CommentCard({review}: CommentCardProps) {
+function CommentCard({comment, afterDeleting}: CommentCardProps) {
+    const user: User = useUser().user!
+    const isAdmin = user.roles[0] === "ROLE_ADMIN";
+    const isCommentAuthor = user.username === comment.authorUsername;
+    const [errorMessage, setErrorMessage] = useState<string>("");
+    const modificationContent = (isAdmin || isCommentAuthor) ?
+        <EditBar handleDelete={(e)=>handleDeleteComment(e)}
+                 deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}/> : null;
+
+    function handleDeleteComment(e: React.MouseEvent){
+        e.preventDefault()
+        CommentService.deleteComment(comment.id)
+            .then(deleted => {
+                deleted ? afterDeleting() : setErrorMessage("'Przy usuwaniu opinii wystąpił błąd. " +
+                    "Spróbuj ponownie lub skontaktuj się z administracją...");
+            })
+    }
+
     return <>
-        <div>{review.authorUsername}</div>
-        <div>{review.text}</div>
+
+        <div>{comment.authorUsername} {modificationContent}</div>
+        <p>{comment.text}</p>
+        <ErrorBox message={errorMessage}/>
     </>
 }
+

@@ -69,4 +69,14 @@ public class ModelIntegrityConstraintsTest {
         assertEquals(1, review.getComments().size());
         data.deleteAll();
     }
+
+    @Test
+    void testReviewReportCascade(){
+        data.addDummyData();
+
+        data.deleteAll();
+    }
+
+
+
 }

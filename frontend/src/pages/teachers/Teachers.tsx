@@ -3,7 +3,7 @@ import {TeacherService, Teacher} from "../../lib/Teacher";
 import Filter, {all, languages} from "../../components/Filter";
 import styles from "./Teachers.module.css";
 import {Link} from "react-router-dom";
-import {NUM_REVIEWS_PLACEHOLDER} from "../../lib/utils";
+import {NUM_REVIEWS_PLACEHOLDER, ratingToPercentage} from "../../lib/utils";
 
 export function Teachers() {
     const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -46,7 +46,9 @@ export default function TeacherList({teachers}: TeacherListProps) {
         <tbody>
         <tr id="headers">
             <th>Nazwisko</th>
-            <th>Średnia ocena</th>
+            <th>Jak łatwe zajęcia?</th>
+            <th>Jak interesujące zajęcia?</th>
+            <th>Jak bardzo angażuje studentów?</th>
             <th>Liczba opinii</th>
         </tr>
         {teachers.map(t => <TeacherRow teacher={t}/>)}
@@ -62,10 +64,16 @@ interface TeacherProps {
 export function TeacherRow({teacher}: TeacherProps) {
     return <tr id={teacher.id}>
         <td>
-            <Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link>`
+            <Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link>
         </td>
         <td className="numTableEntry">
-            {teacher.averageRating}
+            {ratingToPercentage(teacher.averageEaseRating)}
+        </td>
+        <td className="numTableEntry">
+            {ratingToPercentage(teacher.averageInterestRating)}
+        </td>
+        <td className="numTableEntry">
+            {ratingToPercentage(teacher.averageEngagementRating)}
         </td>
         <td className="numTableEntry">
             {NUM_REVIEWS_PLACEHOLDER}

@@ -5,6 +5,7 @@ import React, {useState} from "react";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
+import {ratingToPercentage} from "../lib/utils";
 
 interface ReviewCardProps {
     review: Review;
@@ -41,9 +42,9 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
         <div>
-            <p>Jak łatwy: {review.easeRating}</p>
-            <p>Jak interesujący: {review.interestRating}</p>
-            <p>Jak angażujący: {review.engagementRating}</p>
+            <p>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>
+            <p>Jak interesujący: {ratingToPercentage(review.interestRating)}</p>
+            <p>Jak angażujący: {ratingToPercentage(review.engagementRating)}</p>
         </div>
         <div>{review.opinion}</div>
         <ErrorBox message={errorMessage}/>

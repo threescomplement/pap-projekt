@@ -3,6 +3,7 @@ import React, {ChangeEvent, useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
 import "./ReviewForm.css"
 import {ReviewRequest, ReviewService} from "../../lib/Review";
+import {ratingToPercentage} from "../../lib/utils";
 
 export function ReviewForm() {
     const navigate = useNavigate();
@@ -70,18 +71,18 @@ export function ReviewForm() {
             <p>Jak prosty był kurs?</p>
             <div>
                 <RatingSlider rating={easeRating} setRating={setEaseRating}/>
-                {easeRating === null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {easeRating}</p>}
+                {easeRating === null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {ratingToPercentage(easeRating)}</p>}
             </div>
         </div>
         <div>
             <p>Jak bardzo Cię zainteresował?</p>
             <RatingSlider rating={interestRating} setRating={setInterestRating}/>
-            {interestRating === null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {interestRating}</p>}
+            {interestRating === null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {ratingToPercentage(interestRating)}</p>}
         </div>
         <div>
             <p>Jak bardzo angażujący był?</p>
             <RatingSlider rating={engagementRating} setRating={setEngagementRating}/>
-            {engagementRating === null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {engagementRating}</p>}
+            {engagementRating === null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {ratingToPercentage(engagementRating)}</p>}
         </div>
         <div>
             <button onClick={handleClick}>Zatwierdź</button>

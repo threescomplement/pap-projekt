@@ -71,7 +71,7 @@ public class TeacherIntegrationTests {
         assertEquals(data.teacher_1.getName(), json.read("$.name"));
         assertEquals(5.5, (double) (json.read("$.averageEaseRating")));
         assertEquals(5.5, (double) (json.read("$.averageInterestRating")));
-        assertEquals(5.5, (double) (json.read("$.averageInteractiveRating")));
+        assertEquals(5.5, (double) (json.read("$.averageEngagementRating")));
         // TODO        assertEquals(2, (int) json.read("$.numRatings"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/teachers/1"));
         assertTrue(json.read("$._links.courses.href").toString().contains("/api/courses?name=&language=all&module=all&type=all&level=all&teacherName=mgr.%20Jan%20Kowalski"));

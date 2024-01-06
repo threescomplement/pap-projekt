@@ -37,7 +37,7 @@ public class ReviewService {
                 .opinion(review.getOpinion())
                 .easeRating(review.getEaseRating())
                 .interestRating(review.getInterestRating())
-                .interactiveRating(review.getInteractiveRating())
+                .engagementRating(review.getEngagementRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
                 .edited(review.getEdited())
@@ -104,7 +104,7 @@ public class ReviewService {
             throw (new DuplicateReviewException("Cannot add more than one review to a course"));
         }
         return convertToDTO(
-                reviewRepository.save(new Review(addingUser, course, request.text(), request.easeRating(), request.interestingRating(), request.interactiveRating()))
+                reviewRepository.save(new Review(addingUser, course, request.text(), request.easeRating(), request.interestRating(), request.engagementRating()))
         );
     }
 
@@ -135,7 +135,7 @@ public class ReviewService {
         review.setOpinion(request.text());
         review.setEaseRating(request.easeRating());
         review.setInterestRating(request.interestingRating());
-        review.setInteractiveRating(request.interactiveRating());
+        review.setEngagementRating(request.interactiveRating());
         review.setEdited(true);
         return convertToDTO(reviewRepository.save(review));
 

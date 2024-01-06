@@ -21,19 +21,19 @@ public class CourseService {
         var reviews = course.getReviews();
         double averageEaseRating = 0;
         double averageInterestRating = 0;
-        double averageInteractiveRating = 0;
+        double averageEngagementRating = 0;
         int easeRatingSum = 0;
         int interestRatingSum = 0;
-        int interactiveRatingSum = 0;
+        int engagementRatingSum = 0;
         for (var review : reviews) {
             easeRatingSum += review.getEaseRating();
             interestRatingSum += review.getInterestRating();
-            interactiveRatingSum += review.getInteractiveRating();
+            engagementRatingSum += review.getEngagementRating();
         }
         if (!reviews.isEmpty()) {
             averageEaseRating = (double) easeRatingSum / (reviews.size());
             averageInterestRating = (double) interestRatingSum / (reviews.size());
-            averageInteractiveRating= (double) interactiveRatingSum / (reviews.size());
+            averageEngagementRating= (double) engagementRatingSum / (reviews.size());
         }
 
 
@@ -46,7 +46,7 @@ public class CourseService {
                 .module(course.getModule())
                 .averageEaseRating(averageEaseRating)
                 .averageInterestRating(averageInterestRating)
-                .averageInteractiveRating(averageInteractiveRating)
+                .averageEngagementRating(averageEngagementRating)
                 .teacherId(course.getTeacher().getId())
                 .build();
     }

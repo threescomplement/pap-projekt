@@ -13,5 +13,5 @@ public class TeacherDTO extends RepresentationModel<TeacherDTO> {
     private String name;
     private Double averageEaseRating;
     private Double averageInterestRating;
-    private Double averageInteractiveRating;
+    private Double averageEngagementRating;
 }

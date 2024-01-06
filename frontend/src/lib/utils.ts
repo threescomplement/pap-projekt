@@ -24,13 +24,17 @@ export function getDummyReviews(): Review[] {
     return [{
         authorUsername: "gordonsysy123",
         opinion: "Wyczumpisty kurs!",
-        overallRating: "9",
+        easeRating: "9",
+        interestRating: "8",
+        engagementRating: "6",
         created: "2023-12-06T22:51:36.585+00:00",
         _links: null
     }, {
         authorUsername: "czumpi94ez",
         opinion: "Średnio na jeża",
-        overallRating: "4",
+        easeRating: "4",
+        interestRating: "2",
+        engagementRating: "3",
         created: "2023-12-06T22:50:36.585+00:00",
         _links: null
     }]

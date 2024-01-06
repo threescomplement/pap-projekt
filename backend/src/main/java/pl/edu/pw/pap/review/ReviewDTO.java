@@ -22,7 +22,7 @@ public class ReviewDTO extends RepresentationModel<ReviewDTO> {
     private String opinion;
     private Integer easeRating;
     private Integer interestRating;
-    private Integer interactiveRating;
+    private Integer engagementRating;
     private Timestamp created;
     @JsonIgnore
     private Long courseId;

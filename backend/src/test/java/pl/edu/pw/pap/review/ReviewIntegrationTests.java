@@ -76,7 +76,7 @@ public class ReviewIntegrationTests {
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", json.read("$.opinion"));
         assertEquals(8, (int) json.read("$.easeRating"));
         assertEquals(7, (int) json.read("$.interestRating"));
-        assertEquals(6, (int) json.read("$.interactiveRating"));
+        assertEquals(6, (int) json.read("$.engagementRating"));
 
         assertEquals("rdeckard", json.read("$.authorUsername"));
         assertTrue(json.read("$.created").toString().endsWith("+00:00"));
@@ -218,7 +218,7 @@ public class ReviewIntegrationTests {
         assertEquals("test_opinion", json.read("$.opinion"));
         assertEquals(6, (int) json.read("$.easeRating"));
         assertEquals(7, (int) json.read("$.interestRating"));
-        assertEquals(8, (int) json.read("$.interactiveRating"));
+        assertEquals(8, (int) json.read("$.engagementRating"));
     }
 
     @Test
@@ -294,7 +294,7 @@ public class ReviewIntegrationTests {
         assertEquals(true, returnedReview.read("edited"));
         assertEquals(5, (int) returnedReview.read("easeRating"));
         assertEquals(6, (int) returnedReview.read("interestRating"));
-        assertEquals(7, (int) returnedReview.read("interactiveRating"));
+        assertEquals(7, (int) returnedReview.read("engagementRating"));
         assertEquals(oldDate, returnedReview.read("created"));
 
         // check links
@@ -313,7 +313,7 @@ public class ReviewIntegrationTests {
         assertEquals(true, reviewJson.read("edited"));
         assertEquals(5, (int) returnedReview.read("easeRating"));
         assertEquals(6, (int) returnedReview.read("interestRating"));
-        assertEquals(7, (int) returnedReview.read("interactiveRating"));
+        assertEquals(7, (int) returnedReview.read("engagementRating"));
 
         // check links
         assertTrue(reviewJson.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -346,7 +346,7 @@ public class ReviewIntegrationTests {
         assertEquals(false, reviewJson.read("edited"));
         assertEquals(3, (int) reviewJson.read("easeRating"));
         assertEquals(4, (int) reviewJson.read("interestRating"));
-        assertEquals(5, (int) reviewJson.read("interactiveRating"));
+        assertEquals(5, (int) reviewJson.read("engagementRating"));
 
         // check links
         assertTrue(reviewJson.read("$._links.self.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -379,7 +379,7 @@ public class ReviewIntegrationTests {
         assertEquals(false, reviewJson.read("edited"));
         assertEquals(3, (int) reviewJson.read("easeRating"));
         assertEquals(4, (int) reviewJson.read("interestRating"));
-        assertEquals(5, (int) reviewJson.read("interactiveRating"));
+        assertEquals(5, (int) reviewJson.read("engagementRating"));
 
 
 

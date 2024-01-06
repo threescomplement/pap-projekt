@@ -34,7 +34,7 @@ public class Review {
     private String opinion;
     private int easeRating;
     private int interestRating;
-    private int interactiveRating;
+    private int engagementRating;
     private Boolean edited;
     @CreationTimestamp
     private Timestamp created;
@@ -42,10 +42,10 @@ public class Review {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-    public Review(User user, Course course, String opinion, int easeRating, int interestingnessRating, int interactiveRating) {
+    public Review(User user, Course course, String opinion, int easeRating, int interestingnessRating, int engagementRating) {
         this.opinion = opinion;
         this.easeRating = easeRating;
-        this.interactiveRating = interactiveRating;
+        this.engagementRating = engagementRating;
         this.interestRating = interestingnessRating;
         edited = false;
         course.addReview(this);
@@ -83,7 +83,7 @@ public class Review {
                 ", opinion='" + opinion + '\'' +
                 ", easeRating=" + easeRating +
                 ", interestRating=" + interestRating +
-                ", interactiveRating=" + interactiveRating +
+                ", engagementRating=" + engagementRating +
                 ", edited='" + edited +
                 ", created=" + created.toString() +
                 '}';

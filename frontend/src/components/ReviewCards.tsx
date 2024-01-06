@@ -40,8 +40,12 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
 
     return <>
         <div>{review.authorUsername} {modificationContent}</div>
-        <p>{`Ocena: ${review.overallRating}`}</p>
-        <p>{review.opinion}</p>
+        <div>
+            <p>Jak łatwy: {review.easeRating}</p>
+            <p>Jak interesujący: {review.interestRating}</p>
+            <p>Jak angażujący: {review.engagementRating}</p>
+        </div>
+        <div>{review.opinion}</div>
         <ErrorBox message={errorMessage}/>
     </>
 }

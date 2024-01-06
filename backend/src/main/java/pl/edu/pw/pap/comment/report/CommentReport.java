@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PreRemove;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
@@ -18,7 +19,7 @@ public class CommentReport extends GeneralReport {
     // We only ever use the ReportDTO class for passing reports so this doesn't matter too much
     @JsonIgnore
     @ManyToOne
-    private Comment reported; // TODO model relation with Comment
+    private Comment reported;
 
 
     public CommentReport(User reportingUser, String reason, Comment reportedComment) {
@@ -31,5 +32,12 @@ public class CommentReport extends GeneralReport {
     protected CommentReport() {
     }
 
+    @PreRemove
+    public void preRemove(){
+        if (this.reported != null ){
+            reported.removeReport(this);
+        }
+        // TODO add user remove
+    }
 
 }

@@ -69,6 +69,8 @@ public class Comment {
         if (this.review != null) {
             this.review.removeComment(this);
         }
+        this.reports.forEach(report -> report.setReported(null));
+        this.reports.clear();
     }
 
     @Override

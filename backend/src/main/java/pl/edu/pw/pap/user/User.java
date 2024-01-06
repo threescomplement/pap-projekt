@@ -90,7 +90,4 @@ public class User {
                 '}';
     }
 
-    public void addCommentReport(CommentReport commentReport) {
-
-    }
 }

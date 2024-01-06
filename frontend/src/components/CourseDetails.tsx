@@ -39,7 +39,7 @@ export default function CourseDetails(course: Course) {
     }, [course, memorizedReloadReviews]);
 
     const teacherContent = (teacher != null && teacherLoaded)
-        ? <Link className="TeacherLink" to={"/teachers/" + course.teacherId}> {teacher.name} </Link>
+        ? <Link className="TeacherLink" to={`/teachers/${course.teacherId}`}> {teacher.name} </Link>
         : <span className="TeacherLink">COURSE_TEACHER_PLACEHOLDER</span>;
 
     const moduleContent = course.module != null

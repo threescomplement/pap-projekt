@@ -35,6 +35,7 @@ public class Review {
     private int easeRating;
     private int interestRating;
     private int interactiveRating;
+    private Boolean edited;
     @CreationTimestamp
     private Timestamp created;
 
@@ -46,6 +47,7 @@ public class Review {
         this.easeRating = easeRating;
         this.interactiveRating = interactiveRating;
         this.interestRating = interestingnessRating;
+        edited = false;
         course.addReview(this);
         user.addReview(this);
     }
@@ -82,6 +84,7 @@ public class Review {
                 ", easeRating=" + easeRating +
                 ", interestRating=" + interestRating +
                 ", interactiveRating=" + interactiveRating +
+                ", edited='" + edited +
                 ", created=" + created.toString() +
                 '}';
     }

@@ -8,7 +8,7 @@ export function ThankYouPage() {
 
     useEffect(() => {
         const redirectTimeout = setTimeout(() => {
-            navigate("/courses/" + courseId);
+            navigate(`/courses/${courseId}`);
         }, 3000);
 
         return () => clearTimeout(redirectTimeout);

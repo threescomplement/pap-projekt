@@ -3,7 +3,6 @@ package pl.edu.pw.pap.comment.report;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.PreRemove;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +23,6 @@ public class CommentReport extends GeneralReport {
 
     public CommentReport(User reportingUser, String reason, Comment reportedComment) {
         super(reportingUser, reason);
-        this.reported = reportedComment; // can be deleted if we want, handled in Comment.addReport
         reportedComment.addReport(this);
         reportingUser.addCommentReport(this);
     }
@@ -37,7 +35,9 @@ public class CommentReport extends GeneralReport {
         if (this.reported != null ){
             reported.removeReport(this);
         }
-        // TODO add user remove
+        if (this.reportingUser != null){
+            reportingUser.removeCommentReport(this);
+        }
     }
 
 }

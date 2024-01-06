@@ -7,6 +7,7 @@ import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.review.Review;
+import pl.edu.pw.pap.review.report.ReviewReport;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +38,15 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
+    @JsonIgnore // Don't want to access reports outside ReportController
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReviewReport> reviewReports = new HashSet<>();
+
+    @JsonIgnore // Don't want to access reports outside ReportController
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CommentReport> commentReports = new HashSet<>();
+
+
     public User(String username, String email, String password, String role, Boolean enabled) {
         this.username = username;
         this.email = email;
@@ -56,6 +66,10 @@ public class User {
         this.reviews.clear();
         this.comments.forEach(comment -> comment.setUser(null));
         this.comments.clear();
+        this.reviewReports.forEach(report -> report.setReportingUser(null));
+        this.reviewReports.clear();
+        this.commentReports.forEach(report -> report.setReportingUser(null));
+        this.commentReports.clear();
     }
 
     public void addReview(Review review) {
@@ -76,6 +90,25 @@ public class User {
     public void removeComment(Comment comment) {
         this.comments.remove(comment);
         comment.setUser(null);
+    }
+    public void addReviewReport(ReviewReport report) {
+        this.reviewReports.add(report);
+        report.setReportingUser(this);
+    }
+
+    public void removeReviewReport(ReviewReport report) {
+        this.reviewReports.remove(report);
+        report.setReportingUser(null);
+    }
+
+    public void addCommentReport(CommentReport report) {
+        this.commentReports.add(report);
+        report.setReportingUser(this);
+    }
+
+    public void removeCommentReport(CommentReport report) {
+        this.commentReports.remove(report);
+        report.setReportingUser(null);
     }
 
     @Override

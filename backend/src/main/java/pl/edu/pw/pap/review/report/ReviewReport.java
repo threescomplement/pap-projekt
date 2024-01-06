@@ -33,7 +33,9 @@ public class ReviewReport extends GeneralReport {
         if (this.reported != null){
             reported.removeReport(this);
         }
-        // TODO add user remove
+        if (this.reportingUser != null){
+            reportingUser.removeReviewReport(this);
+        }
     }
 
 }

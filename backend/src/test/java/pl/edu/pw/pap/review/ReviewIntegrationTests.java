@@ -280,12 +280,12 @@ public class ReviewIntegrationTests {
 
 
 
-        var request = new EditReviewRequest("nowy tekscik",5 );
+        var request = new EditReviewRequest("sysy knyszy crazyfrog",5 );
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var returnedReview = JsonPath.parse(response.getBody());
-        assertEquals("nowy tekscik", returnedReview.read("opinion"));
+        assertEquals("sysy knyszy crazyfrog", returnedReview.read("opinion"));
         assertEquals("rdeckard", returnedReview.read("authorUsername"));
         assertEquals(true, returnedReview.read("edited"));
         assertEquals(5, (int) returnedReview.read("overallRating"));
@@ -302,7 +302,7 @@ public class ReviewIntegrationTests {
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
         var reviewJson = JsonPath.parse(response.getBody());
 
-        assertEquals("nowy tekscik", reviewJson.read("opinion"));
+        assertEquals("sysy knyszy crazyfrog", reviewJson.read("opinion"));
         assertEquals("rdeckard", reviewJson.read("authorUsername"));
         assertEquals(true, reviewJson.read("edited"));
         assertEquals(5, (int) reviewJson.read("overallRating"));
@@ -321,7 +321,7 @@ public class ReviewIntegrationTests {
     @Test
     public void editReviewByOtherUser() {
         String endpoint = "/api/courses/1/reviews/rbatty"; //
-        var request = new EditReviewRequest("nowy tekscik", 1);
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
         // Forbidden
@@ -352,7 +352,7 @@ public class ReviewIntegrationTests {
         adminLogin();
 
         String endpoint = "/api/courses/1/reviews/rbatty"; //
-        var request = new EditReviewRequest("nowy tekscik", 1);
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
         // Forbidden
@@ -381,7 +381,7 @@ public class ReviewIntegrationTests {
     @Test
     public void editReviewCourseNotExist() {
         String endpoint = "/api/courses/6/reviews/rdeckard"; // doesnt exist
-        var request = new EditReviewRequest("nowy tekscik", 1);
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
 
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
@@ -392,7 +392,7 @@ public class ReviewIntegrationTests {
     @Test
     public void editReviewUserNotExist() {
         String endpoint = "/api/courses/1/reviews/sysomat"; // doesnt exist
-        var request = new EditReviewRequest("nowy tekscik", 1);
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
 
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
@@ -404,7 +404,7 @@ public class ReviewIntegrationTests {
     public void editReviewCourseNotExistByAdmin() {
         adminLogin();
         String endpoint = "/api/courses/5/reviews/rbatty"; // doesnt exist
-        var request = new EditReviewRequest("nowy tekscik", 1);
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 1);
 
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);

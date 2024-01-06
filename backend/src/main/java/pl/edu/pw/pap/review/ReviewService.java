@@ -41,6 +41,7 @@ public class ReviewService {
                 .overallRating(review.getOverallRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
+                .edited(review.getEdited())
                 .build();
     }
 
@@ -115,5 +116,25 @@ public class ReviewService {
                 .flatMap(Collection::stream)
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public ReviewDTO editReview(Long courseId, String username, EditReviewRequest request, UserPrincipal userPrincipal) {
+        User reviewerUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("No user (reviewer) with username: " + username));
+
+        // this is better to throw before the author check to not imply that a review exists if just the users dont match
+        Review review = reviewRepository.findById(new ReviewKey(reviewerUser.getId(), courseId))
+                .orElseThrow(() -> new ReviewNotFoundException("No review of course" + courseId + " by " + username));
+
+        if (!reviewerUser.getId().equals(userPrincipal.getUserId())) {
+            // review exists but caller is not author, results in 403 forbidden
+            throw (new ForbiddenException("You are not permitted to edit this review"));
+        }
+
+        review.setOpinion(request.text());
+        review.setOverallRating(request.rating());
+        review.setEdited(true);
+        return convertToDTO(reviewRepository.save(review));
+
     }
 }

@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
@@ -17,7 +16,6 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +28,6 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
     public final TeacherRepository teacherRepository;
 
 
@@ -136,7 +133,9 @@ public class ReviewService {
         }
 
         review.setOpinion(request.text());
-        review.setOverallRating(request.rating());
+        review.setEaseRating(request.easeRating());
+        review.setInterestRating(request.interestingRating());
+        review.setInteractiveRating(request.interactiveRating());
         review.setEdited(true);
         return convertToDTO(reviewRepository.save(review));
 

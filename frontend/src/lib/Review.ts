@@ -45,6 +45,12 @@ async function deleteReview(courseId: string, username: string): Promise<boolean
     return response.ok;
 }
 
+async function editReview(request: ReviewRequest, courseId: string, authorUsername: string) {
+    const response = await api.put(`/courses/${courseId}/reviews/${authorUsername}`, request);
+    console.log(response);
+    return response.ok;
+}
+
 async function fetchReviewsByTeacher(): Promise<Review[]> {
     return getDummyReviews();
 }
@@ -58,6 +64,7 @@ export const ReviewService = {
     fetchReviewByCourseIdAndAuthor,
     postReview,
     deleteReview,
+    editReview,
     fetchReviewsByTeacher,
     fetchReviewsByUser
 }

@@ -57,14 +57,14 @@ export function ReviewForm() {
             text: opinion,
             rating: rating
         }
-        ReviewService.postReview(request, courseId!);
+        previousReview === null ? ReviewService.postReview(request, courseId!) : ReviewService.editReview(request, courseId!, username);
         navigate(`/courses/${courseId}/thankyou`);
         // todo: remove this page from history so that clicking back doesn't return to it
     }
 
     return <div className="review-form">
         <h1>{previousReview === null ? "Napisz opinię" : "Edytuj swoją opinię"}
-            {course !== null && (`do kursu ${course.name}`)}</h1>`
+            {course !== null && (` do kursu ${course.name}`)}</h1>`
         <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"
                   onChange={e => setOpinion(e.target.value)}
                   value={opinion}>

@@ -38,4 +38,16 @@ public class ReviewReport extends GeneralReport {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ReviewReport{" +
+                "id=" + id +
+                ", user=" + reportingUser.getUsername() +
+                ", reason=" + reason +
+                ", courseId=" + reported.getCourse().getId() +
+                ", reviewerUsername=" + reported.getUser().getUsername() +
+                '}';
+    }
+
+
 }

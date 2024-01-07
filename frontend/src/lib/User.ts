@@ -134,7 +134,7 @@ async function updateUser(user: AppUser): Promise<AppUser> {
     return response.json();
 }
 
-async function deleteUser(user: AppUser): Promise<boolean> {
+async function deleteUser(user: AppUser | User): Promise<boolean> {
     const response = await api.delete(`/users/${user.username}`);
     return response.ok;
 }

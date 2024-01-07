@@ -3,12 +3,18 @@ package pl.edu.pw.pap.report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.CommentController;
+import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.review.ReviewController;
+import pl.edu.pw.pap.review.ReviewKey;
+import pl.edu.pw.pap.review.ReviewNotFoundException;
+import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
+import pl.edu.pw.pap.user.UserNotFoundException;
+import pl.edu.pw.pap.user.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +29,9 @@ public class ReportService {
 
     private final ReviewReportRepository reviewReportRepository;
     private final CommentReportRepository commentReportRepository;
+    private final ReviewRepository reviewRepository;
+    private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
 
     public ReportDTO convertReviewReportToDto(ReviewReport report) {
 
@@ -91,9 +100,16 @@ public class ReportService {
         return null;
     }
 
-    public ReportDTO reportReview(Long courseId, String reviewerUsername, UserPrincipal userPrincipal){
+    public ReportDTO reportReview(Long courseId, String reviewerUsername, ReportRequest reportRequest,  UserPrincipal userPrincipal){
+        var reviewer = userRepository.findByUsername(reviewerUsername)
+                .orElseThrow(() -> new UserNotFoundException("No usern with username" + reviewerUsername));
+        var review = reviewRepository.findById(new ReviewKey(reviewer.getId(), courseId))
+                .orElseThrow(() -> new ReviewNotFoundException("No review of course " + courseId + " by " + reviewerUsername));
+        var reportingUser = userRepository.findByUsername(userPrincipal.getUsername())
+                .orElseThrow(()-> new UserNotFoundException("User with username " + userPrincipal.getUsername() + " doesn't exist"));
+        var report = reviewReportRepository.save(new ReviewReport(reportingUser, reportRequest.reportReason(), review));
 
-        return null;
+        return convertReviewReportToDto(report);
     }
 
     public ReportDTO reportComment(Long commentId, UserPrincipal userPrincipal){

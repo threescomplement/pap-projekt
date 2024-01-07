@@ -69,10 +69,18 @@ public class ReportService {
     }
 
     public void deleteCommentReport(Long commentReportId){
-        return;
+        var maybeReport = commentReportRepository.findById(commentReportId);
+        if (maybeReport.isEmpty()){
+            return;
+        }
+        commentReportRepository.delete(maybeReport.get());
     }
-    public void deleteReviewReport(Long commentReportId){
-        return;
+    public void deleteReviewReport(Long reviewReportId){
+        var maybeReport = reviewReportRepository.findById(reviewReportId);
+        if (maybeReport.isEmpty()){
+            return;
+        }
+        reviewReportRepository.delete(maybeReport.get());
     }
 
     public ReportDTO getReviewReport(Long reviewReportId){
@@ -84,6 +92,7 @@ public class ReportService {
     }
 
     public ReportDTO reportReview(Long courseId, String reviewerUsername, UserPrincipal userPrincipal){
+
         return null;
     }
 

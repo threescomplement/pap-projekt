@@ -16,12 +16,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import pl.edu.pw.pap.PapApplication;
-import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
-import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.security.AuthService;
-import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.utils.DummyData;
 
@@ -72,7 +69,9 @@ public class TeacherIntegrationTests {
         var json = JsonPath.parse(response.getBody());
         assertEquals(1, (int) json.read("$.id"));
         assertEquals(data.teacher_1.getName(), json.read("$.name"));
-        assertEquals(5.5, (double) (json.read("$.averageRating")));
+        assertEquals(5.5, (double) (json.read("$.averageEaseRating")), 0.01);
+        assertEquals(5.5, (double) (json.read("$.averageInterestRating")), 0.01);
+        assertEquals(5.5, (double) (json.read("$.averageEngagementRating")), 0.01);
         // TODO        assertEquals(2, (int) json.read("$.numRatings"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/teachers/1"));
         assertTrue(json.read("$._links.courses.href").toString().contains("/api/courses?name=&language=all&module=all&type=all&level=all&teacherName=mgr.%20Jan%20Kowalski"));

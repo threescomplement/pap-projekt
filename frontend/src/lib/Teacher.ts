@@ -4,7 +4,9 @@ import api from "./api";
 export interface Teacher {
     id: string,
     name: string,
-    averageRating: string,
+    averageEaseRating: string,
+    averageInterestRating: string,
+    averageEngagementRating: string,
     _links: any
 }
 

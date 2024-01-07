@@ -98,7 +98,9 @@ public class ReviewService {
                 .orElseThrow(() -> new CourseNotFoundException("No course with id: " + userPrincipal.getUsername()));
 
         var duplicate = reviewRepository.findByCourse_IdAndUser_Username(courseId, userPrincipal.getUsername());
-        duplicate.ifPresent(reviewRepository::delete);
+        if (duplicate.isPresent()) {
+            throw (new DuplicateReviewException("Cannot add more than one review to a course"));
+        }
         return convertToDTO(
                 reviewRepository.save(new Review(addingUser, course, request.text(), request.easeRating(), request.interestRating(), request.engagementRating()))
         );
@@ -130,8 +132,8 @@ public class ReviewService {
 
         review.setOpinion(request.text());
         review.setEaseRating(request.easeRating());
-        review.setInterestRating(request.interestingRating());
-        review.setEngagementRating(request.interactiveRating());
+        review.setInterestRating(request.interestRating());
+        review.setEngagementRating(request.engagementRating());
         review.setEdited(true);
         return convertToDTO(reviewRepository.save(review));
 

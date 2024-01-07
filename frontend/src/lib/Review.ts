@@ -1,6 +1,6 @@
 import {Course} from "./Course";
-import {getDummyReviews} from "./utils";
 import api from "./api";
+import {getDummyReviews} from "./utils";
 
 
 export interface Review {
@@ -28,7 +28,6 @@ async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
         .catch(e => console.log(e));
 }
 
-
 async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review | null> {
     const response = await api.get(`/courses/${courseId}/reviews/${authorUsername}`)
     // todo: better error handling
@@ -50,8 +49,16 @@ async function deleteReview(courseId: string, username: string): Promise<boolean
     return response.ok;
 }
 
-async function fetchReviewsByTeacher(): Promise<Review[]> {
-    return getDummyReviews();
+async function editReview(request: ReviewRequest, courseId: string, authorUsername: string) {
+    const response = await api.put(`/courses/${courseId}/reviews/${authorUsername}`, request);
+    console.log(response);
+    return response.ok;
+}
+
+async function fetchReviewsByTeacher(teacherId: string): Promise<boolean> {
+    const response = await api.get(`teachers/${teacherId}/reviews`);
+    console.log(response);
+    return response.ok;
 }
 
 async function fetchReviewsByUser(): Promise<Review[]> {
@@ -63,6 +70,7 @@ export const ReviewService = {
     fetchReviewByCourseIdAndAuthor,
     postReview,
     deleteReview,
+    editReview,
     fetchReviewsByTeacher,
     fetchReviewsByUser
 }

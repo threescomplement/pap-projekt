@@ -1,5 +1,6 @@
 import {ChangeEvent, useState} from "react";
 import postImport, {ImporterRecord} from "./PostImport";
+import UserManagementPanel from "./UserManagementPanel";
 
 
 export default function AdminPanel() {
@@ -38,5 +39,7 @@ export default function AdminPanel() {
         <button onClick={() => handleClick(fileData)}>
             Importuj dane
         </button>
+
+        <UserManagementPanel/>
     </>;
 }

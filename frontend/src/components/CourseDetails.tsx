@@ -5,6 +5,7 @@ import {Link} from "react-router-dom";
 import {Review, ReviewService} from "../lib/Review";
 import {ReviewCardWithLink} from "./ReviewCards";
 import MessageBox from "./MessageBox";
+import {ratingToPercentage} from "../lib/utils";
 
 export default function CourseDetails(course: Course) {
     const [teacher, setTeacher] = useState<Teacher | null>(null);
@@ -54,10 +55,16 @@ export default function CourseDetails(course: Course) {
     return <>
         <h1>{course.name}</h1>
         <p className="TeacherHeader">Lektor: {teacherContent}</p>
-        <h3>Informacje o kursie:</h3>
+        <h2>Informacje o kursie:</h2>
         {moduleContent}
         <p className="CourseInfo">Poziom: {course.level}</p>
         <p className="CourseInfo">Typ kursu: {course.type}</p>
+        <h2>Uśrednione opinie</h2>
+        <div>
+            <p>Jak łatwy? {ratingToPercentage(course.averageEaseRating)}</p>
+            <p>Jak interesujący? {ratingToPercentage(course.averageInterestRating)}</p>
+            <p>Jak angażujący? {ratingToPercentage(course.averageEngagementRating)}</p>
+        </div>
         <h2 className="OpinionsSection">Opinie</h2>
         <MessageBox message={message}/>
         {reviewContent}

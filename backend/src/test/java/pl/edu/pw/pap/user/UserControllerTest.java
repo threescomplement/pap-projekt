@@ -10,10 +10,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static net.bytebuddy.matcher.ElementMatchers.is;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Unit tests for UserController
@@ -46,18 +45,16 @@ class UserControllerTest {
     private UserService userService;
 
 
-
     @Test
     public void registerNewUser() throws Exception {
         var request = new RegisterRequest("rdeckard", "rdeckard@example.com", "password");
         var json = objectMapper.writeValueAsString(request);
-        var user = new User(
-                "rdeckard",
-                "rdeckard@example.com",
-                "$2a$12$vyx87ILAKlC2hkoh80nbMe0iXubtm/vgclOS22/Mj8BqToMyPDhb2",
-                "ROLE_USER",
-                false
-        );
+        var user = UserDTO.builder()
+                .username("rdeckard")
+                .email("rdeckard@example.com")
+                .role("ROLE_USER")
+                .enabled(false)
+                .build();
 
         // Define behavior of mocked object
         Mockito.doReturn(user).when(userService).registerNewUser(request);

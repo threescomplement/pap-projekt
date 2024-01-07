@@ -3,9 +3,7 @@ package pl.edu.pw.pap.review;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
@@ -17,7 +15,6 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +27,6 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
     public final TeacherRepository teacherRepository;
 
 
@@ -38,9 +34,12 @@ public class ReviewService {
         return ReviewDTO.builder()
                 .authorUsername(review.getUser().getUsername())
                 .opinion(review.getOpinion())
-                .overallRating(review.getOverallRating())
+                .easeRating(review.getEaseRating())
+                .interestRating(review.getInterestRating())
+                .engagementRating(review.getEngagementRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
+                .edited(review.getEdited())
                 .build();
     }
 
@@ -75,8 +74,7 @@ public class ReviewService {
 
         log.debug("Found user of review being deleted");
         User user = maybeUser.get();
-        if (!user.getId().equals(userPrincipal.getUserId())
-                && !userPrincipal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (!user.getId().equals(userPrincipal.getUserId()) && !userPrincipal.isAdmin()) {
             // not author and not admin, results in 403 forbidden
             throw (new ForbiddenException("You are not permitted to delete this review"));
         }
@@ -102,7 +100,7 @@ public class ReviewService {
         var duplicate = reviewRepository.findByCourse_IdAndUser_Username(courseId, userPrincipal.getUsername());
         duplicate.ifPresent(reviewRepository::delete);
         return convertToDTO(
-                reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()))
+                reviewRepository.save(new Review(addingUser, course, request.text(), request.easeRating(), request.interestRating(), request.engagementRating()))
         );
     }
 
@@ -115,5 +113,27 @@ public class ReviewService {
                 .flatMap(Collection::stream)
                 .map(this::convertToDTO)
                 .toList();
+    }
+
+    public ReviewDTO editReview(Long courseId, String username, EditReviewRequest request, UserPrincipal userPrincipal) {
+        User reviewerUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("No user (reviewer) with username: " + username));
+
+        // this is better to throw before the author check to not imply that a review exists if just the users dont match
+        Review review = reviewRepository.findById(new ReviewKey(reviewerUser.getId(), courseId))
+                .orElseThrow(() -> new ReviewNotFoundException("No review of course" + courseId + " by " + username));
+
+        if (!reviewerUser.getId().equals(userPrincipal.getUserId())) {
+            // review exists but caller is not author, results in 403 forbidden
+            throw (new ForbiddenException("You are not permitted to edit this review"));
+        }
+
+        review.setOpinion(request.text());
+        review.setEaseRating(request.easeRating());
+        review.setInterestRating(request.interestingRating());
+        review.setEngagementRating(request.interactiveRating());
+        review.setEdited(true);
+        return convertToDTO(reviewRepository.save(review));
+
     }
 }

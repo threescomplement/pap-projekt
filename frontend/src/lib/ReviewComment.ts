@@ -1,5 +1,6 @@
 import {Review} from "./Review";
 import api from "./api";
+import {Link} from "./utils";
 
 
 export interface ReviewComment {
@@ -7,7 +8,11 @@ export interface ReviewComment {
     text: string;
     authorUsername: string,
     created: string
-    _links: any;
+    _links: {
+        self: Link
+        review: Link
+        user: Link
+    }
 }
 
 export interface CommentRequest {

@@ -2,11 +2,15 @@ import {Course, CourseService} from "../../lib/Course";
 import {Link, useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseDetails from "../../components/CourseDetails";
+import {ReviewService} from "../../lib/Review";
+import useUser from "../../hooks/useUser";
 
 export default function SingleCourse() {
+    const username = useUser().user!.username
     const {courseId} = useParams();
     const [course, setCourse] = useState<Course | null>(null);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState<boolean>(false);
+    const [userHasReview, setUserHasReview] = useState<boolean>(false);
 
     useEffect(() => {
         if (courseId == null) {
@@ -19,7 +23,10 @@ export default function SingleCourse() {
                     setIsLoaded(true);
                 }
             )
-    }, [courseId]);
+
+        ReviewService.fetchReviewByCourseIdAndAuthor(courseId, username)
+            .then(r => r == null ? setUserHasReview(false) : setUserHasReview(true));
+    }, [courseId, username]);
 
     if (course == null || courseId == null || !isLoaded) {
         return <div>
@@ -30,6 +37,6 @@ export default function SingleCourse() {
 
     return <div>
         <CourseDetails {...course}/>
-        <Link to="writeReview">Napisz opinię</Link> {/* todo: change this to edytuj opinię if it has already been written*/}
+        <Link to="writeReview">{userHasReview ? "Edytuj swoją opinię" : "Napisz opinię"}</Link>
     </div>
 }

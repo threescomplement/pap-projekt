@@ -132,8 +132,8 @@ public class ReviewService {
 
         review.setOpinion(request.text());
         review.setEaseRating(request.easeRating());
-        review.setInterestRating(request.interestingRating());
-        review.setEngagementRating(request.interactiveRating());
+        review.setInterestRating(request.interestRating());
+        review.setEngagementRating(request.engagementRating());
         review.setEdited(true);
         return convertToDTO(reviewRepository.save(review));
 

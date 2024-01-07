@@ -1,5 +1,5 @@
 import {Review, ReviewService} from "../lib/Review";
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {EditBar} from "./EditBar";
 import React, {useState} from "react";
 import useUser from "../hooks/useUser";
@@ -23,12 +23,16 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     const {courseId} = useParams()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const user: User = useUser().user!;
+    const navigate = useNavigate();
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
     const isReviewAuthor: boolean = review.authorUsername === user.username;
     const modificationContent = (isReviewAuthor || isAdmin) ?
         <EditBar
             handleDelete={(e) => handleDeleteReview(e)}
-            deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}/> : null;
+            deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}
+            handleEdit={(_)=> navigate(`/courses/${courseId}/writeReview`)}
+            canEdit={isReviewAuthor}
+        /> : null;
 
     function handleDeleteReview(e: React.MouseEvent) {
         e.preventDefault()

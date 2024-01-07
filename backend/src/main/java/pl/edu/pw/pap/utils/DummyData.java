@@ -19,7 +19,6 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 
-import javax.swing.*;
 import java.util.List;
 
 /**

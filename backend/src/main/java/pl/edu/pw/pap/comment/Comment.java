@@ -6,13 +6,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.user.User;
 
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.Set;
 
 //Maybe it's possible to have one interface for reviews and comments that includes the text, likes and dislikes
 @Entity

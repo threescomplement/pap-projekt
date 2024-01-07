@@ -1,11 +1,9 @@
 package pl.edu.pw.pap.comment.report;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
-import pl.edu.pw.pap.report.GeneralReport;
 import pl.edu.pw.pap.user.User;
 
 @Setter

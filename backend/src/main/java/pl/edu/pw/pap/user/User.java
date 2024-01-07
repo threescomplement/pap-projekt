@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
-import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.review.Review;
-import pl.edu.pw.pap.review.report.ReviewReport;
 
 import java.util.HashSet;
 import java.util.Set;

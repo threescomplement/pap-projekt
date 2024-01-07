@@ -1,5 +1,6 @@
 package pl.edu.pw.pap.misc;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,10 +9,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.edu.pw.pap.PapApplication;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.comment.CommentRepository;
+import pl.edu.pw.pap.comment.report.CommentReport;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
+import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
@@ -39,7 +43,10 @@ public class ModelIntegrityConstraintsTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     DummyData data;
-
+    @Autowired
+    ReviewReportRepository reviewReportRepository;
+    @Autowired
+    CommentReportRepository commentReportRepository;
 
     @Test
     void testRelatedComments() {
@@ -73,6 +80,65 @@ public class ModelIntegrityConstraintsTest {
     @Test
     void testReviewReportCascade(){
         data.addDummyData();
+        var review1 = reviewRepository.findById(data.review_1.getId()).get();
+        var review2 = reviewRepository.findById(data.review_2.getId()).get();
+        var review4 = reviewRepository.findById(data.review_4.getId()).get();
+
+        var reviewReports = reviewReportRepository.findAll();
+        assertEquals(3, reviewReports.size());
+
+        reviewRepository.delete(review1);
+        reviewReports = reviewReportRepository.findAll();
+        assertEquals(3, reviewReports.size());
+
+        reviewRepository.delete(review2);
+        reviewReports = reviewReportRepository.findAll();
+        assertEquals(1, reviewReports.size());
+
+        reviewRepository.delete(review4);
+        reviewReports = reviewReportRepository.findAll();
+        assertEquals(0, reviewReports.size());
+
+        data.deleteAll();
+    }
+
+    @Test
+    void testDeleteReviewReport(){
+        data.addDummyData();
+        var review2Report = reviewReportRepository.findById(1L).get();
+        System.out.println(review2Report.toString());
+        reviewReportRepository.delete(review2Report);
+
+        var reviewReports = reviewReportRepository.findAll();
+        assertEquals(2, reviewReports.size());
+
+        data.deleteAll();
+    }
+
+
+    @Test
+    void testDeleteComment(){
+        data.addDummyData();
+        var comment = commentRepository.findById(1L).get();
+        commentRepository.delete(comment);
+        var comments = commentRepository.findAll();
+        assertEquals(4, comments.size());
+
+        data.deleteAll();
+    }
+
+
+
+
+
+    @Test
+    void testAccessReviewFromReport(){
+        data.addDummyData();
+
+        var review2Report = reviewReportRepository.findById(1L).get();
+        var review2 = review2Report.getReported();
+        assertEquals(data.review_2.getId(), review2.getId());
+        assertEquals(data.review_2.getOpinion(), review2.getOpinion());
 
         data.deleteAll();
     }

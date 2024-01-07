@@ -5,16 +5,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.comment.CommentRepository;
+import pl.edu.pw.pap.comment.report.CommentReport;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
+import pl.edu.pw.pap.review.report.ReviewReport;
+import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 
+import javax.swing.*;
 import java.util.List;
 
 /**
@@ -30,6 +35,8 @@ public class DummyData {
     private final CommentRepository commentRepository;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ReviewReportRepository reviewReportRepository;
+    private final CommentReportRepository commentReportRepository;
 
     public User user_1;
     public User user_2;
@@ -51,6 +58,12 @@ public class DummyData {
     public Comment comment_3;
     public Comment comment_4;
     public Comment comment_5;
+    public ReviewReport reviewReport_1;
+    public ReviewReport reviewReport_2;
+    public ReviewReport reviewReport_3;
+    public CommentReport commentReport_1;
+    public CommentReport commentReport_2;
+    public CommentReport commentReport_3;
 
     public void addDummyData() {
         user_1 = userRepository.save(new User("rdeckard", "rdeckard@example.com", passwordEncoder.encode("password"), "ROLE_USER", true));
@@ -78,6 +91,20 @@ public class DummyData {
         comment_4 = commentRepository.save(new Comment("trudne serio", review_2, user_2));
         comment_5 = commentRepository.save(new Comment("oj tak", review_2, user_3));
 
+        //rdeckard: 1 reported review, user3: 2 reported reviews
+        // review_2 has 2 reports, review4 has 1 report
+        reviewReport_1 = reviewReportRepository.save(new ReviewReport(user_1, "obelgi w strone prowadzacego", review_2));
+        reviewReport_2 = reviewReportRepository.save(new ReviewReport(user_3, "nie obiektywna ocena", review_2));
+        reviewReport_3 =  reviewReportRepository.save(new ReviewReport(user_3, "", review_4));
+
+        // rbatty: 1 reported comment, user3: 2 reported comments
+        // comment_2 has 2 reports, comment_4 has 1 report
+        commentReport_1 = commentReportRepository.save(new CommentReport(user_3, "brak kultury", comment_2));
+        commentReport_2 = commentReportRepository.save(new CommentReport(user_3, "skill issue", comment_4));
+        commentReport_3 = commentReportRepository.save(new CommentReport(user_2, "jajo", comment_2));
+
+
+
         reviewRepository.saveAll(List.of(review_1, review_2, review_3, review_4));  // Will not work otherwise FIXME
     }
 
@@ -88,5 +115,7 @@ public class DummyData {
         reviewRepository.deleteAll();
         commentRepository.deleteAll();
         emailVerificationTokenRepository.deleteAll();
+        reviewReportRepository.deleteAll();
+        commentReportRepository.deleteAll();
     }
 }

@@ -32,14 +32,25 @@ public class TeacherService {
 
     public TeacherDTO convertToDto(Teacher teacher) {
         var reviews = getTeacherReviews(teacher);
+        var avgEaseRating = reviews.stream()
+                .mapToDouble(Review::getEaseRating)
+                .average()
+                .orElse(0);
+        var avgInterestRating =reviews.stream()
+                .mapToDouble(Review::getInterestRating)
+                .average()
+                .orElse(0);
+        var avgEngagementRating = reviews.stream()
+                .mapToDouble(Review::getEngagementRating)
+                .average()
+                .orElse(0);
+
         return TeacherDTO.builder()
                 .id(teacher.getId())
                 .name(teacher.getName())
-                .averageRating(reviews.stream()
-                        .mapToDouble(Review::getOverallRating)
-                        .average()
-                        .orElse(0)
-                )
+                .averageEaseRating(avgEaseRating)
+                .averageInterestRating(avgInterestRating)
+                .averageEngagementRating(avgEngagementRating)
                 .numberOfRatings(reviews.size())
                 .build();
     }

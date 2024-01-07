@@ -1,5 +1,6 @@
 import {Course} from "./Course";
 import api from "./api";
+import {getDummyReviews} from "./utils";
 
 
 export interface Review {
@@ -54,8 +55,10 @@ async function editReview(request: ReviewRequest, courseId: string, authorUserna
     return response.ok;
 }
 
-async function fetchReviewsByTeacher(): Promise<Review[]> {
-    return getDummyReviews();
+async function fetchReviewsByTeacher(teacherId: string): Promise<boolean> {
+    const response = await api.get(`teachers/${teacherId}/reviews`);
+    console.log(response);
+    return response.ok;
 }
 
 async function fetchReviewsByUser(): Promise<Review[]> {

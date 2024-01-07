@@ -21,8 +21,8 @@ public class ReviewReport extends GeneralReport {
 
     public ReviewReport(User reportingUser, String reason, Review reportedReview) {
         super(reportingUser, reason);
-        reportingUser.addReviewReport(this);
         reportedReview.addReport(this);
+        reportingUser.addReviewReport(this);
     }
 
     protected ReviewReport() {
@@ -30,11 +30,11 @@ public class ReviewReport extends GeneralReport {
 
     @PreRemove
     public void preRemove() {
-        if (this.reported != null) {
-            reported.removeReport(this);
-        }
         if (this.reportingUser != null) {
             reportingUser.removeReviewReport(this);
+        }
+        if (this.reported != null) {
+            reported.removeReport(this);
         }
     }
 

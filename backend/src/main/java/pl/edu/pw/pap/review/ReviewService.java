@@ -3,7 +3,6 @@ package pl.edu.pw.pap.review;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
@@ -75,8 +74,7 @@ public class ReviewService {
 
         log.debug("Found user of review being deleted");
         User user = maybeUser.get();
-        if (!user.getId().equals(userPrincipal.getUserId())
-                && !userPrincipal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (!user.getId().equals(userPrincipal.getUserId()) && !userPrincipal.isAdmin()) {
             // not author and not admin, results in 403 forbidden
             throw (new ForbiddenException("You are not permitted to delete this review"));
         }

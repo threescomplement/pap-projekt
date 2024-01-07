@@ -62,7 +62,7 @@ public class CommentService {
         }
         var comment = maybeComment.get();
         var user = maybeUser.get();
-        if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN")))) {
+        if (!comment.getUser().getId().equals(user.getId()) && !user.isAdmin()) {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
@@ -90,7 +90,7 @@ public class CommentService {
     public CommentDTO addNewComment(Long courseId, String reviewUsername, AddCommentRequest request, UserPrincipal principal) {
         String text = request.text();
         User reviewUser = userRepository.findByUsername(reviewUsername).orElseThrow(
-                () -> new UserNotFoundException("No user found with username: " + principal.getUsername())
+                () -> new UserNotFoundException("No user found with username: " + principal.getUsername())  // TODO ?
         );
 
 

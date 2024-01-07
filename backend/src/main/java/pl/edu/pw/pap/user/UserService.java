@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.config.AppConfiguration;
 import pl.edu.pw.pap.email.EmailSender;
+import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationException;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
@@ -16,6 +18,7 @@ import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,7 +27,7 @@ import java.util.UUID;
 public class UserService {
     private static final String DEFAULT_ROLE = "ROLE_USER";
 
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final Logger log = LoggerFactory.getLogger(UserService.class);  //TODO proper logging
     private final UserRepository userRepository;
     private final EmailVerificationTokenRepository emailTokenRepository;
     private final ResetPasswordTokenRepository passwordTokenRepository;
@@ -36,7 +39,12 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public User registerNewUser(RegisterRequest request) {
+    public Optional<UserDTO> findByUsernameDTO(String username) {
+        return findByUsername(username)
+                .map(this::convertToDto);
+    }
+
+    public UserDTO registerNewUser(RegisterRequest request) {
         if (userRepository.existsUserByEmail(request.email())) {
             throw new UserRegistrationException("Email address is already being used");
         }
@@ -48,7 +56,7 @@ public class UserService {
         var user = new User(request.username(), request.email(), passwordEncoder.encode(request.password()), DEFAULT_ROLE, false);
         user = userRepository.save(user);
         sendVerificationEmail(user);
-        return user;
+        return convertToDto(user);
     }
 
     public EmailVerificationToken generateVerificationToken(User user) {
@@ -61,7 +69,7 @@ public class UserService {
         return emailTokenRepository.save(token);
     }
 
-    public User verifyEmailWithToken(String token) {
+    public UserDTO verifyEmailWithToken(String token) {
         var verificationToken = emailTokenRepository.findByTokenEquals(token)
                 .orElseThrow(() -> new EmailVerificationException("Verification token not found"));
 
@@ -73,7 +81,7 @@ public class UserService {
         user.setEnabled(true);
         user = userRepository.save(user);
         emailTokenRepository.delete(verificationToken);
-        return user;
+        return convertToDto(user);
     }
 
     private void sendVerificationEmail(User user) {
@@ -136,5 +144,52 @@ public class UserService {
                         .expires(Instant.now().plus(1L, ChronoUnit.DAYS))
                         .build()
         );
+    }
+
+    private UserDTO convertToDto(User user) {
+        return UserDTO.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .enabled(user.getEnabled())
+                .build();
+    }
+
+    public void deleteUser(String username, UserPrincipal principal) {
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s does not exist", username)));
+
+        if (!principal.getUserId().equals(user.getId()) && !principal.isAdmin()) {
+            throw new ForbiddenException("You are not permitted to delete this account");
+        }
+
+        userRepository.delete(user);
+    }
+
+    /**
+     * Only admin can modify the user record directly
+     * Normal users can change some of their account's properties via specific endpoints (reset password, confirm email etc.)
+     * @return DTO of updated user
+     */
+    public UserDTO updateUser(String username, UpdateUserRequest request, UserPrincipal principal) {
+        if (!principal.isAdmin()) {
+            throw new ForbiddenException("Only allowed for administrators");
+        }
+
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with username %s does not exist", username)));
+
+        user.setUsername(request.username());
+        user.setEmail(request.email());
+        user.setRole(request.role());
+        user.setEnabled(request.enabled());
+        return convertToDto(userRepository.save(user));
+    }
+
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToDto)
+                .toList();
     }
 }

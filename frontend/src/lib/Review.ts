@@ -6,14 +6,18 @@ import api from "./api";
 export interface Review {
     authorUsername: string;
     opinion: string;
-    overallRating: string;
+    easeRating: string
+    interestRating: string
+    engagementRating: string
     created: string
     _links: any;
 }
 
 export interface ReviewRequest {
     text: string,
-    rating: number
+    easeRating: number
+    interestRating: number
+    engagementRating: number
 }
 
 

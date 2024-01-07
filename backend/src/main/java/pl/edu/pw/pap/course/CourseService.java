@@ -37,12 +37,14 @@ public class CourseService {
                 .level(course.getLevel())
                 .module(course.getModule())
                 .averageRating(averageRating)
+                .numberOfRatings(reviews.size())
                 .teacherId(course.getTeacher().getId())
                 .build();
     }
 
     public Optional<CourseDTO> getById(Long courseId) {
-        return courseRepository.findByIdWithRating(courseId);
+        return courseRepository.findById(courseId)
+                .map(this::convertToDto);
     }
 
     public List<CourseDTO> getTeacherCourses(Long teacherId) {

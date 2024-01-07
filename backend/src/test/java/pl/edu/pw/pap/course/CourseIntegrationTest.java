@@ -74,6 +74,7 @@ class CourseIntegrationTest {
         assertEquals(data.course_1.getType(), json.read("$.type"));
         assertEquals(data.course_1.getLevel(), json.read("$.level"));
         assertEquals(data.course_1.getModule(), json.read("$.module"));
+        assertEquals(2, (int) json.read("$.numberOfRatings"));
         assertEquals(1, (int) json.read("$.teacherId"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1"));
     }

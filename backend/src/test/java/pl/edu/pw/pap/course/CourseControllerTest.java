@@ -35,7 +35,7 @@ class CourseControllerTest {
     @Test
     @WithMockUser
     public void getCourseByIdExists() throws Exception {
-        var course = new CourseDTO(1L, "Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, 5.5, 1L);
+        var course = new CourseDTO(1L, "Angielski w biznesie", "Angielski", "Biznesowy", "B2+", null, 5.5, 2, 1L);
 
         Mockito.doReturn(Optional.of(course)).when(courseService).getById(1L);
 

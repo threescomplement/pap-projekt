@@ -18,5 +18,6 @@ public class CourseDTO extends RepresentationModel<CourseDTO> {
     private String level;
     private String module;
     private Double averageRating;
+    private Integer numberOfRatings;
     private Long teacherId;
 }

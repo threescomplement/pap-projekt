@@ -4,6 +4,7 @@ import {formReducer} from "../../lib/utils";
 import UserService from "../../lib/User";
 import MessageBox from "../../components/MessageBox";
 import {useNavigate} from "react-router-dom";
+import styles from "../../Forms.module.css";
 
 
 interface FormData {
@@ -50,7 +51,8 @@ export default function ChangePassword() {
         }
     }
 
-    return <div>
+    return <div className={styles.formContainer}>
+        <h1>Zmiana hasła</h1>
         <form onSubmit={handleSubmit}>
             <label>
                 <p>Aktualne hasło:</p>

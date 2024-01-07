@@ -5,7 +5,9 @@ import {Link} from "./utils";
 export interface Teacher {
     id: string
     name: string
-    averageRating: string
+    averageEaseRating: string
+    averageInterestRating: string
+    averageEngagementRating: string
     _links: {
         self: Link
         courses: Link

@@ -8,7 +8,9 @@ export interface Course {
     type: string
     level: string
     module: string | null
-    averageRating: string
+    averageEaseRating: string
+    averageInterestRating: string
+    averageEngagementRating: string
     teacherId: string
     _links: {
         self: Link

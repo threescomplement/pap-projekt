@@ -3,6 +3,7 @@ package pl.edu.pw.pap.report;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.CommentController;
+import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
@@ -112,8 +113,16 @@ public class ReportService {
         return convertReviewReportToDto(report);
     }
 
-    public ReportDTO reportComment(Long commentId, UserPrincipal userPrincipal){
-        return null;
+    public ReportDTO reportComment(Long commentId, ReportRequest reportRequest, UserPrincipal userPrincipal){
+
+        var comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException("No comment with id = " + commentId));
+        var reportingUser = userRepository.findByUsername(userPrincipal.getUsername())
+                .orElseThrow(()-> new UserNotFoundException("User with username " + userPrincipal.getUsername() + " doesn't exist"));
+
+        var report = commentReportRepository.save(new CommentReport(reportingUser, reportRequest.reportReason(), comment));
+
+        return convertCommentReportToDto(report);
     }
 
 

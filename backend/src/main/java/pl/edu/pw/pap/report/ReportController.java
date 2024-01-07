@@ -39,14 +39,15 @@ public class ReportController {
                                   @PathVariable String username,
                                   @RequestBody ReportRequest reportRequest,
                                   @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return null;
+        return reportService.reportReview(courseId, username, reportRequest, userPrincipal);
     }
 
     @PostMapping("api/comments/{commentId}/reports")
     public ReportDTO reportComment(@PathVariable Long commentId,
                                    @RequestBody ReportRequest reportRequest,
                                    @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        return null;
+
+        return reportService.reportComment(commentId, reportRequest, userPrincipal); // links added in service
     }
 
 
@@ -59,6 +60,19 @@ public class ReportController {
                 .build();
     }
 
+
+    @DeleteMapping("/api/admin/reports/comments/{commentReportId}")
+    public ResponseEntity<ReportDTO> deleteCommentReport(@PathVariable Long commentReportId) {
+        reportService.deleteCommentReport(commentReportId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/api/admin/reports/reviews/{reviewReportId}")
+    public ResponseEntity<ReportDTO> deleteReviewReport(@PathVariable Long reviewReportId) {
+        reportService.deleteReviewReport(reviewReportId);
+        return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("/api/admin/reports/comments/{commentReportId}")
     public ReportDTO getCommentReport(@PathVariable Long commentReportId) {
         return null;
@@ -66,17 +80,6 @@ public class ReportController {
 
     @GetMapping("/api/admin/reports/reviews/{reviewReportId}")
     public ReportDTO getReviewReport(@PathVariable Long reviewReportId) {
-        return null;
-    }
-
-
-    @DeleteMapping("/api/admin/reports/comments/{commentReportId}")
-    public ResponseEntity<ReportDTO> deleteCommentReport(@PathVariable Long commentReportId) {
-        return null;
-    }
-
-    @DeleteMapping("/api/admin/reports/reviews/{reviewReportId}")
-    public ResponseEntity<ReportDTO> deleteReviewReport(@PathVariable Long reviewReportId) {
         return null;
     }
 

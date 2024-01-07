@@ -77,6 +77,9 @@ class CourseIntegrationTest {
         assertEquals(2, (int) json.read("$.numberOfRatings"));
         assertEquals(1, (int) json.read("$.teacherId"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/courses/1"));
+        assertEquals(5.5, json.read("$.averageEaseRating"), 0.01);
+        assertEquals(5.5, json.read("$.averageInterestRating"), 0.01);
+        assertEquals(5.5, json.read("$.averageEngagementRating"), 0.01);
     }
 
     @Test

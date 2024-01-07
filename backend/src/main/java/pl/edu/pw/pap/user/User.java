@@ -39,11 +39,11 @@ public class User {
     private Set<Comment> comments = new HashSet<>();
 
     @JsonIgnore // Don't want to access reports outside ReportController
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reportingUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewReport> reviewReports = new HashSet<>();
 
     @JsonIgnore // Don't want to access reports outside ReportController
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "reportingUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CommentReport> commentReports = new HashSet<>();
 
 

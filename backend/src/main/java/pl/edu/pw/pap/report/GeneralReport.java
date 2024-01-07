@@ -14,7 +14,7 @@ public abstract class GeneralReport {
 
     @Id
     @GeneratedValue
-    private Long id;
+    protected Long id;
 
     @JsonIgnore
     @ManyToOne

@@ -91,13 +91,13 @@ public class DummyData {
         comment_4 = commentRepository.save(new Comment("trudne serio", review_2, user_2));
         comment_5 = commentRepository.save(new Comment("oj tak", review_2, user_3));
 
-//        rdeckard: 1 reported review, user3: 2 reported reviews
+//        rdeckard: 1 review reports, user3: 2 review reports
 //         review_2 has 2 reports, review4 has 1 report
         reviewReport_1 = reviewReportRepository.save(new ReviewReport(user_1, "obelgi w strone prowadzacego", review_2));
         reviewReport_2 = reviewReportRepository.save(new ReviewReport(user_3, "nie obiektywna ocena", review_2));
         reviewReport_3 =  reviewReportRepository.save(new ReviewReport(user_3, "", review_4));
 
-        // rbatty: 1 reported comment, user3: 2 reported comments
+        // rbatty: 1 comment reports, user3: 2 comment reports
         // comment_2 has 2 reports, comment_4 has 1 report
         commentReport_1 = commentReportRepository.save(new CommentReport(user_3, "brak kultury", comment_2));
         commentReport_2 = commentReportRepository.save(new CommentReport(user_3, "skill issue", comment_4));

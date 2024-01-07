@@ -1,10 +1,7 @@
 package pl.edu.pw.pap.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.user.User;
@@ -21,7 +18,7 @@ public abstract class GeneralReport {
 
     @JsonIgnore
     @ManyToOne
-    protected User reportingUser; // TODO model relation with user
+    protected User reportingUser;
     protected String reason; // TODO: change to enum
 
     public GeneralReport(User reportingUser, String reason){

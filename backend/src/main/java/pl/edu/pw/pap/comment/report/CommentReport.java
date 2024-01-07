@@ -20,7 +20,6 @@ public class CommentReport extends GeneralReport {
     @ManyToOne
     private Comment reported;
 
-
     public CommentReport(User reportingUser, String reason, Comment reportedComment) {
         super(reportingUser, reason);
         reportedComment.addReport(this);
@@ -31,11 +30,11 @@ public class CommentReport extends GeneralReport {
     }
 
     @PreRemove
-    public void preRemove(){
-        if (this.reported != null ){
+    public void preRemove() {
+        if (this.reported != null) {
             reported.removeReport(this);
         }
-        if (this.reportingUser != null){
+        if (this.reportingUser != null) {
             reportingUser.removeCommentReport(this);
         }
     }

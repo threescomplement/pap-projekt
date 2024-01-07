@@ -19,21 +19,21 @@ public class ReviewReport extends GeneralReport {
     @ManyToOne
     private Review reported;
 
-    public ReviewReport(User reportingUser, String reason, Review reportedReview){
+    public ReviewReport(User reportingUser, String reason, Review reportedReview) {
         super(reportingUser, reason);
-        this.reported = reportedReview;
         reportingUser.addReviewReport(this);
         reportedReview.addReport(this);
     }
+
     protected ReviewReport() {
     }
 
     @PreRemove
-    public void preRemove(){
-        if (this.reported != null){
+    public void preRemove() {
+        if (this.reported != null) {
             reported.removeReport(this);
         }
-        if (this.reportingUser != null){
+        if (this.reportingUser != null) {
             reportingUser.removeReviewReport(this);
         }
     }

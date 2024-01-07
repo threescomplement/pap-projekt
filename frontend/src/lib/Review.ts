@@ -1,5 +1,4 @@
 import {Course} from "./Course";
-import {getDummyReviews} from "./utils";
 import api from "./api";
 
 

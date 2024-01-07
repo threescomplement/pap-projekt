@@ -29,7 +29,7 @@ export function ReviewForm() {
     }, [courseId, username]);
 
     useEffect(() => {
-        if (previousReview !== null) {
+        if (previousReview != null) {
             setOpinion(previousReview.opinion);
             setEaseRating(Number(previousReview.easeRating));
             setInterestRating(Number(previousReview.interestRating));
@@ -72,14 +72,14 @@ export function ReviewForm() {
             interestRating: interestRating!,
             engagementRating: engagementRating!
         }
-        previousReview === null ? ReviewService.postReview(request, courseId!) : ReviewService.editReview(request, courseId!, username);
+        previousReview == null ? ReviewService.postReview(request, courseId!) : ReviewService.editReview(request, courseId!, username);
         navigate(`/courses/${courseId}/thankyou`);
         // todo: remove this page from history so that clicking back doesn't return to it
     }
 
     return <div className="review-form">
-        <h1>{previousReview === null ? "Napisz opinię" : "Edytuj swoją opinię"}
-            {course !== null && (` do kursu ${course.name}`)}</h1>`
+        <h1>{previousReview == null ? "Napisz opinię" : "Edytuj swoją opinię"}
+            {course != null && (` do kursu ${course.name}`)}</h1>`
         <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"
                   onChange={e => setOpinion(e.target.value)}
                   value={opinion}>

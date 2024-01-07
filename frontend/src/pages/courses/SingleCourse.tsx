@@ -25,7 +25,7 @@ export default function SingleCourse() {
             )
 
         ReviewService.fetchReviewByCourseIdAndAuthor(courseId, username)
-            .then(r => r === null ? setUserHasReview(false) : setUserHasReview(true));
+            .then(r => r == null ? setUserHasReview(false) : setUserHasReview(true));
     }, [courseId, username]);
 
     if (course == null || courseId == null || !isLoaded) {

@@ -6,10 +6,12 @@ import {ConfirmationPopup} from './ConfirmationPopup';
 interface EditBarProps {
     handleDelete: MouseEventHandler
     deleteConfirmationQuery: string
+    handleEdit: MouseEventHandler<HTMLButtonElement>
+    canEdit: boolean
 }
 
 
-export function EditBar({handleDelete, deleteConfirmationQuery}: EditBarProps) {
+export function EditBar({handleDelete, deleteConfirmationQuery, handleEdit, canEdit}: EditBarProps) {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const whenDeleteConfirmation = <ConfirmationPopup
         query={deleteConfirmationQuery}
@@ -18,7 +20,7 @@ export function EditBar({handleDelete, deleteConfirmationQuery}: EditBarProps) {
     />
 
     const regularContent = <div>
-        <button><MdEdit/></button>
+        {canEdit ? <button onClick={event => handleEdit(event)}><MdEdit/></button> : null}
         <button
             onClick={(event) => {
                 event.stopPropagation();

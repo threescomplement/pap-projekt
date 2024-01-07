@@ -4,11 +4,11 @@ import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewCommen
 import {ReviewCardWithoutLink} from "./ReviewCards";
 import "./ReviewDetails.css"
 import {useParams, useNavigate} from "react-router-dom";
-import {EditBar} from "./EditBar";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import MessageBox from "./MessageBox";
 import ErrorBox from "./ErrorBox";
+import {EditBar} from "./EditBar";
 
 interface ReviewDetailsProps {
     review: Review
@@ -98,7 +98,10 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     const [errorMessage, setErrorMessage] = useState<string>("");
     const modificationContent = (isAdmin || isCommentAuthor) ?
         <EditBar handleDelete={(e)=>handleDeleteComment(e)}
-                 deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}/> : null;
+                 deleteConfirmationQuery={"Czy na pewno chcesz usunąć komentarz?"}
+                 handleEdit={(_) => true}
+                 canEdit={isCommentAuthor}
+        /> : null;
 
     function handleDeleteComment(e: React.MouseEvent){
         e.preventDefault()
@@ -110,7 +113,6 @@ function CommentCard({comment, afterDeleting}: CommentCardProps) {
     }
 
     return <>
-
         <div>{comment.authorUsername} {modificationContent}</div>
         <p>{comment.text}</p>
         <ErrorBox message={errorMessage}/>

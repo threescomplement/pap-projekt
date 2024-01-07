@@ -55,7 +55,7 @@ public class ModelIntegrityConstraintsTest {
         var user_1 = userRepository.save(new User("user_1", "user@example.com", passwordEncoder.encode("password"), "ROLE_USER", true));
         var user_2 = userRepository.save(new User("user_2", "user2@example.com", passwordEncoder.encode("password"), "ROLE_USER", true));
 
-        var review = reviewRepository.save(new Review(user_1, course, "Opinion", 8));
+        var review = reviewRepository.save(new Review(user_1, course, "Opinion", 8, 9, 10));
         var comment = new Comment("comment", review, user_2);
         review = reviewRepository.save(review);  // Does not work if review is not saved TODO make it work if only comment gets saved
         commentRepository.save(comment);

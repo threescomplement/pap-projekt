@@ -1,13 +1,11 @@
 package pl.edu.pw.pap.review;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.course.Course;
-import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.user.User;
 
 import java.sql.Timestamp;
@@ -34,21 +32,21 @@ public class Review {
     private Course course;
 
     private String opinion;
+    private int easeRating;
+    private int interestRating;
+    private int engagementRating;
     private Boolean edited;
-    private int overallRating; // TODO: Decide which parameters should be included in the review
     @CreationTimestamp
     private Timestamp created;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-    @JsonIgnore // Don't want to access reports when simply asking for review
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<ReviewReport> reports = new HashSet<>();
-
-    public Review(User user, Course course, String opinion, int overallRating) {
+    public Review(User user, Course course, String opinion, int easeRating, int interestingnessRating, int engagementRating) {
         this.opinion = opinion;
-        this.overallRating = overallRating;
+        this.easeRating = easeRating;
+        this.engagementRating = engagementRating;
+        this.interestRating = interestingnessRating;
         edited = false;
         course.addReview(this);
         user.addReview(this);
@@ -64,8 +62,6 @@ public class Review {
         }
         this.comments.forEach(c -> c.setReview(null));
         this.comments.clear();
-        this.reports.forEach(r -> r.setReported(null));
-        this.reports.clear();
     }
 
     public void removeComment(Comment comment) {
@@ -78,16 +74,6 @@ public class Review {
         comment.setReview(this);
     }
 
-    public void removeReport(ReviewReport report) {
-        this.reports.remove(report);
-        report.setReported(null);
-    }
-
-    public void addReport(ReviewReport report) {
-        this.reports.add(report);
-        report.setReported(this);
-    }
-
     @Override
     public String toString() {
         return "Review{" +
@@ -95,7 +81,9 @@ public class Review {
                 ", user=" + user.getUsername() +
                 ", course=" + course.getName() +
                 ", opinion='" + opinion + '\'' +
-                ", overallRating=" + overallRating +
+                ", easeRating=" + easeRating +
+                ", interestRating=" + interestRating +
+                ", engagementRating=" + engagementRating +
                 ", edited='" + edited +
                 ", created=" + created.toString() +
                 '}';

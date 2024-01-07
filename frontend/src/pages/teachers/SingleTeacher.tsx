@@ -3,6 +3,7 @@ import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
 import {Course} from "../../lib/Course";
+import {ratingToPercentage} from "../../lib/utils";
 
 
 interface SingleTeacherProps {
@@ -17,7 +18,12 @@ function TeacherData(props: SingleTeacherProps) {
     const teacher = props.teacher
     return <>
         <h1>{teacher.name}</h1>
-        <h2>Średnia ocena {teacher.averageRating}</h2>
+        <h2>Uśrednione opinie</h2>
+        <div>
+            <p>Jak łatwe zajęcia prowadzi? {ratingToPercentage(teacher.averageEaseRating)}</p>
+            <p>Jak interesujące zajęcia prowadzi? {ratingToPercentage(teacher.averageInterestRating)}</p>
+            <p>Jak bardzo angażuje studentów? {ratingToPercentage(teacher.averageEngagementRating)}</p>
+        </div>
     </>
 }
 
@@ -29,10 +35,10 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
             .then(c => setCourses(c))
     }, [teacherId]);
 
-    return <>
+    return <div>
         <h2>Kursy</h2>
         <CourseList courses={courses}/>
-        </>
+        </div>
 }
 
 

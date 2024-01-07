@@ -80,10 +80,10 @@ public class DummyData {
         course_3 = courseRepository.save(new Course("Język niemiecki, poziom A2", "Niemiecki", "Akademicki", "A2", "M6", teacher_2));
         course_4 = courseRepository.save(new Course("Język włoski dla początkujących", "Włoski", "Akademicki", "A1", "M1", teacher_2));
 
-        review_1 = reviewRepository.save(new Review(user_1, course_1, "Dobrze prowadzony kurs, wymagający nauczyciel", 8));
-        review_2 = reviewRepository.save(new Review(user_2, course_1, "Zbyt duże wymagania do studentów", 3));
-        review_3 = reviewRepository.save(new Review(user_2, course_4, "Świetne wprowadzenie do języka", 10));
-        review_4 = reviewRepository.save(new Review(user_1, course_3, "W porządku", 6));
+        review_1 = reviewRepository.save(new Review(user_1, course_1, "Dobrze prowadzony kurs, wymagający nauczyciel", 8, 7, 6));
+        review_2 = reviewRepository.save(new Review(user_2, course_1, "Zbyt duże wymagania do studentów", 3, 4, 5));
+        review_3 = reviewRepository.save(new Review(user_2, course_4, "Świetne wprowadzenie do języka", 10, 10, 9));
+        review_4 = reviewRepository.save(new Review(user_1, course_3, "W porządku", 6, 7, 8));
 
         comment_1 = commentRepository.save(new Comment("rel", review_1, user_3));
         comment_2 = commentRepository.save(new Comment("czyli co?", review_4, user_2));

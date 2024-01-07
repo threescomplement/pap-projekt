@@ -15,6 +15,7 @@ import pl.edu.pw.pap.email.EmailSender;
 import pl.edu.pw.pap.security.AuthService;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationRequest;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
+import pl.edu.pw.pap.user.passwordchange.ChangePasswordRequest;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordRequest;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordToken;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
@@ -424,5 +425,59 @@ public class UserIntegrationTest {
         assertTrue(json.read("$._embedded.users[0]._links.self.href").toString().contains("/api/users/"));
         assertTrue(json.read("$._embedded.users[0]._links.reviews.href").toString().contains("/api/reviews/"));
         assertTrue(json.read("$._embedded.users[0]._links.comments.href").toString().contains("/api/users/"));
+    }
+
+    @Test
+    public void changeOwnPassword() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var changePasswordRequest = new ChangePasswordRequest("password", "newPassword");
+        var changePasswordResponse = restTemplate.exchange(
+                buildUrl("/api/users/change-password", port),
+                HttpMethod.POST,
+                new HttpEntity<>(changePasswordRequest, headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(200), changePasswordResponse.getStatusCode());
+
+        var user = userRepository.findByUsername(data.user_1.getUsername()).get();
+        assertTrue(passwordEncoder.matches("newPassword", user.getPassword()));
+    }
+
+    @Test
+    public void changeOwnPasswordWrongOldPassword() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var changePasswordRequest = new ChangePasswordRequest("incorrectPassword", "newPassword");
+        var changePasswordResponse = restTemplate.exchange(
+                buildUrl("/api/users/change-password", port),
+                HttpMethod.POST,
+                new HttpEntity<>(changePasswordRequest, headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(400), changePasswordResponse.getStatusCode());
+
+        var user = userRepository.findByUsername(data.user_1.getUsername()).get();
+        assertTrue(passwordEncoder.matches("password", user.getPassword()));
+    }
+
+    @Test
+    public void changeOwnPasswordNewIsTheSameAsOld() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var changePasswordRequest = new ChangePasswordRequest("password", "password");
+        var changePasswordResponse = restTemplate.exchange(
+                buildUrl("/api/users/change-password", port),
+                HttpMethod.POST,
+                new HttpEntity<>(changePasswordRequest, headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(200), changePasswordResponse.getStatusCode());
+
+        var user = userRepository.findByUsername(data.user_1.getUsername()).get();
+        assertTrue(passwordEncoder.matches("password", user.getPassword()));
     }
 }

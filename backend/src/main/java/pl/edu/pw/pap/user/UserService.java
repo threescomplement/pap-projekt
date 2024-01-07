@@ -12,6 +12,7 @@ import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationException;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationToken;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
+import pl.edu.pw.pap.user.passwordchange.PasswordChangeException;
 import pl.edu.pw.pap.user.passwordreset.PasswordResetException;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordToken;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordTokenRepository;
@@ -191,5 +192,17 @@ public class UserService {
         return userRepository.findAll().stream()
                 .map(this::convertToDto)
                 .toList();
+    }
+
+    public void changePassword(UserPrincipal principal, String oldPassword, String newPassword) {
+        var user = userRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(String.format("User %s does not exist", principal.getUsername())));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new PasswordChangeException("Incorrect old password");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 }

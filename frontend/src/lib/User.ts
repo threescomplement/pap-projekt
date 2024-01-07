@@ -1,6 +1,7 @@
 import {decodeToken} from "react-jwt";
 
 import api from "./api";
+import {Link} from "./utils";
 
 /**
  * The user logged in on the website
@@ -24,11 +25,11 @@ export interface AppUser {
     email: string,
     role: string,
     enabled: boolean
-    // _links: {
-    //     self: Link,
-    //     comments: Link,
-    //     reviews: Link,
-    // }
+    _links: {
+        self: Link,
+        comments: Link,
+        reviews: Link,
+    }
 }
 
 interface AccessToken {

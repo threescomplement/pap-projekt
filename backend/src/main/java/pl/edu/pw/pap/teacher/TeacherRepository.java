@@ -13,7 +13,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Query("SELECT t FROM Teacher t " +
             "LEFT JOIN Review r ON t.id = r.course.teacher.id " +
             "WHERE (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))" +
-            "AND (:language IS NULL OR r.course.language = :language)" +
+            "AND (:language IS NULL OR LOWER(r.course.language) = LOWER(:language))" +
             "GROUP BY t.id, t.name"
     )
     List<Teacher> findTeachersMatchingFilters(

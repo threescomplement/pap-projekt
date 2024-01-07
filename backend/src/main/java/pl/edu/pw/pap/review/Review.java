@@ -43,7 +43,7 @@ public class Review {
     private Set<Comment> comments = new HashSet<>();
 
     @JsonIgnore // Don't want to access reports when simply asking for review
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ReviewReport> reports = new HashSet<>();
 
     public Review(User user, Course course, String opinion, int overallRating) {

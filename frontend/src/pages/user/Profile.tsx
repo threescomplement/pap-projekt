@@ -6,6 +6,7 @@ import styles from "./Profile.module.css";
 interface ProfileProps {
     user: User | null
 }
+
 export default function Profile({user}: ProfileProps) {
     const {setUser} = useUser();
     const navigate = useNavigate();
@@ -28,6 +29,7 @@ export default function Profile({user}: ProfileProps) {
                 <p>Role: {user.roles}</p>
             </div>
             <button className={styles.logoutButton} onClick={handleLogout}>Wyloguj się</button>
+            <button onClick={() => navigate("/user/change-password")}>Zmień hasło</button>
         </div>
     </div>;
 }

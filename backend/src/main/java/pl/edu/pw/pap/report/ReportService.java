@@ -27,31 +27,29 @@ public class ReportService {
     public ReportDTO convertReviewReportToDto(ReviewReport report) {
 
         var reportDTO = ReportDTO.builder()
-                .reportedText(report.getReported().getOpinion())
-                .reportingUsername(report.getReportingUser().getUsername())
+                .reportedText(report.getReportedText())
+                .reportingUsername(report.getReportingUsername())
                 .reason(report.getReason())
                 .build();
 
-        var review = report.getReported();
         return reportDTO.add(
                 linkTo(methodOn(ReportController.class).getReviewReport(report.getId())).withSelfRel(),
-                linkTo(methodOn(ReviewController.class).getReview(review.getCourse().getId(), review.getUser().getUsername())).withRel("entity"),
-                linkTo(methodOn(ReviewController.class).getReview(review.getCourse().getId(), review.getUser().getUsername())).withRel("review")
+                linkTo(methodOn(ReviewController.class).getReview(report.getCourseId(), report.getReviewerUsername())).withRel("entity"),
+                linkTo(methodOn(ReviewController.class).getReview(report.getCourseId(), report.getReviewerUsername())).withRel("review")
         );
     }
 
     public ReportDTO convertCommentReportToDto(CommentReport report) {
 
         var reportDTO = ReportDTO.builder()
-                .reportedText(report.getReported().getText())
-                .reportingUsername(report.getReportingUser().getUsername())
+                .reportedText(report.getReportedText())
+                .reportingUsername(report.getReportingUsername())
                 .reason(report.getReason())
                 .build();
-        var review = report.getReported().getReview();
         return reportDTO.add(
                 linkTo(methodOn(ReportController.class).getCommentReport(report.getId())).withSelfRel(),
-                linkTo(methodOn(CommentController.class).getCommentById(report.getReported().getId())).withRel("entity"),
-                linkTo(methodOn(ReviewController.class).getReview(review.getCourse().getId(), review.getUser().getUsername())).withRel("review")
+                linkTo(methodOn(CommentController.class).getCommentById(report.getCommentId())).withRel("entity"),
+                linkTo(methodOn(ReviewController.class).getReview(report.getCourseId(), report.getReviewerUsername())).withRel("review")
         );
     }
 

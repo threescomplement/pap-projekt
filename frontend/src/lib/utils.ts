@@ -1,8 +1,6 @@
 // Miscellaneous utilities
 
 import {ChangeEvent} from "react";
-import {Review} from "./Review";
-import {ReviewComment} from "./ReviewComment";
 
 
 /**
@@ -20,34 +18,7 @@ export function formReducer<T>(state: T, event: ChangeEvent<HTMLInputElement>): 
 
 export const NUM_REVIEWS_PLACEHOLDER = 0;
 
-export function getDummyReviews(): Review[] {
-    return [{
-        authorUsername: "gordonsysy123",
-        opinion: "Wyczumpisty kurs!",
-        overallRating: "9",
-        created: "2023-12-06T22:51:36.585+00:00",
-        _links: null
-    }, {
-        authorUsername: "czumpi94ez",
-        opinion: "Średnio na jeża",
-        overallRating: "4",
-        created: "2023-12-06T22:50:36.585+00:00",
-        _links: null
-    }]
-}
 
-export function getDummyComments(): ReviewComment[] {
-    return [{
-        id: "1",
-        authorUsername: "waltuh",
-        text: "Nie zgadzam się!",
-        created: "2023-12-06T22:55:36.585+00:00",
-        _links: null
-    }, {
-        id: "2",
-        authorUsername: "jesser",
-        text: "Zgadzam się!",
-        created: "2023-12-06T22:56:36.585+00:00",
-        _links: null
-    }]
+export interface Link {
+    href: string
 }

@@ -1,11 +1,17 @@
 import {Course} from "./Course";
 import api from "./api";
+import {Link} from "./utils";
 
 export interface Teacher {
-    id: string,
-    name: string,
-    averageRating: string,
-    _links: any
+    id: string
+    name: string
+    averageRating: string
+    _links: {
+        self: Link
+        courses: Link
+        all: Link
+        reviews: Link
+    }
 }
 
 export interface TeacherFilters {

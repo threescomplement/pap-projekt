@@ -1,9 +1,7 @@
 package pl.edu.pw.pap.review.report;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PreRemove;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.report.GeneralReport;
@@ -13,14 +11,22 @@ import pl.edu.pw.pap.user.User;
 @Setter
 @Getter
 @Entity
-public class ReviewReport extends GeneralReport {
+public class ReviewReport {
 
-    @JsonIgnore
-    @ManyToOne
-    private Review reported;
+    @GeneratedValue
+    @Id
+    Long id;
 
+    Long courseId;
+    String reviewerUsername;
+
+    String reportingUsername;
+    String reason;
     public ReviewReport(User reportingUser, String reason, Review reportedReview) {
-        super(reportingUser, reason);
+        this.reason = reason;
+        this.reportingUsername = reportingUser.getUsername();
+        this.courseId = reportedReview.getCourse().getId();
+        this.reviewerUsername = reportedReview.getUser().getUsername();
         reportedReview.addReport(this);
         reportingUser.addReviewReport(this);
     }
@@ -28,24 +34,14 @@ public class ReviewReport extends GeneralReport {
     protected ReviewReport() {
     }
 
-    @PreRemove
-    public void preRemove() {
-        if (this.reportingUser != null) {
-            reportingUser.removeReviewReport(this);
-        }
-        if (this.reported != null) {
-            reported.removeReport(this);
-        }
-    }
-
     @Override
     public String toString() {
         return "ReviewReport{" +
                 "id=" + id +
-                ", user=" + reportingUser.getUsername() +
+                ", user=" + reportingUsername +
                 ", reason=" + reason +
-                ", courseId=" + reported.getCourse().getId() +
-                ", reviewerUsername=" + reported.getUser().getUsername() +
+                ", courseId=" + courseId +
+                ", reviewerUsername=" + reviewerUsername +
                 '}';
     }
 

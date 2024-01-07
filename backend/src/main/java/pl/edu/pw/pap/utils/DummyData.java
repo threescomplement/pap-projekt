@@ -35,7 +35,7 @@ public class DummyData {
     private final CommentRepository commentRepository;
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final ReviewReportRepository reviewReportRepository;
+    private final ReviewReportRepository reviewReportRepository;
 //    private final CommentReportRepository commentReportRepository;
 
     public User user_1;
@@ -58,9 +58,9 @@ public class DummyData {
     public Comment comment_3;
     public Comment comment_4;
     public Comment comment_5;
-//    public ReviewReport reviewReport_1;
-//    public ReviewReport reviewReport_2;
-//    public ReviewReport reviewReport_3;
+    public ReviewReport reviewReport_1;
+    public ReviewReport reviewReport_2;
+    public ReviewReport reviewReport_3;
 //    public CommentReport commentReport_1;
 //    public CommentReport commentReport_2;
 //    public CommentReport commentReport_3;
@@ -91,11 +91,11 @@ public class DummyData {
         comment_4 = commentRepository.save(new Comment("trudne serio", review_2, user_2));
         comment_5 = commentRepository.save(new Comment("oj tak", review_2, user_3));
 
-        //rdeckard: 1 reported review, user3: 2 reported reviews
-        // review_2 has 2 reports, review4 has 1 report
-//        reviewReport_1 = reviewReportRepository.save(new ReviewReport(user_1, "obelgi w strone prowadzacego", review_2));
-//        reviewReport_2 = reviewReportRepository.save(new ReviewReport(user_3, "nie obiektywna ocena", review_2));
-//        reviewReport_3 =  reviewReportRepository.save(new ReviewReport(user_3, "", review_4));
+//        rdeckard: 1 reported review, user3: 2 reported reviews
+//         review_2 has 2 reports, review4 has 1 report
+        reviewReport_1 = reviewReportRepository.save(new ReviewReport(user_1, "obelgi w strone prowadzacego", review_2));
+        reviewReport_2 = reviewReportRepository.save(new ReviewReport(user_3, "nie obiektywna ocena", review_2));
+        reviewReport_3 =  reviewReportRepository.save(new ReviewReport(user_3, "", review_4));
 
         // rbatty: 1 reported comment, user3: 2 reported comments
         // comment_2 has 2 reports, comment_4 has 1 report
@@ -115,7 +115,7 @@ public class DummyData {
         reviewRepository.deleteAll();
         commentRepository.deleteAll();
         emailVerificationTokenRepository.deleteAll();
-//        reviewReportRepository.deleteAll();
+        reviewReportRepository.deleteAll();
 //        commentReportRepository.deleteAll();
     }
 }

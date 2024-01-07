@@ -36,7 +36,7 @@ public class DummyData {
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final ReviewReportRepository reviewReportRepository;
-//    private final CommentReportRepository commentReportRepository;
+    private final CommentReportRepository commentReportRepository;
 
     public User user_1;
     public User user_2;
@@ -61,9 +61,9 @@ public class DummyData {
     public ReviewReport reviewReport_1;
     public ReviewReport reviewReport_2;
     public ReviewReport reviewReport_3;
-//    public CommentReport commentReport_1;
-//    public CommentReport commentReport_2;
-//    public CommentReport commentReport_3;
+    public CommentReport commentReport_1;
+    public CommentReport commentReport_2;
+    public CommentReport commentReport_3;
 
     public void addDummyData() {
         user_1 = userRepository.save(new User("rdeckard", "rdeckard@example.com", passwordEncoder.encode("password"), "ROLE_USER", true));
@@ -99,9 +99,9 @@ public class DummyData {
 
         // rbatty: 1 reported comment, user3: 2 reported comments
         // comment_2 has 2 reports, comment_4 has 1 report
-//        commentReport_1 = commentReportRepository.save(new CommentReport(user_3, "brak kultury", comment_2));
-//        commentReport_2 = commentReportRepository.save(new CommentReport(user_3, "skill issue", comment_4));
-//        commentReport_3 = commentReportRepository.save(new CommentReport(user_2, "jajo", comment_2));
+        commentReport_1 = commentReportRepository.save(new CommentReport(user_3, "brak kultury", comment_2));
+        commentReport_2 = commentReportRepository.save(new CommentReport(user_3, "skill issue", comment_4));
+        commentReport_3 = commentReportRepository.save(new CommentReport(user_2, "jajo", comment_2));
 
 
 
@@ -116,6 +116,6 @@ public class DummyData {
         commentRepository.deleteAll();
         emailVerificationTokenRepository.deleteAll();
         reviewReportRepository.deleteAll();
-//        commentReportRepository.deleteAll();
+        commentReportRepository.deleteAll();
     }
 }

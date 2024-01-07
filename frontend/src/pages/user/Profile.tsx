@@ -39,6 +39,7 @@ export default function Profile({user}: ProfileProps) {
                 <p>Role: {user.roles}</p>
             </div>
             <button className={styles.logoutButton} onClick={handleLogout}>Wyloguj się</button>
+            <button onClick={() => navigate("/user/change-password")}>Zmień hasło</button>
             {showDeleteConfirmation
                 ? <ConfirmationPopup query={"Czy na pewno chcesz usunąć swoje konto?"}
                                      handleConfirmation={handleDeleteAccount}

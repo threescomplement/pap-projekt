@@ -1,6 +1,7 @@
 import {decodeToken} from "react-jwt";
 
 import api from "./api";
+import {Link} from "./utils";
 
 /**
  * The user logged in on the website
@@ -24,11 +25,11 @@ export interface AppUser {
     email: string,
     role: string,
     enabled: boolean
-    // _links: {
-    //     self: Link,
-    //     comments: Link,
-    //     reviews: Link,
-    // }
+    _links: {
+        self: Link,
+        comments: Link,
+        reviews: Link,
+    }
 }
 
 interface AccessToken {
@@ -48,6 +49,11 @@ export interface RegisterRequest {
     username: string,
     email: string,
     password: string,
+}
+
+export interface ChangePasswordRequest {
+    oldPassword: string
+    newPassword: string
 }
 
 const USER_STORAGE_HANDLE = "user";
@@ -123,6 +129,11 @@ async function resetPassword(newPassword: string, resetPasswordToken: string): P
 
 }
 
+async function changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
+    const response = await api.post("/users/change-password", {oldPassword: oldPassword, newPassword: newPassword});
+    return response.ok;
+}
+
 async function getAllUsers(): Promise<AppUser[]> {
     const response = await api.get("/users");
     const json = await response.json();
@@ -147,6 +158,7 @@ const UserService = {
     verifyEmail,
     sendResetPasswordEmail,
     resetPassword,
+    changePassword,
     getAllUsers,
     updateUser,
     deleteUser

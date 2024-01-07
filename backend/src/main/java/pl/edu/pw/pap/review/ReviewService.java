@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
@@ -16,7 +15,6 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -29,7 +27,6 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
     public final TeacherRepository teacherRepository;
 
 
@@ -37,7 +34,9 @@ public class ReviewService {
         return ReviewDTO.builder()
                 .authorUsername(review.getUser().getUsername())
                 .opinion(review.getOpinion())
-                .overallRating(review.getOverallRating())
+                .easeRating(review.getEaseRating())
+                .interestRating(review.getInterestRating())
+                .engagementRating(review.getEngagementRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
                 .edited(review.getEdited())
@@ -103,7 +102,7 @@ public class ReviewService {
             throw (new DuplicateReviewException("Cannot add more than one review to a course"));
         }
         return convertToDTO(
-                reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()))
+                reviewRepository.save(new Review(addingUser, course, request.text(), request.easeRating(), request.interestRating(), request.engagementRating()))
         );
     }
 
@@ -132,7 +131,9 @@ public class ReviewService {
         }
 
         review.setOpinion(request.text());
-        review.setOverallRating(request.rating());
+        review.setEaseRating(request.easeRating());
+        review.setInterestRating(request.interestRating());
+        review.setEngagementRating(request.engagementRating());
         review.setEdited(true);
         return convertToDTO(reviewRepository.save(review));
 

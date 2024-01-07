@@ -32,17 +32,21 @@ public class Review {
     private Course course;
 
     private String opinion;
+    private int easeRating;
+    private int interestRating;
+    private int engagementRating;
     private Boolean edited;
-    private int overallRating; // TODO: Decide which parameters should be included in the review
     @CreationTimestamp
     private Timestamp created;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-    public Review(User user, Course course, String opinion, int overallRating) {
+    public Review(User user, Course course, String opinion, int easeRating, int interestingnessRating, int engagementRating) {
         this.opinion = opinion;
-        this.overallRating = overallRating;
+        this.easeRating = easeRating;
+        this.engagementRating = engagementRating;
+        this.interestRating = interestingnessRating;
         edited = false;
         course.addReview(this);
         user.addReview(this);
@@ -77,7 +81,9 @@ public class Review {
                 ", user=" + user.getUsername() +
                 ", course=" + course.getName() +
                 ", opinion='" + opinion + '\'' +
-                ", overallRating=" + overallRating +
+                ", easeRating=" + easeRating +
+                ", interestRating=" + interestRating +
+                ", engagementRating=" + engagementRating +
                 ", edited='" + edited +
                 ", created=" + created.toString() +
                 '}';

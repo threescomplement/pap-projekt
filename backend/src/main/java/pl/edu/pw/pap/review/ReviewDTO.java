@@ -20,7 +20,9 @@ import java.sql.Timestamp;
 public class ReviewDTO extends RepresentationModel<ReviewDTO> {
     private String authorUsername;
     private String opinion;
-    private Integer overallRating;
+    private Integer easeRating;
+    private Integer interestRating;
+    private Integer engagementRating;
     private Timestamp created;
     @JsonIgnore
     private Long courseId;

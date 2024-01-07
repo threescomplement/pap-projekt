@@ -49,6 +49,10 @@ public class User {
 
     }
 
+    public boolean isAdmin() {
+        return this.getRole().equals("ROLE_ADMIN");
+    }
+
     @PreRemove
     public void preRemove() {
         this.reviews.forEach(review -> review.setUser(null));

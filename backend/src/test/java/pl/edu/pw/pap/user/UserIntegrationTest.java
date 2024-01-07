@@ -1,5 +1,6 @@
 package pl.edu.pw.pap.user;
 
+import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.http.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.edu.pw.pap.PapApplication;
 import pl.edu.pw.pap.email.EmailSender;
+import pl.edu.pw.pap.security.AuthService;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationRequest;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordRequest;
@@ -54,14 +56,23 @@ public class UserIntegrationTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private DummyData dummyData;
+    private AuthService authService;
+    @Autowired
+    private DummyData data;
 
     TestRestTemplate restTemplate = new TestRestTemplate();
     HttpHeaders headers = new HttpHeaders();
 
     @BeforeEach
     public void clearDatabase() {
-        dummyData.deleteAll();
+        data.deleteAll();
+        headers = new HttpHeaders();
+    }
+
+    private void authenticateAsUser(User user) {
+        headers = new HttpHeaders();
+        var token = authService.attemptLogin(user.getUsername(), "password").getAccessToken();
+        headers.add("Authorization", "Bearer " + token);
     }
 
     @Test
@@ -214,5 +225,204 @@ public class UserIntegrationTest {
                 String.class
         );
         assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
+
+    @Test
+    public void getUserExists() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/" + data.user_1.getUsername(), port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var json = JsonPath.parse(response.getBody());
+        assertEquals(data.user_1.getId(), Long.parseLong(json.read("$.id").toString()));
+        assertEquals(data.user_1.getUsername(), json.read("$.username"));
+        assertEquals(data.user_1.getEmail(), json.read("$.email"));
+        assertEquals(data.user_1.getRole(), json.read("$.role"));
+        assertEquals(data.user_1.getEnabled(), json.read("$.enabled"));
+
+        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/users/" + data.user_1.getUsername()));
+        assertTrue(json.read("$._links.reviews.href").toString().endsWith("/api/reviews/" + data.user_1.getUsername()));
+        assertTrue(json.read("$._links.comments.href").toString().endsWith(String.format("/api/users/%s/comments", data.user_1.getUsername())));
+
+        data.deleteAll();
+    }
+
+    @Test
+    public void getUserNotExists() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/idonotexist", port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+    @Test
+    public void updateUserBySelf() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var request = new UpdateUserRequest("username", "email@example.com", "ROLE_ADMIN", true);
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/" + data.user_1.getUsername(), port),
+                HttpMethod.PUT,
+                new HttpEntity<>(request, headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+    }
+
+    @Test
+    public void updateUserByAnotherUser() {
+        data.addDummyData();
+        authenticateAsUser(data.user_2);
+
+        var request = new UpdateUserRequest("username", "email@example.com", "ROLE_ADMIN", true);
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/" + data.user_1.getUsername(), port),
+                HttpMethod.PUT,
+                new HttpEntity<>(request, headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+    }
+
+    @Test
+    public void updateUserByAdmin() {
+        data.addDummyData();
+        authenticateAsUser(data.admin_1);
+
+
+        var userBefore = userRepository.findByUsername(data.user_1.getUsername()).get();
+        var request = new UpdateUserRequest("newUsername", "newEmail@example.com", "ROLE_ADMIN", true);
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/" + data.user_1.getUsername(), port),
+                HttpMethod.PUT,
+                new HttpEntity<>(request, headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+        var userAfter = userRepository.findById(userBefore.getId()).get();
+
+        assertEquals(userBefore.getId(), userAfter.getId());
+        assertEquals(userBefore.getId(), Long.valueOf(json.read("$.id").toString()));
+        assertEquals(request.username(), userAfter.getUsername());
+        assertEquals(request.username(), json.read("$.username"));
+        assertEquals(request.email(), userAfter.getEmail());
+        assertEquals(request.email(), json.read("$.email"));
+        assertEquals(request.role(), userAfter.getRole());
+        assertEquals(request.role(), json.read("$.role"));
+        assertEquals(request.enabled(), userAfter.getEnabled());
+        assertEquals(request.enabled(), json.read("$.enabled"));
+
+        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/users/newUsername"));
+        assertTrue(json.read("$._links.reviews.href").toString().endsWith("/api/reviews/newUsername"));
+        assertTrue(json.read("$._links.comments.href").toString().endsWith("/api/users/newUsername/comments"));
+    }
+
+    @Test
+    public void updateUserByAdminNotExists() {
+        data.addDummyData();
+        authenticateAsUser(data.admin_1);
+        var request = new UpdateUserRequest("newUsername", "newEmail@example.com", "ROLE_ADMIN", true);
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/idonotexist", port),
+                HttpMethod.PUT,
+                new HttpEntity<>(request, headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
+
+    @Test
+    public void deleteUserBySelf() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+        assertTrue(userRepository.existsUserByUsername(data.user_1.getUsername()));
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/" + data.user_1.getUsername(), port),
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+        assertFalse(userRepository.existsUserByUsername(data.user_1.getUsername()));
+    }
+
+    @Test
+    public void deleteUserByOtherUser() {
+        data.addDummyData();
+        authenticateAsUser(data.user_2);
+        assertTrue(userRepository.existsUserByUsername(data.user_1.getUsername()));
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/" + data.user_1.getUsername(), port),
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode());
+        assertTrue(userRepository.existsUserByUsername(data.user_1.getUsername()));
+    }
+
+    @Test
+    public void deleteUserByAdmin() {
+        data.addDummyData();
+        authenticateAsUser(data.admin_1);
+        assertTrue(userRepository.existsUserByUsername(data.user_1.getUsername()));
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/" + data.user_1.getUsername(), port),
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+        assertFalse(userRepository.existsUserByUsername(data.user_1.getUsername()));
+    }
+
+    @Test
+    public void deleteUserByAdminNotExists() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users/idonotexist", port),
+                HttpMethod.DELETE,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        assertEquals(HttpStatusCode.valueOf(400), response.getStatusCode());
+    }
+
+    @Test
+    public void getAllUsers() {
+        data.addDummyData();
+        authenticateAsUser(data.user_1);
+
+        var response = restTemplate.exchange(
+                buildUrl("/api/users", port),
+                HttpMethod.GET,
+                new HttpEntity<>(headers),
+                String.class
+        );
+        var json = JsonPath.parse(response.getBody());
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        assertEquals(4, (int) json.read("$._embedded.users.length()"));
+        assertTrue(json.read("$._embedded.users[0]._links.self.href").toString().contains("/api/users/"));
+        assertTrue(json.read("$._embedded.users[0]._links.reviews.href").toString().contains("/api/reviews/"));
+        assertTrue(json.read("$._embedded.users[0]._links.comments.href").toString().contains("/api/users/"));
     }
 }

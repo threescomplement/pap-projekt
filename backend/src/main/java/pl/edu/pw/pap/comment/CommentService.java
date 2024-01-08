@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewRepository;
@@ -23,6 +24,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private final CommentReportRepository commentReportRepository;
 
     public CommentDTO convertToDto(Comment comment) {
         return CommentDTO.builder()
@@ -66,6 +68,9 @@ public class CommentService {
         }
 
         commentRepository.delete(comment);
+        //clear reports
+        commentReportRepository.deleteAllByCommentId(commentId);
+
     }
 
     public Optional<CommentDTO> findCommentById(Long commentId) {

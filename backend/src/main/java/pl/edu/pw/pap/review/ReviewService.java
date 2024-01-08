@@ -8,6 +8,7 @@ import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
+import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.teacher.TeacherNotFoundException;
 import pl.edu.pw.pap.teacher.TeacherRepository;
@@ -27,7 +28,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    public final TeacherRepository teacherRepository;
+    private final TeacherRepository teacherRepository;
+    private final ReviewReportRepository reviewReportRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
@@ -86,8 +88,10 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
-
         reviewRepository.delete(review);
+        // clear reports
+        reviewReportRepository.deleteAllByCourseIdAndAndReviewerUsername(
+                review.getCourse().getId(), review.getUser().getUsername());
     }
 
     public ReviewDTO addReview(Long courseId, AddReviewRequest request, UserPrincipal userPrincipal) {

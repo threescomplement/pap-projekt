@@ -1,6 +1,6 @@
 import {Course} from "./Course";
 import api from "./api";
-import {getDummyReviews, Link} from "./utils";
+import {Link} from "./utils";
 
 
 export interface Review {
@@ -60,22 +60,10 @@ async function editReview(request: ReviewRequest, courseId: string, authorUserna
     return response.ok;
 }
 
-async function fetchReviewsByTeacher(teacherId: string): Promise<boolean> {
-    const response = await api.get(`teachers/${teacherId}/reviews`);
-    console.log(response);
-    return response.ok;
-}
-
-async function fetchReviewsByUser(): Promise<Review[]> {
-    return getDummyReviews();
-}
-
 export const ReviewService = {
     fetchReviewsByCourse,
     fetchReviewByCourseIdAndAuthor,
     postReview,
     deleteReview,
-    editReview,
-    fetchReviewsByTeacher,
-    fetchReviewsByUser
+    editReview
 }

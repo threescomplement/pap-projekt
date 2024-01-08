@@ -15,6 +15,7 @@ import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationRequest;
+import pl.edu.pw.pap.user.passwordchange.ChangePasswordRequest;
 import pl.edu.pw.pap.user.passwordreset.ResetPasswordRequest;
 import pl.edu.pw.pap.user.passwordreset.SendResetPasswordEmailRequest;
 
@@ -104,6 +105,19 @@ public class UserController {
         try {
             userService.resetPassword(request.passwordResetToken(), request.newPassword());
             return ResponseEntity.ok("Password has been reset successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.toString());
+        }
+    }
+
+    @PostMapping("/api/users/change-password")
+    public ResponseEntity<String> changePassword(
+            @AuthenticationPrincipal UserPrincipal principal,
+            @RequestBody ChangePasswordRequest request
+    ) {
+        try {
+            userService.changePassword(principal, request.oldPassword(), request.newPassword());
+            return ResponseEntity.ok("Password has been changed successfully");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.toString());
         }

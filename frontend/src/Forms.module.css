@@ -1,21 +1,23 @@
-.registerContainer {
+.formContainer {
     padding: 2rem;
     font-family: Arial, sans-serif;
+    margin: 0 auto;
+    width: 80%;
 }
 
-.registerContainer h1 {
+.formContainer h1 {
     color: #333;
     font-size: 2.5rem;
     text-align: left;
 }
 
-.registerContainer label p {
-    font-size: 1.2em;
+.formContainer label p {
+    font-size: 1.2rem;
     color: #666;
     margin-bottom: 0.5rem;
 }
 
-.registerContainer label input {
+.formContainer label input {
     display: block;
     width: 40%;
     padding: 1rem;
@@ -25,20 +27,12 @@
     border: 1px solid #ddd;
 }
 
-.registerContainer a {
-    color: #4169E1;
-    text-decoration: none;
-}
-
-.registerContainer a:hover {
-    color: #6495ED;
-}
-
-.registerContainer input[type="submit"] {
+.formContainer input[type="submit"] {
     cursor: pointer;
     background-color: #4169E1;
     color: white;
     border: none;
+    border-radius: 0.8rem;
     font-size: 1em;
     padding: 0.5rem 1rem;
 }

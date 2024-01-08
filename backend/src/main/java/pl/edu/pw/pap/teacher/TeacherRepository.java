@@ -11,9 +11,9 @@ import java.util.List;
 public interface TeacherRepository extends JpaRepository<Teacher, Long> {
 
     @Query("SELECT t FROM Teacher t " +
-            "LEFT JOIN Review r ON t.id = r.course.teacher.id " +
+            "LEFT JOIN Course c ON t.id = c.teacher.id " +
             "WHERE (:name IS NULL OR LOWER(t.name) LIKE LOWER(CONCAT('%', :name, '%')))" +
-            "AND (:language IS NULL OR r.course.language = :language)" +
+            "AND (:language IS NULL OR LOWER(c.language) = :language)" +
             "GROUP BY t.id, t.name"
     )
     List<Teacher> findTeachersMatchingFilters(

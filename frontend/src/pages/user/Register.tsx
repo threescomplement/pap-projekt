@@ -2,7 +2,7 @@ import {FormEvent, useReducer, useState} from "react";
 import UserService, {RegisterRequest} from "../../lib/User";
 import {Link} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
-import styles from "./Register.module.css"
+import styles from "../../Forms.module.css"
 
 const initialFormData: RegisterRequest = {
     username: "",
@@ -29,7 +29,7 @@ export default function Register() {
         </>;
     }
 
-    return <div className={styles.registerContainer}>
+    return <div className={styles.formContainer}>
         <h1>Register new account</h1>
 
         <form onSubmit={handleFormSubmit}>

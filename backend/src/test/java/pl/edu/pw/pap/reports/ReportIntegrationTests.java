@@ -476,6 +476,15 @@ public class ReportIntegrationTests {
         checkUnchangedData();
 
     }
+    @Test
+    public void addInvalidCommentReportUser() {
+        String endpoint = "/api/comments/20/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        checkUnchangedData();
+    }
 
 
     // Add comment report bad admin/user

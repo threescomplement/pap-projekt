@@ -15,9 +15,11 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import pl.edu.pw.pap.PapApplication;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.report.ReportRequest;
 import pl.edu.pw.pap.review.ReviewRepository;
+import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.AuthService;
 import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.UserRepository;
@@ -30,7 +32,6 @@ import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static pl.edu.pw.pap.utils.UrlBuilder.buildUrl;
 
 @SpringBootTest(classes = PapApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -50,6 +51,10 @@ public class ReportIntegrationTests {
     ReviewRepository reviewRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ReviewReportRepository reviewReportRepository;
+    @Autowired
+    CommentReportRepository commentReportRepository;
     @Autowired
     AuthService authService;
     @Autowired
@@ -527,8 +532,55 @@ public class ReportIntegrationTests {
     }
 
 
-    // delete non existent comment report admin
-    //
+    @Test
+    public void deleteInvalidCommentReportAdmin() {
+        adminLogin();
+        String endpoint = "/api/admin/reports/comments/15";
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+        checkUnchangedData();
+    }
+
+    @Test
+    public void deleteReportsOfRemovedReview(){
+        adminLogin();
+        String endpoint = "/api/courses/1/reviews/rbatty";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+        assertEquals(1, reviewReportRepository.count());
+        assertEquals(3, commentReportRepository.count());
+
+        endpoint = "/api/courses/3/reviews/rdeckard";
+        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+        assertEquals(0, reviewReportRepository.count());
+        assertEquals(3, commentReportRepository.count());
+
+    }
+
+    @Test
+    public void deleteReportsOfRemovedComment(){
+
+        adminLogin();
+        String endpoint = "/api/comments/2";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+        assertEquals(3, reviewReportRepository.count());
+        assertEquals(1, commentReportRepository.count());
+
+        endpoint = "/api/comments/4";
+        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+        assertEquals(3, reviewReportRepository.count());
+        assertEquals(0, commentReportRepository.count());
+
+
+    }
 
 
 }

@@ -20,9 +20,14 @@ code {
 a {
     text-decoration: none;
     color: inherit;
+    padding: .8rem;
+    transition: background-color 0.3s, border-radius 0.3s;
+    border-radius: .3rem;
 }
 
 a:hover {
+    background-color: #444;
+    border-radius: 5px;
     text-decoration: underline;
 }
 
@@ -60,7 +65,7 @@ button, input, select, textarea {
     margin: 2rem auto;
     padding: 1rem;
     text-align: left;
-    border-radius: 8px;
+    border-radius: .5rem;
 }
 
 
@@ -90,4 +95,45 @@ h6 {
 
 p {
     font-size: 1.2rem;
+}
+
+input[type="text"] {
+    padding: .5rem;
+    border: 1px solid #222;
+    border-radius: 5px;
+    font-size: 1.25rem;
+    background-color: #222;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    width: 70%;
+    box-sizing: border-box;
+    transition: border-color 0.3s, caret-color 0.3s;
+    outline:none
+}
+
+input[type="text"]:focus, input[type="text"]:hover {
+    border-color: #aaa;
+    caret-color: #aaa;
+}
+
+select {
+    padding: .5rem;
+    color: #888;
+    border: 1px solid #222;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    background-color: #222;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    width: 70%;
+    box-sizing: border-box;
+    transition: border-color 0.3s, color 0.3s, background-color 0.3s, transform 0.3s; /* Add transform to the transition */
+    outline: none;
+}
+
+select:focus,
+select:hover {
+    border-color: #aaa; /*todo: match this to the textinput*/
+    background-color: #222;
+    outline: none;
 }

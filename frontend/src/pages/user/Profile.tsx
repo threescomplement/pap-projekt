@@ -1,7 +1,10 @@
-import {User} from "../../lib/User";
+import UserService, {User} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {useNavigate} from "react-router-dom";
 import styles from "./Profile.module.css";
+import {MdDeleteForever} from "react-icons/md";
+import {useState} from "react";
+import {ConfirmationPopup} from "../../components/ConfirmationPopup";
 
 interface ProfileProps {
     user: User | null
@@ -10,6 +13,7 @@ interface ProfileProps {
 export default function Profile({user}: ProfileProps) {
     const {setUser} = useUser();
     const navigate = useNavigate();
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     if (user == null) {
         return <h1>Zaloguj się, aby wyświetlić swój profil...</h1>;
@@ -18,6 +22,12 @@ export default function Profile({user}: ProfileProps) {
     const handleLogout = () => {
         setUser(null);
         navigate("/user/login");
+    }
+
+    const handleDeleteAccount = () => {
+        UserService.deleteUser(user)
+            .then(() => handleLogout())
+            .catch(e => console.error(e))
     }
 
     return <div className={styles.wrapper}>
@@ -30,6 +40,14 @@ export default function Profile({user}: ProfileProps) {
             </div>
             <button className={styles.logoutButton} onClick={handleLogout}>Wyloguj się</button>
             <button onClick={() => navigate("/user/change-password")}>Zmień hasło</button>
+            {showDeleteConfirmation
+                ? <ConfirmationPopup query={"Czy na pewno chcesz usunąć swoje konto?"}
+                                     handleConfirmation={handleDeleteAccount}
+                                     setVisibility={setShowDeleteConfirmation}/>
+                : <button className={styles.deleteAccountButton} onClick={() => setShowDeleteConfirmation(true)}>
+                    Usuń konto <MdDeleteForever/>
+                </button>
+            }
         </div>
     </div>;
 }

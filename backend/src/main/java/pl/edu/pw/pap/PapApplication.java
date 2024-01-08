@@ -42,7 +42,7 @@ public class PapApplication {
         };
     }
 
-        @Bean
+//        @Bean
     @Profile({"dev", "dev-postgres"})
     public CommandLineRunner addDummyData(
             CourseRepository courseRepository,

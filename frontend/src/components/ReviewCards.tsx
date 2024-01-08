@@ -30,8 +30,8 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
         <EditBar
             handleDelete={(e) => handleDeleteReview(e)}
             deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}
-                handleEdit={(_)=> navigate(`/courses/${courseId}/writeReview`)}
-                canEdit={isReviewAuthor}
+            handleEdit={(_) => navigate(`/courses/${courseId}/writeReview`)}
+            canEdit={isReviewAuthor}
         /> : null;
 
     function handleDeleteReview(e: React.MouseEvent) {

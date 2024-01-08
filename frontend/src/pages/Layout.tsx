@@ -33,7 +33,7 @@ export function Layout() {
                     <li className={styles.navbarLink}>
                         <Link to="/user/register">Rejestracja</Link>
                     </li>
-                </> : <li className={styles.profileLink}>Welcome <Link to="/user">{user.username}</Link></li>
+                </> : <li className={styles.profileLink}>Witaj, <Link to="/user">{user.username}</Link></li>
                 }
                 {user?.roles[0] === "ROLE_ADMIN" ? <li className={styles.navbarLink}>
                     <Link to="/admin">Panel administratora</Link>

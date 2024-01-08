@@ -476,6 +476,7 @@ public class ReportIntegrationTests {
         checkUnchangedData();
 
     }
+
     @Test
     public void addInvalidCommentReportUser() {
         String endpoint = "/api/comments/20/reports";
@@ -486,9 +487,46 @@ public class ReportIntegrationTests {
         checkUnchangedData();
     }
 
+    @Test
+    public void deleteCommentReportAdmin() {
+        adminLogin();
+        String endpoint = "/api/admin/reports/comments/1";
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode()); // no content
 
-    // Add comment report bad admin/user
-    // delete comment report admin
+
+        endpoint = "/api/admin/reports";
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var json = JsonPath.parse(response.getBody());
+        List<String> reports = json.read("$._embedded.reports");
+        assertEquals(5, reports.size()); // was 6 at the beginning
+
+        // review report stays the same
+        assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
+        assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
+        assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertTrue(json.read("$._embedded.reports[0]._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
+        assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+        // the comment report with id 2 moves "up" and is now the first one returned
+        assertEquals("user_3", json.read("$._embedded.reports[3].reportingUsername"));
+        assertEquals("skill issue", json.read("$._embedded.reports[3].reason"));
+        assertEquals("trudne serio", json.read("$._embedded.reports[3].reportedText"));
+        assertTrue(json.read("$._embedded.reports[3]._links.self.href").toString().endsWith("/api/admin/reports/comments/2"));
+        assertTrue(json.read("$._embedded.reports[3]._links.entity.href").toString().endsWith("/api/comments/4"));
+        assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+        //links
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("/api/admin/reports")));
+
+    }
+
+
     // delete non existent comment report admin
     //
 

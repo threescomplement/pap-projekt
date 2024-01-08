@@ -51,6 +51,11 @@ export interface RegisterRequest {
     password: string,
 }
 
+export interface ChangePasswordRequest {
+    oldPassword: string
+    newPassword: string
+}
+
 const USER_STORAGE_HANDLE = "user";
 
 function storeUser(user: User | null) {
@@ -124,6 +129,11 @@ async function resetPassword(newPassword: string, resetPasswordToken: string): P
 
 }
 
+async function changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
+    const response = await api.post("/users/change-password", {oldPassword: oldPassword, newPassword: newPassword});
+    return response.ok;
+}
+
 async function getAllUsers(): Promise<AppUser[]> {
     const response = await api.get("/users");
     const json = await response.json();
@@ -135,7 +145,7 @@ async function updateUser(user: AppUser): Promise<AppUser> {
     return response.json();
 }
 
-async function deleteUser(user: AppUser): Promise<boolean> {
+async function deleteUser(user: AppUser | User): Promise<boolean> {
     const response = await api.delete(`/users/${user.username}`);
     return response.ok;
 }
@@ -148,6 +158,7 @@ const UserService = {
     verifyEmail,
     sendResetPasswordEmail,
     resetPassword,
+    changePassword,
     getAllUsers,
     updateUser,
     deleteUser

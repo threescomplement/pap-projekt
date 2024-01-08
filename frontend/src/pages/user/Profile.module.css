@@ -25,10 +25,15 @@
 }
 
 .logoutButton {
-    background-color: #dc3545;
+    background-color: #007BFF;
     border: none;
     border-radius: 4px;
     color: #fff;
     padding: 10px 20px;
     cursor: pointer;
+}
+
+.deleteAccountButton {
+    background-color: rgba(255,8,0,0.85);
+    margin: 1em;
 }

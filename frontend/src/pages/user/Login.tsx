@@ -3,7 +3,7 @@ import UserService, {LoginRequest} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
-import styles from "./Login.module.css"
+import styles from "../../Forms.module.css"
 import ErrorBox from "../../components/ErrorBox";
 
 const initialFormData: LoginRequest = {
@@ -40,7 +40,7 @@ export default function Login() {
         }
     }
 
-    return <div className={styles.loginContainer}>
+    return <div className={styles.formContainer}>
         <h1>Login</h1>
 
         <form onSubmit={handleFormSubmit}>

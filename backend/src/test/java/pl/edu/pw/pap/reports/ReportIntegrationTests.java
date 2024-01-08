@@ -74,6 +74,50 @@ public class ReportIntegrationTests {
         headers.add("Authorization", "Bearer " + token);
     }
 
+    public void checkUnchangedData(){
+        // checks if the amount is the same as before and comment and review reports are in the same order
+        //
+        adminLogin();
+        String endpoint = "/api/admin/reports";
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var json = JsonPath.parse(response.getBody());
+        List<String> reports = json.read("$._embedded.reports");
+        assertEquals(6, reports.size());
+
+        assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
+        assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
+        assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertTrue(json.read("$._embedded.reports[0]._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
+        assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+        // last reviewReport is the same as original
+        assertEquals("user_3", json.read("$._embedded.reports[2].reportingUsername"));
+        assertEquals("", json.read("$._embedded.reports[2].reason"));
+        assertEquals("W porządku", json.read("$._embedded.reports[2].reportedText"));
+
+
+        // first comment report is the same
+        assertEquals("user_3", json.read("$._embedded.reports[3].reportingUsername"));
+        assertEquals("brak kultury", json.read("$._embedded.reports[3].reason"));
+        assertEquals("czyli co?", json.read("$._embedded.reports[3].reportedText"));
+        assertTrue(json.read("$._embedded.reports[3]._links.self.href").toString().endsWith("/api/admin/reports/comments/1"));
+        assertTrue(json.read("$._embedded.reports[3]._links.entity.href").toString().endsWith("/api/comments/2"));
+        assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/3/reviews/rdeckard"));
+
+        // last commentReport is the same
+        assertEquals("rbatty", json.read("$._embedded.reports[5].reportingUsername"));
+        assertEquals("jajo", json.read("$._embedded.reports[5].reason"));
+        assertEquals("czyli co?", json.read("$._embedded.reports[5].reportedText"));
+
+
+        //links
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("/api/admin/reports")));
+    }
+
     @Test
     public void getAllReportsNormalUser(){
 
@@ -317,6 +361,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode()); // no content
+
     }
 
 
@@ -410,7 +455,18 @@ public class ReportIntegrationTests {
 
         }
 
+    @Test
+    public void addInvalidCommentReportAdmin(){
+        adminLogin();
+        String endpoint = "/api/comments/20/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
 
+        checkUnchangedData();
+
+    }
 
 
 

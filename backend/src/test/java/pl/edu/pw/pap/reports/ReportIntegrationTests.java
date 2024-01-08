@@ -74,7 +74,7 @@ public class ReportIntegrationTests {
         headers.add("Authorization", "Bearer " + token);
     }
 
-    public void checkUnchangedData(){
+    public void checkUnchangedData() {
         // checks if the amount is the same as before and comment and review reports are in the same order
         //
         adminLogin();
@@ -119,7 +119,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void getAllReportsNormalUser(){
+    public void getAllReportsNormalUser() {
 
         String endpoint = "/api/admin/reports";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -129,7 +129,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void deleteReviewReportNormalUser(){
+    public void deleteReviewReportNormalUser() {
 
         String endpoint = "/api/admin/reports/reviews/1";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -139,7 +139,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void deleteNonExistentReviewReportNormalUser(){
+    public void deleteNonExistentReviewReportNormalUser() {
 
         String endpoint = "/api/admin/reports/reviews/15";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -149,7 +149,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void deleteCommentReportNormalUser(){
+    public void deleteCommentReportNormalUser() {
 
         String endpoint = "/api/admin/reports/comments/1";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -159,7 +159,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void deleteNonExistentCommentReportNormalUser(){
+    public void deleteNonExistentCommentReportNormalUser() {
 
         String endpoint = "/api/admin/reports/comments/15";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -169,7 +169,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void getAllReportsAdmin(){
+    public void getAllReportsAdmin() {
         adminLogin();
         String endpoint = "/api/admin/reports";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -200,7 +200,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void addReviewReportAdmin(){
+    public void addReviewReportAdmin() {
         adminLogin();
         String endpoint = "/api/courses/1/reviews/rdeckard/reports";
         var request = new ReportRequest("zle mu patrzy z oczu");
@@ -239,7 +239,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void addReviewReportNormalUser(){
+    public void addReviewReportNormalUser() {
         String endpoint = "/api/courses/1/reviews/rdeckard/reports";
         var request = new ReportRequest("zle mu patrzy z oczu");
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -253,7 +253,6 @@ public class ReportIntegrationTests {
         assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
         assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
-
 
 
         //check if it got added
@@ -281,7 +280,6 @@ public class ReportIntegrationTests {
         assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
 
 
-
     }
 
 
@@ -306,6 +304,7 @@ public class ReportIntegrationTests {
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
         checkUnchangedData();
     }
+
     @Test
     public void addReviewReportUserBadCourse() {
         String endpoint = "/api/courses/10/reviews/rdeckard/reports";
@@ -328,7 +327,7 @@ public class ReportIntegrationTests {
 
 
     @Test
-    public void deleteReviewReportAdmin(){
+    public void deleteReviewReportAdmin() {
         adminLogin();
         String endpoint = "/api/admin/reports/reviews/2";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -363,6 +362,7 @@ public class ReportIntegrationTests {
         //links
         assertTrue(json.read("$._links.self.href").toString().endsWith(("/api/admin/reports")));
     }
+
     @Test
     public void deleteReviewReportNonExistentAdmin() {
         adminLogin();
@@ -376,7 +376,7 @@ public class ReportIntegrationTests {
 
 
     @Test
-    public void addCommentReportAdmin(){
+    public void addCommentReportAdmin() {
         adminLogin();
         String endpoint = "/api/comments/1/reports";
         var request = new ReportRequest("zle mu patrzy z oczu");
@@ -421,7 +421,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void addCommentReportNormalUser(){
+    public void addCommentReportNormalUser() {
         String endpoint = "/api/comments/1/reports";
         var request = new ReportRequest("zle mu patrzy z oczu");
         var response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -463,21 +463,19 @@ public class ReportIntegrationTests {
         assertTrue(json.read("$._embedded.reports[6]._links.entity.href").toString().endsWith("/api/comments/1"));
         assertTrue(json.read("$._embedded.reports[6]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
 
-        }
+    }
 
     @Test
-    public void addInvalidCommentReportAdmin(){
+    public void addInvalidCommentReportAdmin() {
         adminLogin();
         String endpoint = "/api/comments/20/reports";
         var request = new ReportRequest("zle mu patrzy z oczu");
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
-
         checkUnchangedData();
 
     }
-
 
 
     // Add comment report bad admin/user

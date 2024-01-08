@@ -45,3 +45,7 @@ export function ratingToPercentage(rating: string | number) {
     if (isNaN(numericRating)) return '0%';
     return `${Math.floor(numericRating * 10)}%`
 }
+
+export interface Link {
+    href: string
+}

@@ -47,12 +47,14 @@ public class CourseService {
                 .averageEaseRating(averageEaseRating)
                 .averageInterestRating(averageInterestRating)
                 .averageEngagementRating(averageEngagementRating)
+                .numberOfRatings(reviews.size())
                 .teacherId(course.getTeacher().getId())
                 .build();
     }
 
     public Optional<CourseDTO> getById(Long courseId) {
-        return courseRepository.findByIdWithRating(courseId);
+        return courseRepository.findById(courseId)
+                .map(this::convertToDto);
     }
 
     public List<CourseDTO> getTeacherCourses(Long teacherId) {

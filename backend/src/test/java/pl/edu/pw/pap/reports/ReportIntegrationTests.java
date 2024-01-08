@@ -80,7 +80,7 @@ public class ReportIntegrationTests {
         String endpoint = "/api/admin/reports";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.GET, new HttpEntity<>(headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode()); // Forbidden
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode()); // Unauthorised
     }
 
     @Test
@@ -89,7 +89,16 @@ public class ReportIntegrationTests {
         String endpoint = "/api/admin/reports/reviews/1";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode()); // Forbidden
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode());  // Unauthorised
+    }
+
+    @Test
+    public void deleteNonExistentReviewReportNormalUser(){
+
+        String endpoint = "/api/admin/reports/reviews/15";
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode());  // Unauthorised
     }
 
     @Test
@@ -98,7 +107,16 @@ public class ReportIntegrationTests {
         String endpoint = "/api/admin/reports/comments/1";
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(403), response.getStatusCode()); // Forbidden
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode()); // Unauthorised
+    }
+
+    @Test
+    public void deleteNonExistentCommentReportNormalUser(){
+
+        String endpoint = "/api/admin/reports/comments/15";
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode()); // Unauthorised
     }
 
     @Test
@@ -140,8 +158,13 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        // TODO check if this returns the DTO
-
+        var returnedReport = JsonPath.parse(response.getBody());
+        assertEquals("admin", returnedReport.read("$.reportingUsername"));
+        assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
+        assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", returnedReport.read("$.reportedText"));
+        assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
+        assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+        assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
 
         endpoint = "/api/admin/reports";
         response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -164,8 +187,6 @@ public class ReportIntegrationTests {
         assertTrue(json.read("$._embedded.reports[3]._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
         assertTrue(json.read("$._embedded.reports[3]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
-
-
     }
 
     @Test
@@ -175,7 +196,15 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-        // TODO check if this returns the DTO
+
+        var returnedReport = JsonPath.parse(response.getBody());
+        assertEquals("rdeckard", returnedReport.read("$.reportingUsername"));
+        assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
+        assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", returnedReport.read("$.reportedText"));
+        assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
+        assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+        assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+
 
 
         //check if it got added
@@ -205,6 +234,46 @@ public class ReportIntegrationTests {
 
 
     }
+
+
+    @Test
+    public void addReviewReportAdminBadCourse() {
+        adminLogin();
+        String endpoint = "/api/courses/10/reviews/rdeckard/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+    @Test
+    public void addReviewReportAdminBadReview() {
+        adminLogin();
+        String endpoint = "/api/courses/2/reviews/rdeckard/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+    @Test
+    public void addReviewReportUserBadCourse() {
+        String endpoint = "/api/courses/10/reviews/rdeckard/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+    @Test
+    public void addReviewReportUserBadReview() {
+        String endpoint = "/api/courses/2/reviews/rdeckard/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+    }
+
+
     @Test
     public void addCommentReportAdmin(){
         adminLogin();
@@ -224,7 +293,57 @@ public class ReportIntegrationTests {
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
     }
 
+    @Test
+    public void deleteReviewReportAdmin(){
+        adminLogin();
+        String endpoint = "/api/admin/reports/reviews/2";
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode()); // no content
 
+
+        endpoint = "/api/admin/reports";
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var json = JsonPath.parse(response.getBody());
+        List<String> reports = json.read("$._embedded.reports");
+        assertEquals(5, reports.size()); // was 6 at the beginning
+
+        assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
+        assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
+        assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertTrue(json.read("$._embedded.reports[0]._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
+        assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+        assertEquals("user_3", json.read("$._embedded.reports[2].reportingUsername"));
+        assertEquals("brak kultury", json.read("$._embedded.reports[2].reason"));
+        assertEquals("czyli co?", json.read("$._embedded.reports[2].reportedText"));
+
+        assertTrue(json.read("$._embedded.reports[2]._links.self.href").toString().endsWith("/api/admin/reports/comments/1"));
+        assertTrue(json.read("$._embedded.reports[2]._links.entity.href").toString().endsWith("/api/comments/2"));
+        assertTrue(json.read("$._embedded.reports[2]._links.review.href").toString().endsWith("/api/courses/3/reviews/rdeckard"));
+
+        //links
+        assertTrue(json.read("$._links.self.href").toString().endsWith(("/api/admin/reports")));
+    }
+    @Test
+    public void deleteReviewReportNonExistentAdmin() {
+        adminLogin();
+        String endpoint = "/api/admin/reports/reviews/5";
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode()); // no content
+    }
+
+
+    // Add comment report Admin/user
+    // Add comment report bad admin/user
+    // delete comment report admin
+    // delete non existent comment report admin
+    //
 
 
 }

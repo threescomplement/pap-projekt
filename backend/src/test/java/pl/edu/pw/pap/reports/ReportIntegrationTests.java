@@ -275,25 +275,6 @@ public class ReportIntegrationTests {
 
 
     @Test
-    public void addCommentReportAdmin(){
-        adminLogin();
-        String endpoint = "/api/comments/2/reports";
-        var request = new ReportRequest("zle mu patrzy z oczu");
-        var response = restTemplate.exchange(buildUrl(endpoint, port),
-                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-    }
-
-    @Test
-    public void addCommentReportNormalUser(){
-        String endpoint = "/api/comments/1/reports";
-        var request = new ReportRequest("zle mu patrzy z oczu");
-        var response = restTemplate.exchange(buildUrl(endpoint, port),
-                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
-    }
-
-    @Test
     public void deleteReviewReportAdmin(){
         adminLogin();
         String endpoint = "/api/admin/reports/reviews/2";
@@ -339,7 +320,100 @@ public class ReportIntegrationTests {
     }
 
 
-    // Add comment report Admin/user
+    @Test
+    public void addCommentReportAdmin(){
+        adminLogin();
+        String endpoint = "/api/comments/1/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        // check return after adding
+        var returnedReport = JsonPath.parse(response.getBody());
+        assertEquals("admin", returnedReport.read("$.reportingUsername"));
+        assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
+        assertEquals("rel", returnedReport.read("$.reportedText"));
+        assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
+        assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/comments/1"));
+        assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+
+
+        endpoint = "/api/admin/reports";
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var json = JsonPath.parse(response.getBody());
+        List<String> reports = json.read("$._embedded.reports");
+        assertEquals(7, reports.size());
+
+        // check if old is the same
+        assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
+        assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
+        assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+        // check if the new one is present
+        assertEquals("admin", json.read("$._embedded.reports[6].reportingUsername"));
+        assertEquals("zle mu patrzy z oczu", json.read("$._embedded.reports[6].reason"));
+        assertEquals("rel", json.read("$._embedded.reports[6].reportedText"));
+        assertTrue(json.read("$._embedded.reports[6]._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
+        assertTrue(json.read("$._embedded.reports[6]._links.entity.href").toString().endsWith("/api/comments/1"));
+        assertTrue(json.read("$._embedded.reports[6]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+
+    }
+
+    @Test
+    public void addCommentReportNormalUser(){
+        String endpoint = "/api/comments/1/reports";
+        var request = new ReportRequest("zle mu patrzy z oczu");
+        var response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        // check return after adding
+        var returnedReport = JsonPath.parse(response.getBody());
+        assertEquals("rdeckard", returnedReport.read("$.reportingUsername"));
+        assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
+        assertEquals("rel", returnedReport.read("$.reportedText"));
+        assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
+        assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/comments/1"));
+        assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+
+
+        adminLogin(); // log in as admin to check reports
+        endpoint = "/api/admin/reports";
+        response = restTemplate.exchange(buildUrl(endpoint, port),
+                HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+
+        var json = JsonPath.parse(response.getBody());
+        List<String> reports = json.read("$._embedded.reports");
+        assertEquals(7, reports.size());
+
+        // check if old is the same
+        assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
+        assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
+        assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
+        // check if the new one is present
+        assertEquals("rdeckard", json.read("$._embedded.reports[6].reportingUsername"));
+        assertEquals("zle mu patrzy z oczu", json.read("$._embedded.reports[6].reason"));
+        assertEquals("rel", json.read("$._embedded.reports[6].reportedText"));
+        assertTrue(json.read("$._embedded.reports[6]._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
+        assertTrue(json.read("$._embedded.reports[6]._links.entity.href").toString().endsWith("/api/comments/1"));
+        assertTrue(json.read("$._embedded.reports[6]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+
+        }
+
+
+
+
+
     // Add comment report bad admin/user
     // delete comment report admin
     // delete non existent comment report admin

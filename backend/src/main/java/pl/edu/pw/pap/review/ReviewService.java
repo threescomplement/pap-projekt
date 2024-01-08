@@ -1,5 +1,6 @@
 package pl.edu.pw.pap.review;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ public class ReviewService {
                 .toList();
     }
 
+    @Transactional
     public void deleteReview(Long courseId, String username, UserPrincipal userPrincipal) {
 
         log.debug("Asked for deletion of review by " + username + " of course " + courseId);
@@ -88,10 +90,11 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
-        reviewRepository.delete(review);
         // clear reports
-        reviewReportRepository.deleteAllByCourseIdAndAndReviewerUsername(
+        reviewReportRepository.removeByCourseIdAndReviewerUsername(
                 review.getCourse().getId(), review.getUser().getUsername());
+
+        reviewRepository.delete(review);
     }
 
     public ReviewDTO addReview(Long courseId, AddReviewRequest request, UserPrincipal userPrincipal) {

@@ -7,6 +7,6 @@ import java.util.Optional;
 
 @Repository
 public interface ReviewReportRepository extends JpaRepository<ReviewReport, Long> {
+    Long removeByCourseIdAndReviewerUsername(Long courseId, String reviewerUsername);
 
-    void deleteAllByCourseIdAndAndReviewerUsername(Long courseId, String reviewerUsername);
 }

@@ -36,15 +36,6 @@ public class User {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
-//    @JsonIgnore // Don't want to access reports outside ReportController
-//    @OneToMany(mappedBy = "reportingUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<ReviewReport> reviewReports = new HashSet<>();
-////
-//    @JsonIgnore // Don't want to access reports outside ReportController
-//    @OneToMany(mappedBy = "reportingUser", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<CommentReport> commentReports = new HashSet<>();
-
-
     public User(String username, String email, String password, String role, Boolean enabled) {
         this.username = username;
         this.email = email;
@@ -52,7 +43,6 @@ public class User {
         this.role = role;
         this.enabled = enabled;
     }
-
 
     protected User() {
 

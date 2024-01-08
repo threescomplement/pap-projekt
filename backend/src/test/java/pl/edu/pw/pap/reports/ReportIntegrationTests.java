@@ -543,7 +543,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void deleteReportsOfRemovedReview(){
+    public void deleteReportsOfRemovedReview() {
         adminLogin();
         String endpoint = "/api/courses/1/reviews/rbatty";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
@@ -562,7 +562,7 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void deleteReportsOfRemovedComment(){
+    public void deleteReportsOfRemovedComment() {
 
         adminLogin();
         String endpoint = "/api/comments/2";

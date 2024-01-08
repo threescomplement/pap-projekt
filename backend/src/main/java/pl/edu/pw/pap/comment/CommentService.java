@@ -1,5 +1,6 @@
 package pl.edu.pw.pap.comment;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,7 @@ public class CommentService {
                 .toList();
     }
 
+    @Transactional
     public void deleteComment(Long commentId, UserPrincipal principal) {
 
         var maybeComment = commentRepository.findById(commentId);
@@ -67,9 +69,9 @@ public class CommentService {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
-        commentRepository.delete(comment);
         //clear reports
-        commentReportRepository.deleteAllByCommentId(commentId);
+        commentReportRepository.removeByCommentId(commentId);
+        commentRepository.delete(comment);
 
     }
 

@@ -125,6 +125,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.GET, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode()); // Unauthorised
+        checkUnchangedData();
     }
 
     @Test
@@ -134,6 +135,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode());  // Unauthorised
+        checkUnchangedData();
     }
 
     @Test
@@ -143,6 +145,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode());  // Unauthorised
+        checkUnchangedData();
     }
 
     @Test
@@ -152,6 +155,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode()); // Unauthorised
+        checkUnchangedData();
     }
 
     @Test
@@ -161,6 +165,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode()); // Unauthorised
+        checkUnchangedData();
     }
 
     @Test
@@ -288,6 +293,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        checkUnchangedData();
     }
 
     @Test
@@ -298,6 +304,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        checkUnchangedData();
     }
     @Test
     public void addReviewReportUserBadCourse() {
@@ -306,6 +313,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        checkUnchangedData();
     }
 
     @Test
@@ -315,6 +323,7 @@ public class ReportIntegrationTests {
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.POST, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        checkUnchangedData();
     }
 
 
@@ -362,6 +371,7 @@ public class ReportIntegrationTests {
                 HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode()); // no content
 
+        checkUnchangedData();
     }
 
 

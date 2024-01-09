@@ -44,7 +44,6 @@ public class User {
         this.enabled = enabled;
     }
 
-
     protected User() {
 
     }
@@ -59,6 +58,7 @@ public class User {
         this.reviews.clear();
         this.comments.forEach(comment -> comment.setUser(null));
         this.comments.clear();
+
     }
 
     public void addReview(Review review) {
@@ -92,4 +92,5 @@ public class User {
                 ", enabled=" + enabled +
                 '}';
     }
+
 }

@@ -1,5 +1,6 @@
 package pl.edu.pw.pap.review;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
+import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.teacher.TeacherNotFoundException;
 import pl.edu.pw.pap.teacher.TeacherRepository;
@@ -27,7 +29,8 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    public final TeacherRepository teacherRepository;
+    private final TeacherRepository teacherRepository;
+    private final ReviewReportRepository reviewReportRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
@@ -60,6 +63,7 @@ public class ReviewService {
                 .toList();
     }
 
+    @Transactional
     public void deleteReview(Long courseId, String username, UserPrincipal userPrincipal) {
 
         log.debug("Asked for deletion of review by " + username + " of course " + courseId);
@@ -86,6 +90,9 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
+        // clear reports
+        reviewReportRepository.removeByCourseIdAndReviewerUsername(
+                review.getCourse().getId(), review.getUser().getUsername());
 
         reviewRepository.delete(review);
     }

@@ -32,6 +32,11 @@ public class Comment {
     private User user;
 
 
+//    @JsonIgnore // We don't want this to be visible to a regular user when getting a comment
+//    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<CommentReport> reports = new HashSet<>();
+
+
     public Comment(String text, Review review, User user) {
         this.text = text;
         this.edited = false;
@@ -42,6 +47,17 @@ public class Comment {
     protected Comment() {
     }
 
+    // the same operations as in the Comment - Report relation
+//    public void addReport(CommentReport report){
+//        reports.add(report);
+//        report.setReported(this);
+//    }
+//
+//    public void removeReport(CommentReport report){
+//        reports.remove(report);
+//        report.setReported(null);
+//    }
+
     @PreRemove
     public void preRemove() {
         if (this.user != null) {
@@ -50,6 +66,8 @@ public class Comment {
         if (this.review != null) {
             this.review.removeComment(this);
         }
+//        this.reports.forEach(report -> report.setReported(null));
+//        this.reports.clear();
     }
 
     @Override

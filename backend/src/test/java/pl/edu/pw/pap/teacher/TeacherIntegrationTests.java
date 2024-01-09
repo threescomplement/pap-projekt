@@ -16,12 +16,9 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.annotation.DirtiesContext;
 import pl.edu.pw.pap.PapApplication;
-import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
-import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.security.AuthService;
-import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.utils.DummyData;
 

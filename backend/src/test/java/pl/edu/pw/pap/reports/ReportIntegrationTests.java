@@ -578,8 +578,82 @@ public class ReportIntegrationTests {
 
         assertEquals(3, reviewReportRepository.count());
         assertEquals(0, commentReportRepository.count());
+    }
+
+    @Test
+    public void getSingleCommentReportAdmin(){
+        adminLogin();
+        String endpoint = "/api/admin/reports/comments/2";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+
+        assertEquals("user_3", json.read("$.reportingUsername"));
+        assertEquals("skill issue", json.read("$.reason"));
+        assertEquals("trudne serio", json.read("$.reportedText"));
+        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/2"));
+        assertTrue(json.read("$._links.entity.href").toString().endsWith("/api/comments/4"));
+        assertTrue(json.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        checkUnchangedData();
+    }
+    @Test
+    public void getSingleNonExistentCommentReportAdmin(){
+        adminLogin();
+        String endpoint = "/api/admin/reports/comments/20";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        checkUnchangedData();
+    }
+
+    @Test
+    public void getSingleCommentReportUser(){
+        String endpoint = "/api/admin/reports/comments/2";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode());
+        checkUnchangedData();
+    }
 
 
+    @Test
+    public void getSingleReviewReportAdmin(){
+        adminLogin();
+        String endpoint = "/api/admin/reports/reviews/1";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
+        var json = JsonPath.parse(response.getBody());
+
+
+        // review report stays the same
+        assertEquals("rdeckard", json.read("$.reportingUsername"));
+        assertEquals("obelgi w strone prowadzacego", json.read("$.reason"));
+        assertEquals("Zbyt duże wymagania do studentów", json.read("$.reportedText"));
+        assertTrue(json.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
+        assertTrue(json.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        assertTrue(json.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+        checkUnchangedData();
+    }
+
+    @Test
+    public void getSingleReviewReportUser() {
+        String endpoint = "/api/admin/reports/reviews/1";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode());
+    }
+    @Test
+    public void getSingleInvalidReviewReportUser() {
+        String endpoint = "/api/admin/reports/reviews/15";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(401), response.getStatusCode());
+    }
+
+
+    @Test
+    public void getSingleInvalidReviewReportAdmin(){
+        adminLogin();
+        String endpoint = "/api/admin/reports/reviews/15";
+        var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        assertEquals(HttpStatusCode.valueOf(404), response.getStatusCode());
+        checkUnchangedData();
     }
 
 

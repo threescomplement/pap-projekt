@@ -44,5 +44,6 @@ export default function ReportBox(props: ReportBoxProps) {
             {reasons.map(r => <option value={r}>{r}</option>)}
         </select>
         <button onClick={handleReport}>Zgłoś</button>
+        <button onClick={()=>setDisplayFull(false)}>Anuluj</button>
     </div>
 }

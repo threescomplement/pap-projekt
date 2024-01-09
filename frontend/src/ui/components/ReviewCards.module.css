@@ -37,3 +37,8 @@
     color: #aaa;
     background-color: #151515;
 }
+
+.readMoreLink:hover {
+    background-color: #66A1BF;
+    color: #272727;
+}

@@ -22,4 +22,9 @@
     background-color: #151515;
 }
 
+.writeReviewLink:hover {
+    background-color: #66A1BF;
+    color: #272727;
+}
+
 /* todo: space the lower button out */

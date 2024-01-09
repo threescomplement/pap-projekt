@@ -9,12 +9,17 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: #f8f9fa;
+    background-color: #252525;
     border-radius: 8px;
-    box-shadow: 1px 1px 5px rgba(0,0,0,.1);
     padding: 20px;
     margin-top: 20px;
     width: 50%;
+}
+
+.profileContainer button {
+    color: #fff;
+    margin: .3rem;
+    width: 10rem;
 }
 
 .userInfo {
@@ -24,16 +29,9 @@
     margin-bottom: 20px;
 }
 
-.logoutButton {
-    background-color: #007BFF;
-    border: none;
-    border-radius: 4px;
-    color: #fff;
-    padding: 10px 20px;
-    cursor: pointer;
-}
+
 
 .deleteAccountButton {
+    /* todo: remove important */
     background-color: rgba(255,8,0,0.85);
-    margin: 1em;
 }

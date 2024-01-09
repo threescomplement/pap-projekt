@@ -53,7 +53,7 @@
 
 ### Dostęp do panelu
 1. Zaloguj się na konto administratora (admin, password)
-2. Sprawdź czy na pasku pojawia się link Panel administratora i przejdź do panelu
+2. Sprawdź, czy na pasku pojawia się link Panel administratora i przejdź do panelu
 3. Wyloguj się
 4. Zaloguj się na konto zwykłego użytkownika (rdeckard, password)
 5. Upewnij się, że na pasku obok "Welcome rdeckard" nie pojawia się link do panelu administratora
@@ -109,7 +109,38 @@
 5. Upewnij się, że na stronie profilu wyświetla się zmieniony adres email
 
 
-TODO: obsługa zgłoszeń
+## Obsługa zgłoszeń
+
+### Odrzucenie niesłusznego zgłoszenia
+1. Zaloguj się jako zwykły użytkownik
+2. Wejdź w listę kursów
+3. Wejdź w opinie o kursie
+4. Zgłoś opinię
+5. Zgłoś jeden z komentarzy
+6. Wyloguj się
+7. Zaloguj się jako administrator
+8. Przejdź do panelu administratora
+9. W panelu powinny być widoczne oba zgłoszenia
+10. Upewnij się, że link prowadzi do strony właściwej opinii
+11. Dla obu zgłoszeń naciśnij przycisk do zatwierdzania treści
+12. Przejdź z powrotem do strony powiązanej opinii
+13. Zarówno opinia i wcześniej zgłoszony komentarz powinny być widoczne
+
+### Usunięcie zgłoszonych treści
+1. Zaloguj się jako zwykły użytkownik
+2. Wejdź w listę kursów
+3. Wejdź w opinie o kursie
+4. Zgłoś opinię
+5. Zgłoś jeden z komentarzy
+6. Wyloguj się
+7. Zaloguj się jako administrator
+8. Przejdź do panelu administratora
+9. W panelu powinny być widoczne oba zgłoszenia
+10. Upewnij się, że link prowadzi do strony właściwej opinii
+11. Usuń komentarz powiązany ze zgłoszeniem
+12. Przejdź z powrotem do strony powiązanej opinii, upewnij się, że komentarz nie jest już widoczny
+13. Przejdź do panelu administratora, usuń opinię powiązaną ze zgłoszeniem
+14. Przejdź do strony kursu, którego dotyczyła zgłaszana opinia, nie powinna już być widoczna
 
 ## Interakcja z kursami, lektorami i opiniami
 

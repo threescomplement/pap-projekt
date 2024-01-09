@@ -26,6 +26,8 @@ export default function UserManagementPanel() {
                 <th>Email</th>
                 <th>Role</th>
                 <th>Enabled</th>
+                <th>Delete</th>
+                <th>Edited?</th>
             </tr>
             </thead>
             <tbody>

@@ -1,0 +1,36 @@
+.reviewCard {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #f9f9f9;
+}
+
+.reviewCard:hover {
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.reviewCard div {
+    margin-bottom: 0.5rem;
+}
+
+.reviewCard .author {
+    font-weight: bold;
+}
+
+.reviewCard .rating {
+    color: #333;
+}
+
+.reviewCard .opinion {
+    font-size: 1em;
+    color: #333;
+}
+
+.reviewCard .link {
+    color: #4169E1;
+}
+
+.reviewCard .link:hover {
+    color: #6495ED;
+}

@@ -1,4 +1,4 @@
-button {
+button, input[type="submit"] {
     background-color: #151515;
     color: #aaa;
     padding: 0.5rem 1rem;
@@ -9,7 +9,8 @@ button {
     transition: background-color 0.3s;
 }
 
-button:hover {
+button:hover, input[type="submit"]:hover {
     background-color: #66A1BF;
     color: #272727;
+    cursor: pointer;
 }

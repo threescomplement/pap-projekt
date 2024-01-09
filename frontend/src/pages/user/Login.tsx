@@ -53,8 +53,10 @@ export default function Login() {
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
             <ErrorBox message={errorMessage}/>
+            <div className={styles.buttonContainer}>
             <input type="submit" value="Log In"/>
-            <Link to={"/user/forgot-password"}>Nie pamiętam hasła</Link>
+            <Link className={styles.forgotPasswordLink} to={"/user/forgot-password"}>Nie pamiętam hasła</Link>
+            </div>
         </form>
     </div>
 }

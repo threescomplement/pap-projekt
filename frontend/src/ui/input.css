@@ -1,5 +1,5 @@
 
-input[type="text"] {
+input[type="text"], input[type="password"] {
     color: #999;
     padding: .5rem;
     border: 1px solid #222;
@@ -14,7 +14,8 @@ input[type="text"] {
     outline: none
 }
 
-input[type="text"]:focus, input[type="text"]:hover {
+input[type="text"]:focus, input[type="text"]:hover,
+input[type="password"]:focus, input[type="password"]:hover {
     border-color: #aaa;
     caret-color: #aaa;
     color: #aaa;

@@ -40,9 +40,18 @@ async function deleteComment(commentId: string) {
     return response.ok;
 }
 
+async function editComment(commentId: string, request: CommentRequest) {
+    try {
+        await api.put(`/comments/${commentId}`, request)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 
 export const CommentService = {
     fetchCommentsByReview,
     postComment,
-    deleteComment
+    deleteComment,
+    editComment
 }

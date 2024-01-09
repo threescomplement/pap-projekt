@@ -62,7 +62,7 @@ public class CommentService {
         }
         var comment = maybeComment.get();
         var user = maybeUser.get();
-        if (!comment.getUser().getId().equals(user.getId()) && (!(user.getRole().equals("ROLE_ADMIN")))) {
+        if (!comment.getUser().getId().equals(user.getId()) && !user.isAdmin()) {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
@@ -90,7 +90,7 @@ public class CommentService {
     public CommentDTO addNewComment(Long courseId, String reviewUsername, AddCommentRequest request, UserPrincipal principal) {
         String text = request.text();
         User reviewUser = userRepository.findByUsername(reviewUsername).orElseThrow(
-                () -> new UserNotFoundException("No user found with username: " + principal.getUsername())
+                () -> new UserNotFoundException("No user found with username: " + principal.getUsername())  // TODO ?
         );
 
 
@@ -113,10 +113,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException("No comment with given ID: " + commentId + " found for edit"));
 
-        // the throw shouldn't ever happen but we need the role in UserPrincipal to avoid this check
-        User editingUser = userRepository.findByUsername(principal.getUsername())
-                .orElseThrow(() -> new UserNotFoundException("User asking for update doesn't exist"));
-        if (!comment.getUser().getId().equals(editingUser.getId())) {
+        if (!comment.getUser().getId().equals(principal.getUserId())) {
             throw (new ForbiddenException(("You are not permitted to edit that comment")));
         }
         comment.setText(request.text());

@@ -19,6 +19,8 @@ import {ReviewForm} from "./pages/review/ReviewForm";
 import {ThankYouPage} from "./pages/review/ThankYou";
 import ForgotPassword from "./pages/user/ForgotPassword";
 import ResetPassword from "./pages/user/ResetPassword";
+import {ReviewDeleted} from "./pages/review/ReviewDeleted";
+import ChangePassword from "./pages/user/ChangePassword";
 
 /**
  * Top level component for the entire application
@@ -50,6 +52,7 @@ export default function App() {
                                 <Route path="reviews/:authorUsername" element={<SingleReview/>}/>
                                 <Route path="writeReview" element={<ReviewForm/>}/>
                                 <Route path="thankyou" element={<ThankYouPage/>}/>
+                                <Route path="reviewDeleted" element={<ReviewDeleted/>}/>
                             </Route>
                         </Route>
                         <Route path="teachers">
@@ -63,6 +66,7 @@ export default function App() {
                             <Route path="verify/:token" element={<ConfirmEmail/>}/>
                             <Route path="forgot-password" element={<ForgotPassword/>}/>
                             <Route path="reset-password/:token" element={<ResetPassword/>}/>
+                            <Route path="change-password" element={<ChangePassword/>}/>
                         </Route>
                         <Route path="admin">
                             <Route index element={<AdminPanel />}/>

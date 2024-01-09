@@ -1,25 +1,28 @@
 import {Course} from "./Course";
-import {getDummyReviews, Link} from "./utils";
 import api from "./api";
+import {Link} from "./utils";
 
 
 export interface Review {
-    id: string;
     authorUsername: string;
     opinion: string;
+    easeRating: string
+    interestRating: string
+    engagementRating: string
     created: string
-    overallRating: string;
     _links: {
-        self: Link,
-        user: Link,
-        comments: Link,
+        self: Link
+        user: Link
+        comments: Link
         course: Link
-    };
+    }
 }
 
 export interface ReviewRequest {
     text: string,
-    rating: number
+    easeRating: number
+    interestRating: number
+    engagementRating: number
 }
 
 
@@ -30,28 +33,37 @@ async function fetchReviewsByCourse(course: Course): Promise<Review[]> {
         .catch(e => console.log(e));
 }
 
-async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review> {
-    return api.get((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + authorUsername))
-        .then(r => r.json());
+async function fetchReviewByCourseIdAndAuthor(courseId: string, authorUsername: string): Promise<Review | null> {
+    const response = await api.get(`/courses/${courseId}/reviews/${authorUsername}`)
+    // todo: better error handling
+    console.log(response)
+    if (response.status === 404) {
+        return null
+    }
+    return response.json()
 }
 
-async function postReview(request: ReviewRequest, courseId: string) {
-    api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews"), request)
+async function postReview(request: ReviewRequest, courseId: string): Promise<void> {
+    api.post(`/courses/${courseId}/reviews`, request)
         .catch(e => console.log(e));
 }
 
-async function fetchReviewsByTeacher(): Promise<Review[]> {
-    return getDummyReviews();
+async function deleteReview(courseId: string, username: string): Promise<boolean> {
+    const response = await api.delete(`/courses/${courseId}/reviews/${username}`);
+    console.log(response);
+    return response.ok;
 }
 
-async function fetchReviewsByUser(): Promise<Review[]> {
-    return getDummyReviews();
+async function editReview(request: ReviewRequest, courseId: string, authorUsername: string) {
+    const response = await api.put(`/courses/${courseId}/reviews/${authorUsername}`, request);
+    console.log(response);
+    return response.ok;
 }
 
 export const ReviewService = {
     fetchReviewsByCourse,
     fetchReviewByCourseIdAndAuthor,
     postReview,
-    fetchReviewsByTeacher,
-    fetchReviewsByUser
+    deleteReview,
+    editReview
 }

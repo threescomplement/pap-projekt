@@ -9,10 +9,10 @@ export interface ReviewComment {
     authorUsername: string,
     created: string
     _links: {
-        self: Link,
-        review: Link,
+        self: Link
+        review: Link
         user: Link
-    };
+    }
 }
 
 export interface CommentRequest {
@@ -28,13 +28,30 @@ async function fetchCommentsByReview(review: Review): Promise<ReviewComment[]> {
 
 async function postComment(request: CommentRequest, courseId: string, reviewAuthor: string) {
     try {
-        await api.post((process.env.REACT_APP_API_ROOT + "/courses/" + courseId + "/reviews/" + reviewAuthor + "/comments"), request)
+        await api.post(`/courses/${courseId}/reviews/${reviewAuthor}/comments`, request)
     } catch (e) {
         console.log(e)
     }
 }
 
+async function deleteComment(commentId: string) {
+    const response = await api.delete(`/comments/${commentId}`);
+    console.log(response);
+    return response.ok;
+}
+
+async function editComment(commentId: string, request: CommentRequest) {
+    try {
+        await api.put(`/comments/${commentId}`, request)
+    } catch (e) {
+        console.log(e)
+    }
+}
+
+
 export const CommentService = {
     fetchCommentsByReview,
-    postComment
+    postComment,
+    deleteComment,
+    editComment
 }

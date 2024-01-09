@@ -1,7 +1,11 @@
 import {decodeToken} from "react-jwt";
 
 import api from "./api";
+import {Link} from "./utils";
 
+/**
+ * The user logged in on the website
+ */
 export interface User {
     id: number,
     username: string,
@@ -9,6 +13,23 @@ export interface User {
     password: string,
     token: string,
     roles: string[],
+}
+
+/**
+ * Represents user of the application for admin management functionality
+ * TODO: these should not be separate classes
+ */
+export interface AppUser {
+    id: number,
+    username: string,
+    email: string,
+    role: string,
+    enabled: boolean
+    _links: {
+        self: Link,
+        comments: Link,
+        reviews: Link,
+    }
 }
 
 interface AccessToken {
@@ -28,6 +49,11 @@ export interface RegisterRequest {
     username: string,
     email: string,
     password: string,
+}
+
+export interface ChangePasswordRequest {
+    oldPassword: string
+    newPassword: string
 }
 
 const USER_STORAGE_HANDLE = "user";
@@ -103,6 +129,27 @@ async function resetPassword(newPassword: string, resetPasswordToken: string): P
 
 }
 
+async function changePassword(oldPassword: string, newPassword: string): Promise<boolean> {
+    const response = await api.post("/users/change-password", {oldPassword: oldPassword, newPassword: newPassword});
+    return response.ok;
+}
+
+async function getAllUsers(): Promise<AppUser[]> {
+    const response = await api.get("/users");
+    const json = await response.json();
+    return json._embedded.users;
+}
+
+async function updateUser(user: AppUser): Promise<AppUser> {
+    const response = await api.put(`/users/${user.username}`, user);
+    return response.json();
+}
+
+async function deleteUser(user: AppUser | User): Promise<boolean> {
+    const response = await api.delete(`/users/${user.username}`);
+    return response.ok;
+}
+
 const UserService = {
     storeUser,
     getStoredUser,
@@ -110,7 +157,11 @@ const UserService = {
     attemptRegister,
     verifyEmail,
     sendResetPasswordEmail,
-    resetPassword
+    resetPassword,
+    changePassword,
+    getAllUsers,
+    updateUser,
+    deleteUser
 }
 
 export default UserService;

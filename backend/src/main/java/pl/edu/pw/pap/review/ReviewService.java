@@ -3,20 +3,22 @@ package pl.edu.pw.pap.review;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
-import pl.edu.pw.pap.course.CourseNotFoundException;
 import pl.edu.pw.pap.course.CourseRepository;
+import pl.edu.pw.pap.course.CourseNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
+import pl.edu.pw.pap.teacher.TeacherNotFoundException;
+import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
-import pl.edu.pw.pap.user.UserNotFoundException;
 import pl.edu.pw.pap.user.UserRepository;
+import pl.edu.pw.pap.user.UserNotFoundException;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,16 +27,19 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
-    private final CommentRepository commentRepository;
+    public final TeacherRepository teacherRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
         return ReviewDTO.builder()
                 .authorUsername(review.getUser().getUsername())
                 .opinion(review.getOpinion())
-                .overallRating(review.getOverallRating())
+                .easeRating(review.getEaseRating())
+                .interestRating(review.getInterestRating())
+                .engagementRating(review.getEngagementRating())
                 .created(review.getCreated())
                 .courseId(review.getCourse().getId())
+                .edited(review.getEdited())
                 .build();
     }
 
@@ -69,8 +74,7 @@ public class ReviewService {
 
         log.debug("Found user of review being deleted");
         User user = maybeUser.get();
-        if (!user.getId().equals(userPrincipal.getUserId())
-                && !userPrincipal.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+        if (!user.getId().equals(userPrincipal.getUserId()) && !userPrincipal.isAdmin()) {
             // not author and not admin, results in 403 forbidden
             throw (new ForbiddenException("You are not permitted to delete this review"));
         }
@@ -98,8 +102,40 @@ public class ReviewService {
             throw (new DuplicateReviewException("Cannot add more than one review to a course"));
         }
         return convertToDTO(
-                reviewRepository.save(new Review(addingUser, course, request.text(), request.rating()))
+                reviewRepository.save(new Review(addingUser, course, request.text(), request.easeRating(), request.interestRating(), request.engagementRating()))
         );
     }
 
+    public List<ReviewDTO> getTeacherReviews(Long teacherId) {
+        var teacher = teacherRepository.findById(teacherId)
+                .orElseThrow(() -> new TeacherNotFoundException("No teacher with id: " + teacherId));
+
+        return teacher.getCourses().stream()
+                .map(Course::getReviews)
+                .flatMap(Collection::stream)
+                .map(this::convertToDTO)
+                .toList();
+    }
+
+    public ReviewDTO editReview(Long courseId, String username, EditReviewRequest request, UserPrincipal userPrincipal) {
+        User reviewerUser = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("No user (reviewer) with username: " + username));
+
+        // this is better to throw before the author check to not imply that a review exists if just the users dont match
+        Review review = reviewRepository.findById(new ReviewKey(reviewerUser.getId(), courseId))
+                .orElseThrow(() -> new ReviewNotFoundException("No review of course" + courseId + " by " + username));
+
+        if (!reviewerUser.getId().equals(userPrincipal.getUserId())) {
+            // review exists but caller is not author, results in 403 forbidden
+            throw (new ForbiddenException("You are not permitted to edit this review"));
+        }
+
+        review.setOpinion(request.text());
+        review.setEaseRating(request.easeRating());
+        review.setInterestRating(request.interestRating());
+        review.setEngagementRating(request.engagementRating());
+        review.setEdited(true);
+        return convertToDTO(reviewRepository.save(review));
+
+    }
 }

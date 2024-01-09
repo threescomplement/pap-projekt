@@ -1,4 +1,5 @@
 import api from "./api";
+import {Link} from "./utils";
 
 export interface Course {
     id: string,
@@ -6,10 +7,17 @@ export interface Course {
     language: string,
     type: string,
     level: string,
-    module: string | null, //TODO: make api return teacher id
-    averageRating: string,
+    module: string | null,
+    averageEaseRating: string,
+    averageInterestRating: string,
+    averageEngagementRating: string,
     teacherId: string,
-    _links: any
+    _links: {
+        self: Link
+        teacher: Link
+        all: Link
+        reviews: Link
+    }
 }
 
 export interface CourseFilters {

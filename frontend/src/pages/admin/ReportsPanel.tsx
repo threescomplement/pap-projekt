@@ -1,8 +1,8 @@
 import ReportService, {Report} from "../../lib/Reports";
-import {FiAlertCircle, FiCheck} from "react-icons/fi";
 import {useEffect, useState} from "react";
 import ErrorBox from "../../components/ErrorBox";
 import {Link} from "react-router-dom";
+import {ConfirmationPopup} from "../../components/ConfirmationPopup";
 
 // TODO styling
 export default function ReportsPanel() {
@@ -72,6 +72,9 @@ export interface ReportCardProps {
 }
 
 export function ReportCard(props: ReportCardProps) {
+    const [showOkConfirmation, setShowOkConfirmation] = useState(false);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
     //TODO refactor this, include the params in the DTO instead of relying on links being the same
     function extractLink(report: Report): string {
         const baseLink = report._links.review.href;
@@ -86,7 +89,19 @@ export function ReportCard(props: ReportCardProps) {
         <p>Powód zgłoszenia: {props.report.reason}</p>
         <h3>Treść</h3>
         <p>{props.report.reportedText}</p>
-        <button onClick={() => props.handleContentOk(props.report)}><FiCheck/></button>
-        <button onClick={() => props.handleDeleteContent(props.report)}><FiAlertCircle/></button>
+        {showOkConfirmation
+            ? <ConfirmationPopup
+                query={"Czy na pewno chcesz usunąć zgłoszenie?"}
+                handleConfirmation={() => props.handleContentOk(props.report)}
+                setVisibility={setShowOkConfirmation}/>
+            : <button onClick={() => setShowOkConfirmation(true)}>Content is ok</button>
+        }
+        {showDeleteConfirmation
+            ? <ConfirmationPopup
+                query={"Czy na pewno chcesz usunąć zgłoszoną treść?"}
+                handleConfirmation={() => props.handleDeleteContent(props.report)}
+                setVisibility={setShowDeleteConfirmation}/>
+            : <button onClick={() => setShowDeleteConfirmation(true)}>Delete reported content</button>
+        }
     </div>
 }

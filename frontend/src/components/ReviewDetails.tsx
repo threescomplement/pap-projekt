@@ -2,7 +2,6 @@ import {Review} from "../lib/Review";
 import React, {useEffect, useState, useCallback} from "react";
 import {CommentRequest, CommentService, ReviewComment} from "../lib/ReviewComment";
 import {ReviewCardWithoutLink} from "./ReviewCards";
-import "./ReviewDetails.css"
 import {useParams, useNavigate} from "react-router-dom";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";

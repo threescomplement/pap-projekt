@@ -281,10 +281,7 @@ public class ReviewIntegrationTests {
         var oldDate = json.read("$.created");
 
 
-
-
-
-        var request = new EditReviewRequest("sysy knyszy crazyfrog",5, 6, 7 );
+        var request = new EditReviewRequest("sysy knyszy crazyfrog", 5, 6, 7);
         var response = restTemplate.exchange(buildUrl(endpoint, port),
                 HttpMethod.PUT, new HttpEntity<>(request, headers), String.class);
         assertEquals(HttpStatusCode.valueOf(200), response.getStatusCode());
@@ -321,7 +318,6 @@ public class ReviewIntegrationTests {
         assertTrue(reviewJson.read("$._links.comments.href").toString().endsWith("/api/courses/1/reviews/rdeckard/comments"));
         assertTrue(reviewJson.read("$._links.course.href").toString().endsWith("/api/courses/1"));
         assertEquals(oldDate, returnedReview.read("created"));
-
 
 
     }
@@ -380,7 +376,6 @@ public class ReviewIntegrationTests {
         assertEquals(3, (int) reviewJson.read("easeRating"));
         assertEquals(4, (int) reviewJson.read("interestRating"));
         assertEquals(5, (int) reviewJson.read("engagementRating"));
-
 
 
         // check links

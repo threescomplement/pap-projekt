@@ -42,6 +42,8 @@ public class Review {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
+    //TODO: Keep a set of reports for a given review
+
     public Review(User user, Course course, String opinion, int easeRating, int interestingnessRating, int engagementRating) {
         this.opinion = opinion;
         this.easeRating = easeRating;

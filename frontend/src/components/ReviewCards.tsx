@@ -6,6 +6,7 @@ import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
 import {ratingToPercentage} from "../lib/utils";
+import ReportBox from "./ReportBox";
 
 interface ReviewCardProps {
     review: Review;
@@ -44,7 +45,11 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     }
 
     return <>
-        <div>{review.authorUsername} {modificationContent}</div>
+        <div>
+            <p>{review.authorUsername}</p>
+            {modificationContent}
+            <ReportBox reportedEntity={review}/>
+        </div>
         <div>
             <p>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>
             <p>Jak interesujący: {ratingToPercentage(review.interestRating)}</p>

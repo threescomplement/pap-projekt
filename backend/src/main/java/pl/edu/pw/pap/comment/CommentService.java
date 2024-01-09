@@ -1,10 +1,11 @@
 package pl.edu.pw.pap.comment;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewRepository;
@@ -24,6 +25,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private final CommentReportRepository commentReportRepository;
 
     public CommentDTO convertToDto(Comment comment) {
         return CommentDTO.builder()
@@ -49,6 +51,7 @@ public class CommentService {
                 .toList();
     }
 
+    @Transactional
     public void deleteComment(Long commentId, UserPrincipal principal) {
 
         var maybeComment = commentRepository.findById(commentId);
@@ -66,7 +69,10 @@ public class CommentService {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
+        //clear reports TODO: model relation to do this with cascades
+        commentReportRepository.removeByCommentId(commentId);
         commentRepository.delete(comment);
+
     }
 
     public Optional<CommentDTO> findCommentById(Long commentId) {

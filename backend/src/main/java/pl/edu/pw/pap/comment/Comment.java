@@ -30,7 +30,7 @@ public class Comment {
     @JsonIgnore
     @ManyToOne
     private User user;
-
+    // TODO model relation with CommentReport to keep reports here
 
     public Comment(String text, Review review, User user) {
         this.text = text;
@@ -50,6 +50,8 @@ public class Comment {
         if (this.review != null) {
             this.review.removeComment(this);
         }
+//        this.reports.forEach(report -> report.setReported(null));
+//        this.reports.clear();
     }
 
     @Override

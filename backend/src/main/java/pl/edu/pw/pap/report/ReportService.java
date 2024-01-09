@@ -6,12 +6,14 @@ import pl.edu.pw.pap.comment.CommentController;
 import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.report.CommentReport;
+import pl.edu.pw.pap.comment.report.CommentReportNotFoundException;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewNotFoundException;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.review.report.ReviewReport;
+import pl.edu.pw.pap.review.report.ReviewReportNotFoundException;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.UserNotFoundException;
@@ -94,11 +96,15 @@ public class ReportService {
     }
 
     public ReportDTO getReviewReport(Long reviewReportId){
-        return null;
+        var reviewReport = reviewReportRepository.findById(reviewReportId)
+                .orElseThrow(() -> new ReviewReportNotFoundException("No review report with id " + reviewReportId));
+        return convertReviewReportToDto(reviewReport);
     }
 
     public ReportDTO getCommentReport(Long commentReportId){
-        return null;
+        var commentReport = commentReportRepository.findById(commentReportId)
+                .orElseThrow(() -> new CommentReportNotFoundException("No report with id:" + commentReportId));
+        return convertCommentReportToDto(commentReport);
     }
 
     public ReportDTO reportReview(Long courseId, String reviewerUsername, ReportRequest reportRequest,  UserPrincipal userPrincipal){

@@ -11,9 +11,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.comment.ForbiddenException;
-import pl.edu.pw.pap.comment.UnauthorizedException;
+import pl.edu.pw.pap.comment.report.CommentReportNotFoundException;
 import pl.edu.pw.pap.review.DuplicateReviewException;
 import pl.edu.pw.pap.review.ReviewNotFoundException;
+import pl.edu.pw.pap.review.report.ReviewReportNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.teacher.TeacherNotFoundException;
 import pl.edu.pw.pap.user.UserNotFoundException;
@@ -75,16 +76,22 @@ public class ReportController {
 
     @GetMapping("/api/admin/reports/comments/{commentReportId}")
     public ReportDTO getCommentReport(@PathVariable Long commentReportId) {
-        return null;
+        return reportService.getCommentReport(commentReportId);
     }
 
     @GetMapping("/api/admin/reports/reviews/{reviewReportId}")
     public ReportDTO getReviewReport(@PathVariable Long reviewReportId) {
-        return null;
+        return reportService.getReviewReport(reviewReportId);
     }
 
 
-    @ExceptionHandler({CommentNotFoundException.class, UserNotFoundException.class, ReviewNotFoundException.class, TeacherNotFoundException.class})
+    @ExceptionHandler({CommentNotFoundException.class,
+            UserNotFoundException.class,
+            ReviewNotFoundException.class,
+            TeacherNotFoundException.class,
+            CommentReportNotFoundException.class,
+            ReviewReportNotFoundException.class
+    })
     public ResponseEntity<Exception> handleEntityNotFound(Exception e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
     }

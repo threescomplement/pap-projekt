@@ -1,0 +1,23 @@
+@import "../../ui/index.css";
+
+/*todo!*/
+.singleCourseContainer {
+    composes: container from "../../ui/index.css";
+}
+
+
+.courseInfoContainer {
+    display: flex;
+    margin: 2rem 0;
+    gap: 3rem;
+}
+
+
+.courseInfo h2, p {
+    padding-bottom: .5rem;
+}
+
+.writeReviewLink {
+    padding: .8rem;
+    background-color: #151515;
+}

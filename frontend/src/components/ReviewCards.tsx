@@ -6,6 +6,7 @@ import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
 import {ratingToPercentage} from "../lib/utils";
+import styles from "../ui/components/ReviewCards.module.css";
 
 interface ReviewCardProps {
     review: Review;
@@ -13,7 +14,7 @@ interface ReviewCardProps {
 }
 
 export function ReviewCardWithLink(props: ReviewCardProps) {
-    return <div>
+    return <div className={styles.reviewCardContainer}>
         <ReviewCardWithoutLink {...props}/>
         <Link to={`reviews/${props.review.authorUsername}`}> Czytaj więcej </Link>
     </div>
@@ -30,7 +31,7 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
         <EditBar
             handleDelete={(e) => handleDeleteReview(e)}
             deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}
-            handleEdit={(_)=> navigate(`/courses/${courseId}/writeReview`)}
+            handleEdit={(_) => navigate(`/courses/${courseId}/writeReview`)}
             canEdit={isReviewAuthor}
         /> : null;
 
@@ -43,15 +44,18 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
             })
     }
 
-    return <>
-        <div>{review.authorUsername} {modificationContent}</div>
-        <div>
-            <p>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>
-            <p>Jak interesujący: {ratingToPercentage(review.interestRating)}</p>
-            <p>Jak angażujący: {ratingToPercentage(review.engagementRating)}</p>
+    return <div className={styles.reviewCardContainer}>
+        <div className={styles.reviewCardHeader}>
+        <div className={styles.reviewCardAuthor}>{review.authorUsername} </div>
+        <div>{modificationContent}</div>
         </div>
-        <div>{review.opinion}</div>
+        <div className={styles.ratingsContainer}>
+            <p className={styles.rating}>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>
+            <p className={styles.rating}>Jak interesujący: {ratingToPercentage(review.interestRating)}</p>
+            <p className={styles.rating}>Jak angażujący: {ratingToPercentage(review.engagementRating)}</p>
+        </div>
+        <div className={styles.opinion}>{review.opinion}</div>
         <ErrorBox message={errorMessage}/>
-    </>
+    </div>
 }
 

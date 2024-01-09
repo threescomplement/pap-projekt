@@ -1,0 +1,33 @@
+
+.reviewCardContainer {
+    background-color: #272727;
+    color: #fff;
+    padding: .8rem .8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+.reviewCardHeader {
+    display: flex;
+    /*background-color: #444;*/
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reviewCardAuthor {
+    font-weight: bold;
+}
+
+.ratingsContainer {
+    display: flex;
+    margin-bottom: 0.5rem;
+}
+
+.rating {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.opinion {
+    margin-top: 1rem;
+}

@@ -1,6 +1,7 @@
 @import "./select.css";
 @import "./table.css";
 @import "./textInput.css";
+@import "./button.css";
 
 body {
     margin: 0;

@@ -4,6 +4,7 @@ import React, {useEffect, useState} from "react";
 import CourseDetails from "../../components/CourseDetails";
 import {ReviewService} from "../../lib/Review";
 import useUser from "../../hooks/useUser";
+import styles from "./SingleCourse.module.css"
 
 export default function SingleCourse() {
     const username = useUser().user!.username
@@ -35,8 +36,8 @@ export default function SingleCourse() {
         </div>
     }
 
-    return <div>
+    return <div className={styles.singleCourseContainer}>
         <CourseDetails {...course}/>
-        <Link to="writeReview">{userHasReview ? "Edytuj swoją opinię" : "Napisz opinię"}</Link>
+        <Link className={styles.writeReviewLink} to="writeReview">{userHasReview ? "Edytuj swoją opinię" : "Napisz opinię"}</Link>
     </div>
 }

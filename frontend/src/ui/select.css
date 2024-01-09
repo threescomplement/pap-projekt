@@ -8,10 +8,13 @@ select {
     background-color: #222;
     margin-top: .5rem;
     margin-bottom: .5rem;
-    width: 70%;
     box-sizing: border-box;
     transition: border-color 0.3s, color 0.3s, background-color 0.3s, transform 0.3s; /* Add transform to the transition */
     outline: none;
+    display: block;
+    width: 90%;
+    height: 2.75rem;
+    background-clip: padding-box;
 }
 
 

@@ -27,7 +27,7 @@ export function Teachers() {
 
 
     return <div className={styles.teachersContainer}>
-        <h1>Lektorzy</h1>
+        <h1 className={styles.teachersHeader}>Lektorzy</h1>
         <input type="text" placeholder="Szukaj po nazwisku" onChange={e => setQuery(e.target.value)}/>
         <Filter name="Nauczany język"
                 options={languages}
@@ -42,7 +42,7 @@ interface TeacherListProps {
 }
 
 export default function TeacherList({teachers}: TeacherListProps) {
-    return <table className={styles.teacherList}>
+    return <table>
         <tbody>
         <tr id="headers">
             <th>Nazwisko</th>
@@ -66,16 +66,16 @@ export function TeacherRow({teacher}: TeacherProps) {
         <td>
             <Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link>
         </td>
-        <td className="numTableEntry">
+        <td>
             {ratingToPercentage(teacher.averageEaseRating)}
         </td>
-        <td className="numTableEntry">
+        <td>
             {ratingToPercentage(teacher.averageInterestRating)}
         </td>
-        <td className="numTableEntry">
+        <td>
             {ratingToPercentage(teacher.averageEngagementRating)}
         </td>
-        <td className="numTableEntry">
+        <td>
             {NUM_REVIEWS_PLACEHOLDER}
         </td>
     </tr>

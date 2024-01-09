@@ -16,7 +16,7 @@ interface ReviewCardProps {
 export function ReviewCardWithLink(props: ReviewCardProps) {
     return <div className={styles.reviewCardContainer}>
         <ReviewCardWithoutLink {...props}/>
-        <Link to={`reviews/${props.review.authorUsername}`}> Czytaj więcej </Link>
+        <Link to={`reviews/${props.review.authorUsername}`} className={styles.readMoreLink}> Czytaj więcej </Link>
     </div>
 }
 

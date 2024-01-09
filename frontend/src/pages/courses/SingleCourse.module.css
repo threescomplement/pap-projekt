@@ -1,6 +1,5 @@
 @import "../../ui/index.css";
 
-/*todo!*/
 .singleCourseContainer {
     composes: container from "../../ui/index.css";
 }
@@ -20,4 +19,7 @@
 .writeReviewLink {
     padding: .8rem;
     background-color: #151515;
+    margin-top: 8rem;
 }
+
+/* todo: space the lower button out */

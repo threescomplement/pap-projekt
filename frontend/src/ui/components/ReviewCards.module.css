@@ -31,3 +31,8 @@
 .opinion {
     margin-top: 1rem;
 }
+
+.readMoreLink {
+    padding: .8rem;
+    background-color: #151515;
+}

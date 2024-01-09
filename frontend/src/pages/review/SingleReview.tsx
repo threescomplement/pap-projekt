@@ -8,7 +8,6 @@ import {User} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {EditBar} from "../../components/EditBar";
 import ErrorBox from "../../components/ErrorBox";
-import "./SingleReview.css"
 
 export function SingleReview() {
     const {courseId, authorUsername} = useParams();

@@ -41,7 +41,8 @@ export default function SingleCourse() {
 
     return <div className={styles.singleCourseContainer}>
         <CourseDetails {...course}/>
-        <Link className={styles.writeReviewLink} to="writeReview">{userHasReview ? "Edytuj swoją opinię" : "Napisz opinię"}</Link>
+        <Link className={styles.writeReviewLink}
+              to="writeReview">{userHasReview ? "Edytuj swoją opinię" : "Napisz opinię"}</Link>
     </div>
 }
 
@@ -74,7 +75,6 @@ function CourseDetails(course: Course) {
             .catch(e => console.log(e));
 
         memorizedReloadReviews();
-
     }, [course, memorizedReloadReviews]);
 
     const teacherContent = (teacher != null && teacherLoaded)
@@ -86,27 +86,34 @@ function CourseDetails(course: Course) {
         : <p className="CourseInfo">Ten kurs nie jest przypisany do żadnego modułu</p>
 
 
+
     const reviewContent = reviews.length === 0
         ? <div>Ten kurs nie ma jeszcze opinii</div>
         : <div>{<ReviewList reviews={reviews} refreshParent={afterReviewDelete}/>}</div>
 
-    return <>
-        <h1>{course.name}</h1>
-        <p className="TeacherHeader">Lektor: {teacherContent}</p>
-        <h2>Informacje o kursie:</h2>
-        {moduleContent}
-        <p className="CourseInfo">Poziom: {course.level}</p>
-        <p className="CourseInfo">Typ kursu: {course.type}</p>
-        <h2>Uśrednione opinie</h2>
-        <div>
-            <p>Jak łatwy? {ratingToPercentage(course.averageEaseRating)}</p>
-            <p>Jak interesujący? {ratingToPercentage(course.averageInterestRating)}</p>
-            <p>Jak angażujący? {ratingToPercentage(course.averageEngagementRating)}</p>
+
+
+    return <div>
+            <h1>{course.name}</h1>
+            <p>Lektor: {teacherContent}</p>
+            <div className={styles.courseInfoContainer}>
+                <div className={styles.courseInfo}>
+                    <h2>Informacje o kursie:</h2>
+                    {moduleContent}
+                    <p>Poziom: {course.level}</p>
+                    <p>Typ kursu: {course.type}</p>
+                </div>
+                <div className={styles.courseInfo}>
+                    <h2>Uśrednione opinie</h2>
+                    <p>Jak łatwy? {ratingToPercentage(course.averageEaseRating)}</p>
+                    <p>Jak interesujący? {ratingToPercentage(course.averageInterestRating)}</p>
+                    <p>Jak angażujący? {ratingToPercentage(course.averageEngagementRating)}</p>
+                </div>
+            </div>
+            <h2>Opinie</h2>
+            <MessageBox message={message}/>
+            {reviewContent}
         </div>
-        <h2 className="OpinionsSection">Opinie</h2>
-        <MessageBox message={message}/>
-        {reviewContent}
-    </>
 }
 
 

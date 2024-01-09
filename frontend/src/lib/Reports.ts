@@ -4,12 +4,13 @@ import {Review} from "./Review";
 import {ReviewComment} from "./ReviewComment";
 
 export interface Report {
-    reportedText: string,
-    reportingUsername: string,
-    reason: string,
+    reportedText: string
+    reportingUsername: string
+    reason: string
     _links: {
-        self: Link,
-        entity: Link,
+        self: Link
+        entity: Link
+        review: Link
     }
 }
 

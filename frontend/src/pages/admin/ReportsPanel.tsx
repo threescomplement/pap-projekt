@@ -2,6 +2,7 @@ import ReportService, {Report} from "../../lib/Reports";
 import {FiAlertCircle, FiCheck} from "react-icons/fi";
 import {useEffect, useState} from "react";
 import ErrorBox from "../../components/ErrorBox";
+import {Link} from "react-router-dom";
 
 // TODO styling
 export default function ReportsPanel() {
@@ -71,8 +72,17 @@ export interface ReportCardProps {
 }
 
 export function ReportCard(props: ReportCardProps) {
+    //TODO refactor this, include the params in the DTO instead of relying on links being the same
+    function extractLink(report: Report): string {
+        const baseLink = report._links.review.href;
+        const idx = baseLink.indexOf("/api") + 4;
+        return baseLink.substring(idx);
+    }
+
     return <div>
-        <h3>Zgłoszone przez użytkownika {props.report.reportingUsername}</h3>
+        <Link to={extractLink(props.report)}>
+            <h3>Zgłoszone przez użytkownika {props.report.reportingUsername}</h3>
+        </Link>
         <p>Powód zgłoszenia: {props.report.reason}</p>
         <h3>Treść</h3>
         <p>{props.report.reportedText}</p>

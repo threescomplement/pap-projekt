@@ -1,0 +1,25 @@
+/* todo: make sure it works since these were ported from reviewdetails */
+
+.add-comment-container {
+    margin-top: 18px;
+}
+
+textarea {
+    width: 98%;
+    padding: 6px;
+    margin-bottom: 8px;
+    resize: vertical;
+}
+
+button {
+    background-color: #005bff;
+    color: #fff;
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+button:hover {
+    background-color: #0054b3;
+}

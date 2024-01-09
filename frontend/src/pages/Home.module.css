@@ -1,7 +1,7 @@
-@import "../index.css";
+@import "../ui/index.css";
 
 .homeContainer {
-    composes: container from '../index.css';
+    composes: container from '../ui/index.css';
     width: 80%;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }

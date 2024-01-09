@@ -32,7 +32,7 @@ export function Courses() {
     // TODO: allow multiple selections for filters
     return (
         <div className={styles.coursesContainer}>
-            <h1>Kursy</h1>
+            <h1 className={styles.coursesHeader}>Kursy</h1>
             <input type="text" placeholder="Szukaj po nazwie" onChange={e => setQuery(e.target.value)}/>
             <div className={styles.filterContainer}>
                 <Filter

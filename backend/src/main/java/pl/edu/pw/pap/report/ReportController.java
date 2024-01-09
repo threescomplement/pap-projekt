@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import pl.edu.pw.pap.comment.CommentNotFoundException;
 import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.comment.report.CommentReportNotFoundException;
-import pl.edu.pw.pap.review.DuplicateReviewException;
 import pl.edu.pw.pap.review.ReviewNotFoundException;
 import pl.edu.pw.pap.review.report.ReviewReportNotFoundException;
 import pl.edu.pw.pap.security.UserPrincipal;
@@ -96,15 +95,9 @@ public class ReportController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
     }
 
-
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<Exception> handleForbidden(Exception e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e);
-    }
-
-    @ExceptionHandler(DuplicateReviewException.class)
-    public ResponseEntity<Exception> handleDuplicateReview(Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e);
     }
 
 

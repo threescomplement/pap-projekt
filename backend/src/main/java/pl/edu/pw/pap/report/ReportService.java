@@ -36,7 +36,7 @@ public class ReportService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
 
-    public ReportDTO convertReviewReportToDto(ReviewReport report) {
+    public ReportDTO convertReportToDto(ReviewReport report) {
 
         var reportDTO = ReportDTO.builder()
                 .reportedText(report.getReportedText())
@@ -51,7 +51,7 @@ public class ReportService {
         );
     }
 
-    public ReportDTO convertCommentReportToDto(CommentReport report) {
+    public ReportDTO convertReportToDto(CommentReport report) {
 
         var reportDTO = ReportDTO.builder()
                 .reportedText(report.getReportedText())
@@ -71,11 +71,11 @@ public class ReportService {
         var commentReports = commentReportRepository.findAll();
         ArrayList<ReportDTO> allReports = new ArrayList<>(reviewReports
                 .stream()
-                .map(this::convertReviewReportToDto)
+                .map(this::convertReportToDto)
                 .toList());
         allReports.addAll(commentReports
                 .stream()
-                .map(this::convertCommentReportToDto)
+                .map(this::convertReportToDto)
                 .toList());
         return allReports.stream().toList();
     }
@@ -98,13 +98,13 @@ public class ReportService {
     public ReportDTO getReviewReport(Long reviewReportId){
         var reviewReport = reviewReportRepository.findById(reviewReportId)
                 .orElseThrow(() -> new ReviewReportNotFoundException("No review report with id " + reviewReportId));
-        return convertReviewReportToDto(reviewReport);
+        return convertReportToDto(reviewReport);
     }
 
     public ReportDTO getCommentReport(Long commentReportId){
         var commentReport = commentReportRepository.findById(commentReportId)
                 .orElseThrow(() -> new CommentReportNotFoundException("No report with id:" + commentReportId));
-        return convertCommentReportToDto(commentReport);
+        return convertReportToDto(commentReport);
     }
 
     public ReportDTO reportReview(Long courseId, String reviewerUsername, ReportRequest reportRequest,  UserPrincipal userPrincipal){
@@ -116,7 +116,7 @@ public class ReportService {
                 .orElseThrow(()-> new UserNotFoundException("User with username " + userPrincipal.getUsername() + " doesn't exist"));
         var report = reviewReportRepository.save(new ReviewReport(reportingUser, reportRequest.reportReason(), review));
 
-        return convertReviewReportToDto(report);
+        return convertReportToDto(report);
     }
 
     public ReportDTO reportComment(Long commentId, ReportRequest reportRequest, UserPrincipal userPrincipal){
@@ -128,7 +128,7 @@ public class ReportService {
 
         var report = commentReportRepository.save(new CommentReport(reportingUser, reportRequest.reportReason(), comment));
 
-        return convertCommentReportToDto(report);
+        return convertReportToDto(report);
     }
 
 

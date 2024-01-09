@@ -90,7 +90,7 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
-        // clear reports
+        // clear reports TODO: model relation to do this automatically with cascades
         reviewReportRepository.removeByCourseIdAndReviewerUsername(
                 review.getCourse().getId(), review.getUser().getUsername());
 

@@ -15,6 +15,8 @@ public class ReviewReport {
     @Id
     Long id;
 
+
+    // TODO: Model a proper relation between ReviewReport and Review
     Long courseId;
     String reviewerUsername;
     String reportedText;

@@ -69,7 +69,7 @@ public class CommentService {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
-        //clear reports
+        //clear reports TODO: model relation to do this with cascades
         commentReportRepository.removeByCommentId(commentId);
         commentRepository.delete(comment);
 

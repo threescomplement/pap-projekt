@@ -15,5 +15,4 @@ public class ReportDTO extends RepresentationModel<ReportDTO>{
     private String reportingUsername;
     private String reportedText;
     private String reason;
-    //data
 }

@@ -59,9 +59,7 @@ public class CommentIntegrationTest {
 
     @BeforeEach
     public void setupDatabase() {
-        System.out.println("deleting");
         data.deleteAll();
-        System.out.println("deleted all");
         data.addDummyData();
 
         var token = authService.attemptLogin(data.user_1.getUsername(), "password").getAccessToken();

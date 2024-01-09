@@ -1,7 +1,6 @@
 import ReportService, {Report} from "../../lib/Reports";
 import {FiAlertCircle, FiCheck} from "react-icons/fi";
 import {useEffect, useState} from "react";
-import {getDummyReports} from "../../lib/utils";
 import ErrorBox from "../../components/ErrorBox";
 
 // TODO styling
@@ -9,9 +8,11 @@ export default function ReportsPanel() {
     const [reports, setReports] = useState<Report[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
 
-    function loadReports() {
+    async function loadReports() {
         try {
-            setReports(getDummyReports());  // TODO
+            const reports = await ReportService.getAllReports();
+            setReports(reports);
+            setErrorMessage("");
         } catch (e) {
             setErrorMessage("Pobieranie nie powiodło się");
         }
@@ -21,7 +22,7 @@ export default function ReportsPanel() {
         try {
             const ok = await ReportService.deleteReport(report);
             if (ok) {
-                loadReports();
+                await loadReports();
                 setErrorMessage("");
             } else {
                 setErrorMessage("Nie udało się usunąć zgłoszenia");
@@ -36,7 +37,7 @@ export default function ReportsPanel() {
         try {
             const ok = await ReportService.deleteReportedEntity(report);
             if (ok) {
-                loadReports();
+                await loadReports();
                 setErrorMessage("");
             } else {
                 setErrorMessage("Nie udało się usunąć zgłoszonej treści");
@@ -48,7 +49,8 @@ export default function ReportsPanel() {
     }
 
     useEffect(() => {
-        loadReports();
+        loadReports()
+            .catch(e => console.error(e));
     })
 
     return <div>

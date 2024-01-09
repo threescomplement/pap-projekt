@@ -27,7 +27,7 @@ export const reasons = [
 
 // TODO make sure this works when the backend gets implemented
 async function getAllReports(): Promise<Report[]> {
-    const response = await api.get("/api/admin/reports");
+    const response = await api.get("/admin/reports");
     const json = await response.json();
     return json._embedded.reports;
 }

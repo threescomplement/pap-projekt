@@ -9,6 +9,7 @@ import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import MessageBox from "./MessageBox";
 import ErrorBox from "./ErrorBox";
+import ReportBox from "./ReportBox";
 
 interface ReviewDetailsProps {
     review: Review
@@ -100,7 +101,11 @@ function CommentCard({comment, afterDeleting, afterEditing}: CommentCardProps) {
         ? <CommentEditForm afterPosting={afterEditing} commentId={comment.id} setEditingForParent={setDuringEditing}
                            oldContent={comment.text}/>
         : <div>
-            <div>{comment.authorUsername} {modificationContent}</div>
+            <div>
+                <p>{comment.authorUsername}</p>
+                {modificationContent}
+                <ReportBox reportedEntity={comment}/>
+            </div>
             <div>{comment.text}</div>
             <ErrorBox message={errorMessage}/>
         </div>

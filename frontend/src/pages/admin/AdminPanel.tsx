@@ -1,6 +1,8 @@
 import {ChangeEvent, useState} from "react";
 import postImport, {ImporterRecord} from "./PostImport";
 import UserManagementPanel from "./UserManagementPanel";
+import "../../ui/index.css"
+import classes from "./AdminPanel.module.css"
 
 
 export default function AdminPanel() {
@@ -32,8 +34,8 @@ export default function AdminPanel() {
 
     }
 
-    return <>
-        <h1>Panel administratora</h1>
+    return <div className={"container" /*fixme?*/}>
+        <h1 className={classes.adminHeader}>Panel administratora</h1>
         <input type="file" onChange={(e) => handleSelectFile(e)}/>
         <p>{message}</p>
         <button onClick={() => handleClick(fileData)}>
@@ -41,5 +43,5 @@ export default function AdminPanel() {
         </button>
 
         <UserManagementPanel/>
-    </>;
+    </div>;
 }

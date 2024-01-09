@@ -1,5 +1,5 @@
 import React, {MouseEventHandler} from 'react';
-import styles from './ConfirmationPopup.module.css';
+import styles from '../ui/components/ConfirmationPopup.module.css';
 
 export interface ConfirmationPopupProps {
     query: string,

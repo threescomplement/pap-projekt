@@ -1,0 +1,5 @@
+@import "../courses/Courses.module.css";
+
+.adminHeader {
+    composes: coursesHeader from "../courses/Courses.module.css";
+}

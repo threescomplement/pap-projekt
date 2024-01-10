@@ -52,6 +52,7 @@
 
 .cardButtonContainer button {
     padding: .6rem .8rem;
+    height: fit-content;
 }
 
 .commentCardContainer {

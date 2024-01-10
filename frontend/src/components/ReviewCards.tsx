@@ -46,15 +46,10 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
             })
     }
 
-    function averageRating() {
-        return (parseFloat(review.easeRating) + parseFloat(review.interestRating) + parseFloat(review.engagementRating)) / 3
-    }
-
     return <div className={styles.cardContainer}>
         <div className={styles.cardHeader}>
             <div className={styles.usernameAndProgressContainer}>
             <p className={styles.cardAuthor}>{review.authorUsername} </p>
-            <RatingProgressBar value={averageRating()}/>
             </div>
             <div className={styles.cardButtonContainer}>{modificationContent}
                 <ReportBox reportedEntity={review}/></div>
@@ -62,15 +57,15 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
         <div className={styles.ratingsContainer}>
             <div>
                 <p className={styles.rating}>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>
-                {/*<RatingProgressBar value={parseFloat(review.easeRating)}/>*/}
+                <RatingProgressBar value={review.easeRating}/>
             </div>
             <div>
                 <p className={styles.rating}>Jak interesujący: {ratingToPercentage(review.interestRating)}</p>
-                {/*<RatingProgressBar value={parseFloat(review.interestRating)}/>*/}
+                <RatingProgressBar value={review.interestRating}/>
             </div>
             <div>
                 <p className={styles.rating}>Jak angażujący: {ratingToPercentage(review.engagementRating)}</p>
-                {/*<RatingProgressBar value={parseFloat(review.engagementRating)}/>*/}
+                <RatingProgressBar value={review.engagementRating}/>
             </div>
         </div>
         <div className={styles.opinion}>{review.opinion}</div>

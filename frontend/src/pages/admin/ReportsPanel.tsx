@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import ErrorBox from "../../components/ErrorBox";
 import {Link} from "react-router-dom";
 import {ConfirmationPopup} from "../../components/ConfirmationPopup";
+import styles from "../../ui/pages/AdminPanel.module.css"
 
 // TODO styling
 export default function ReportsPanel() {
@@ -57,8 +58,8 @@ export default function ReportsPanel() {
     return <div>
         <h2>Zgłoszenia</h2>
         <ErrorBox message={errorMessage}/>
-        <ul>
-            {reports.map(r => <li>
+        <ul className={styles.reportList}>
+            {reports.map(r => <li className={styles.reportCard}>
                 <ReportCard report={r} handleContentOk={handleContentOk} handleDeleteContent={handleDeleteContent}/>
             </li>)}
         </ul>
@@ -86,10 +87,10 @@ export function ReportCard(props: ReportCardProps) {
         <Link to={extractLink(props.report)}>
             <h3>Zgłoszone przez użytkownika {props.report.reportingUsername}</h3>
         </Link>
-        <p>Powód zgłoszenia: {props.report.reason}</p>
+        <p className={styles.reportReason}>Powód zgłoszenia: {props.report.reason}</p>
         <h3>Treść</h3>
         <p>{props.report.reportedText}</p>
-        {showOkConfirmation
+        <div className={styles.reportCardButtonContainer}>{showOkConfirmation
             ? <ConfirmationPopup
                 query={"Czy na pewno chcesz usunąć zgłoszenie?"}
                 handleConfirmation={() => props.handleContentOk(props.report)}
@@ -103,5 +104,6 @@ export function ReportCard(props: ReportCardProps) {
                 setVisibility={setShowDeleteConfirmation}/>
             : <button onClick={() => setShowDeleteConfirmation(true)}>Delete reported content</button>
         }
+        </div>
     </div>
 }

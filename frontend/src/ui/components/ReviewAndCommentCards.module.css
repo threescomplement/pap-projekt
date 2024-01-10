@@ -11,6 +11,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 1rem;
 }
 
 .cardAuthor {
@@ -20,6 +21,7 @@
 .ratingsContainer {
     display: flex;
     margin-bottom: 0.5rem;
+    justify-content: space-between;
 }
 
 .rating {
@@ -57,6 +59,12 @@
     padding-left: 2rem;
     padding-bottom: 1rem;
     width: 70%
+}
+
+.usernameAndProgressContainer {
+    display: flex;
+    justify-content: left;
+    gap: 3rem;
 }
 
 /* todo: add popups when hovering over the buttons */

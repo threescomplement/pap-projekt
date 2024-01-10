@@ -8,6 +8,7 @@ import ErrorBox from "./ErrorBox";
 import {ratingToPercentage} from "../lib/utils";
 import styles from "../ui/components/ReviewAndCommentCards.module.css";
 import ReportBox from "./ReportBox";
+import RatingProgressBar from "./RatingProgressBar";
 
 interface ReviewCardProps {
     review: Review;
@@ -45,16 +46,32 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
             })
     }
 
+    function averageRating() {
+        return (parseFloat(review.easeRating) + parseFloat(review.interestRating) + parseFloat(review.engagementRating)) / 3
+    }
+
     return <div className={styles.cardContainer}>
         <div className={styles.cardHeader}>
-        <p className={styles.cardAuthor}>{review.authorUsername} </p>
-        <div className={styles.cardButtonContainer}>{modificationContent}
-            <ReportBox reportedEntity={review}/></div>
+            <div className={styles.usernameAndProgressContainer}>
+            <p className={styles.cardAuthor}>{review.authorUsername} </p>
+            <RatingProgressBar value={averageRating()}/>
+            </div>
+            <div className={styles.cardButtonContainer}>{modificationContent}
+                <ReportBox reportedEntity={review}/></div>
         </div>
         <div className={styles.ratingsContainer}>
-            <p className={styles.rating}>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>
-            <p className={styles.rating}>Jak interesujący: {ratingToPercentage(review.interestRating)}</p>
-            <p className={styles.rating}>Jak angażujący: {ratingToPercentage(review.engagementRating)}</p>
+            <div>
+                <p className={styles.rating}>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>
+                {/*<RatingProgressBar value={parseFloat(review.easeRating)}/>*/}
+            </div>
+            <div>
+                <p className={styles.rating}>Jak interesujący: {ratingToPercentage(review.interestRating)}</p>
+                {/*<RatingProgressBar value={parseFloat(review.interestRating)}/>*/}
+            </div>
+            <div>
+                <p className={styles.rating}>Jak angażujący: {ratingToPercentage(review.engagementRating)}</p>
+                {/*<RatingProgressBar value={parseFloat(review.engagementRating)}/>*/}
+            </div>
         </div>
         <div className={styles.opinion}>{review.opinion}</div>
         <ErrorBox message={errorMessage}/>

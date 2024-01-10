@@ -48,7 +48,8 @@ export function ReviewForm() {
         const [sliderValue, setSliderValue] = useState<number>(rating || 0)
 
         const handleChange = (v: number[]) => {
-            const value = Math.round(v[0]) // todo: divide by 10;
+            /*todo: update value onValueChange, maybe refactor this*/
+            const value = Math.round(v[0])
             setSliderValue(value);
             setRating(value);
         };

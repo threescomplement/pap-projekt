@@ -8,8 +8,11 @@ import {User} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {EditBar} from "../../components/EditBar";
 import ErrorBox from "../../components/ErrorBox";
-import "./SingleReview.css"
 import ReportBox from "../../components/ReportBox";
+import styles from './SingleReview.module.css'
+import cardStyles from '../../ui/components/ReviewAndCommentCards.module.css'
+import "../../ui/index.css"
+
 
 export function SingleReview() {
     const {courseId, authorUsername} = useParams();
@@ -23,7 +26,7 @@ export function SingleReview() {
             })
     }, [authorUsername, courseId]);
 
-    return review != null ? <ReviewDetails review={review} /> : <h1>Loading..</h1>
+    return review != null ? <ReviewDetails review={review}/> : <h1>Loading..</h1>
 }
 
 interface ReviewDetailsProps {
@@ -59,7 +62,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
         setMessage("Komentarz został usunięty.")
     }
 
-    return <div>
+    return <div className={styles.singleReviewContainer}>
         <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
         <MessageBox message={message}/>
         <CommentList comments={comments} afterDeleting={afterDeletingComment} afterEditing={reloadComments}/>
@@ -115,11 +118,13 @@ function CommentCard({comment, afterDeleting, afterEditing}: CommentCardProps) {
     return duringEditing
         ? <CommentEditForm afterPosting={afterEditing} commentId={comment.id} setEditingForParent={setDuringEditing}
                            oldContent={comment.text}/>
-        : <div>
-            <div>
-                <p>{comment.authorUsername}</p>
-                {modificationContent}
-                <ReportBox reportedEntity={comment}/>
+        : <div className={cardStyles.commentCardContainer}>
+            <div className={cardStyles.cardHeader}>
+                <p className={cardStyles.cardAuthor}>{comment.authorUsername}</p>
+                <div className={cardStyles.cardButtonContainer}>
+                    {modificationContent}
+                    <ReportBox reportedEntity={comment}/>
+                </div>
             </div>
             <div>{comment.text}</div>
             <ErrorBox message={errorMessage}/>
@@ -150,7 +155,7 @@ function CommentInputForm({afterPosting, courseId, reviewAuthorUsername}: Commen
             .catch(e => console.log(e));
     }
 
-    return <div>
+    return <div className={styles.addCommentBox}>
     <textarea
         placeholder="Twój komentarz"
         onChange={e => setComment(e.target.value)}
@@ -192,4 +197,5 @@ function CommentEditForm({afterPosting, commentId, setEditingForParent, oldConte
         <button onClick={handleCommentSubmit}>Edytuj komentarz</button>
         <button onClick={() => setEditingForParent(false)}>Anuluj</button>
     </div>
+
 }

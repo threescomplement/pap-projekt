@@ -6,7 +6,7 @@ import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
 import {ratingToPercentage} from "../lib/utils";
-import styles from "../ui/components/ReviewCards.module.css";
+import styles from "../ui/components/ReviewAndCommentCards.module.css";
 import ReportBox from "./ReportBox";
 
 interface ReviewCardProps {
@@ -15,7 +15,7 @@ interface ReviewCardProps {
 }
 
 export function ReviewCardWithLink(props: ReviewCardProps) {
-    return <div className={styles.reviewCardContainer}>
+    return <div className={styles.cardContainer}>
         <ReviewCardWithoutLink {...props}/>
         <Link to={`reviews/${props.review.authorUsername}`} className={styles.readMoreLink}> Czytaj więcej </Link>
     </div>
@@ -45,10 +45,10 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
             })
     }
 
-    return <div className={styles.reviewCardContainer}>
-        <div className={styles.reviewCardHeader}>
-        <div className={styles.reviewCardAuthor}>{review.authorUsername} </div>
-        <div>{modificationContent}
+    return <div className={styles.cardContainer}>
+        <div className={styles.cardHeader}>
+        <p className={styles.cardAuthor}>{review.authorUsername} </p>
+        <div className={styles.cardButtonContainer}>{modificationContent}
             <ReportBox reportedEntity={review}/></div>
         </div>
         <div className={styles.ratingsContainer}>

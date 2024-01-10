@@ -1,5 +1,5 @@
 
-.reviewCardContainer {
+.cardContainer {
     background-color: #272727;
     color: #fff;
     padding: .8rem .8rem 2rem;
@@ -7,13 +7,13 @@
     border-radius: 0.5rem;
 }
 
-.reviewCardHeader {
+.cardHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.reviewCardAuthor {
+.cardAuthor {
     font-weight: bold;
 }
 
@@ -41,3 +41,22 @@
     background-color: #66A1BF;
     color: #272727;
 }
+
+.cardButtonContainer {
+    display: flex;
+    justify-content: right;
+    gap: .5rem;
+}
+
+.cardButtonContainer button {
+    padding: .6rem .8rem;
+}
+
+.commentCardContainer {
+    composes: cardContainer;
+    padding-left: 2rem;
+    padding-bottom: 1rem;
+    width: 70%
+}
+
+/* todo: add popups when hovering over the buttons */

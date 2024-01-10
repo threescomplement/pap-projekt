@@ -4,11 +4,23 @@
     composes: container from "../../ui/index.css";
 }
 
+.courseHeader {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.teacherContent {
+    font-size :1.5rem;
+    color: #aaa;
+}
 
 .courseInfoContainer {
     display: flex;
     margin: 2rem 0;
     gap: 3rem;
+    /* todo: figure this out*/
+    justify-content: space-between;
+    padding-right: 100px
 }
 
 
@@ -35,4 +47,7 @@
     margin: 1rem 0 2rem;
 }
 
-/* todo: space the lower button out */
+.teacherLink {
+    padding: .4rem .3rem;
+    /* todo: space this out a bit */
+}

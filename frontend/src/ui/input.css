@@ -1,5 +1,5 @@
 
-input[type="text"], input[type="password"], input[type="email"] {
+input[type="text"], input[type="password"], input[type="email"], textarea {
     color: #999;
     padding: .5rem;
     border: 1px solid #222;
@@ -16,7 +16,8 @@ input[type="text"], input[type="password"], input[type="email"] {
 
 input[type="text"]:focus, input[type="text"]:hover,
 input[type="password"]:focus, input[type="password"]:hover,
-input[type="email"]:focus, input[type="email"]:hover {
+input[type="email"]:focus, input[type="email"]:hover,
+textarea:focus, textarea:hover{
     border-color: #aaa;
     caret-color: #aaa;
     color: #aaa;
@@ -54,4 +55,10 @@ input[type="file"]:hover {
     color: #aaa;
     background-color: #222;
     outline: none;
+}
+
+textarea {
+    height: auto;
+    overflow-y: hidden;
+    resize: none;
 }

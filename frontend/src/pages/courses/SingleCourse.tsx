@@ -78,8 +78,8 @@ function CourseDetails(course: Course) {
     }, [course, memorizedReloadReviews]);
 
     const teacherContent = (teacher != null && teacherLoaded)
-        ? <Link className="TeacherLink" to={`/teachers/${course.teacherId}`}> {teacher.name} </Link>
-        : <span className="TeacherLink">COURSE_TEACHER_PLACEHOLDER</span>;
+        ? <Link className={styles.teacherLink} to={`/teachers/${course.teacherId}`}> {teacher.name} </Link>
+        : <span>COURSE_TEACHER_PLACEHOLDER</span>;
 
     const moduleContent = course.module != null
         ? <p className="CourseInfo">Moduł: {course.module}</p>
@@ -94,11 +94,11 @@ function CourseDetails(course: Course) {
 
 
     return <div>
-            <h1>{course.name}</h1>
-            <p>Lektor: {teacherContent}</p>
+            <h1 className={styles.courseHeader}>{course.name}</h1>
+            <div className={styles.teacherContent}>Lektor: {teacherContent}</div>
             <div className={styles.courseInfoContainer}>
                 <div className={styles.courseInfo}>
-                    <h2>Informacje o kursie:</h2>
+                    <h2>Informacje o kursie</h2>
                     {moduleContent}
                     <p>Poziom: {course.level}</p>
                     <p>Typ kursu: {course.type}</p>

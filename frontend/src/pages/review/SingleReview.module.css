@@ -1,0 +1,24 @@
+@import "../../ui/index.css";
+
+.singleReviewContainer {
+    composes: container from "../../ui/index.css";
+    height: auto;
+}
+
+.addCommentBox {
+    display: block;
+    justify-content: left;
+    height: auto;
+    width: 70%
+}
+
+.addCommentBox textarea {
+    /*todo: make it resize based on lines of content inside*/
+    width: 100%;
+    padding: 1rem;
+    margin-bottom: 0.3rem;
+}
+
+.addCommentBox button {
+    padding: .8rem
+}

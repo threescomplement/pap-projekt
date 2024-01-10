@@ -5,6 +5,8 @@ import styles from "../../ui/pages/ReviewForm.module.css"
 import {Review, ReviewRequest, ReviewService} from "../../lib/Review";
 import useUser from "../../hooks/useUser";
 import {ratingToPercentage} from "../../lib/utils";
+import * as Slider from "@radix-ui/react-slider";
+import sliderStyles from "../../ui/components/RatingSlider.module.css"
 
 export function ReviewForm() {
     const {courseId} = useParams();
@@ -42,23 +44,26 @@ export function ReviewForm() {
         setRating: React.Dispatch<React.SetStateAction<number | null>>;
     }
 
-    function RatingSlider({rating, setRating}: RatingSliderProps) { // todo: swap this for a nicer one
-        const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-            const value = Math.round(parseFloat(e.target.value));
+    function RatingSlider({rating, setRating}: RatingSliderProps) {
+        const [sliderValue, setSliderValue] = useState<number>(rating || 0)
+
+        const handleChange = (v: number[]) => {
+            const value = Math.round(v[0]) // todo: divide by 10;
+            setSliderValue(value);
             setRating(value);
         };
 
-        return (
-            <input
-                type="range"
-                min={0}
-                max={10}
-                step={1}
-                value={rating != null ? rating : 0}
-                onChange={handleChange}
-                onInput={handleChange}
-            />
-        );
+        return <div>
+                <Slider.Root className={sliderStyles.SliderRoot} defaultValue={[sliderValue]}
+                             max={10} step={1}
+                             onValueCommit={handleChange}
+                >
+                    <Slider.Track className={sliderStyles.SliderTrack}>
+                        <Slider.Range className={sliderStyles.SliderRange}/>
+                    </Slider.Track>
+                    <Slider.Thumb className={sliderStyles.SliderThumb}/>
+                </Slider.Root>
+            </div>
     }
 
     function handleClick() {

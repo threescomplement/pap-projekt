@@ -4,7 +4,8 @@ import React, {useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
 import {Course} from "../../lib/Course";
 import {ratingToPercentage} from "../../lib/utils";
-import styles from "./SingleTeacher.module.css"
+import styles from "../../ui/pages/SingleTeacher.module.css"
+import AverageRatingDisplay from "../../components/AverageRatingDisplay";
 
 interface SingleTeacherProps {
     teacher: Teacher
@@ -20,10 +21,7 @@ function TeacherData(props: SingleTeacherProps) {
         <h1>{teacher.name}</h1>
         <div className={styles.teacherInfoContainer}>
             <div className={styles.teacherInfo}>
-                <h2>Uśrednione opinie</h2>
-                <p>Jak łatwe zajęcia prowadzi? {ratingToPercentage(teacher.averageEaseRating)}</p>
-                <p>Jak interesujące zajęcia prowadzi? {ratingToPercentage(teacher.averageInterestRating)}</p>
-                <p>Jak bardzo angażuje studentów? {ratingToPercentage(teacher.averageEngagementRating)}</p>
+                <AverageRatingDisplay entity={teacher}/>
             </div>
         </div>
     </div>

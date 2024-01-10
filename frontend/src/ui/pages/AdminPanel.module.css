@@ -1,0 +1,51 @@
+@import "Courses.module.css";
+
+.adminHeader {
+    composes: coursesHeader from "Courses.module.css";
+}
+
+.userManagementPanel {
+    /*margin-top: 2rem*/
+}
+
+.managementAndReportContainer {
+    display: flex;
+    margin-top: 2rem;
+    gap: 3rem;
+}
+
+.reportList {
+    display: block;
+}
+
+.reportCard {
+    background-color: #272727;
+    border-radius: .5rem;
+    margin: 1rem;
+    padding: 1rem 1.5rem 1rem;
+}
+
+.reportCard h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+}
+
+.reportReason {
+    color: #fff;
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: .5rem;
+}
+
+.reportCardButtonContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    gap: 1rem;
+}
+
+.reportCardButtonContainer button {
+    flex-grow: 0;
+    height: fit-content;
+}
+/*todo: needs more love*/

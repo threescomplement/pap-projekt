@@ -1,7 +1,7 @@
-@import "../../ui/index.css";
+@import "../index.css";
 
 .singleReviewContainer {
-    composes: container from "../../ui/index.css";
+    composes: container from "../index.css";
     height: auto;
 }
 

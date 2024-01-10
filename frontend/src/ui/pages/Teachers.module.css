@@ -1,13 +1,13 @@
-@import "../../ui/index.css";
-@import "../../pages/courses/Courses.module.css";
+@import "../index.css";
+@import "Courses.module.css";
 
 
 .teachersContainer {
-    composes: container from "../../ui/index.css";
+    composes: container from "../index.css";
 }
 
 .teachersHeader {
-    composes: coursesHeader from "../../pages/courses/Courses.module.css";
+    composes: coursesHeader from "Courses.module.css";
 }
 
 /* todo: move the searchbar and dropdown into a flex container so they fit horizontally */

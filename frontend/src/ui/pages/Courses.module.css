@@ -1,5 +1,5 @@
-@import '../../ui/index.css';
-@import '../../ui/select.css';
+@import '../index.css';
+@import '../common/select.css';
 
 .coursesHeader {
     padding-bottom: 2rem;
@@ -7,7 +7,7 @@
 }
 
 .coursesContainer {
-    composes: container from '../../ui/index.css';
+    composes: container from '../index.css';
 }
 
 .coursesContainer input[type="text"] {
@@ -18,7 +18,7 @@
 }
 
 .filterContainer {
-    composes: container from '../../ui/index.css';
+    composes: container from '../index.css';
     padding: 0;
     margin: 0 0 0;
     display: flex;

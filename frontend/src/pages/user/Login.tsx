@@ -3,7 +3,7 @@ import UserService, {LoginRequest} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
-import styles from "../../Forms.module.css"
+import styles from "../../ui/components/Forms.module.css"
 import ErrorBox from "../../components/ErrorBox";
 
 const initialFormData: LoginRequest = {

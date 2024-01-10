@@ -1,7 +1,7 @@
-@import "./select.css";
-@import "./table.css";
-@import "input.css";
-@import "./button.css";
+@import "common/select.css";
+@import "common/table.css";
+@import "common/input.css";
+@import "common/button.css";
 
 body {
     margin: 0;

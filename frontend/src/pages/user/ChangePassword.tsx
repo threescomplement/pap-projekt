@@ -4,7 +4,7 @@ import {formReducer} from "../../lib/utils";
 import UserService from "../../lib/User";
 import MessageBox from "../../components/MessageBox";
 import {useNavigate} from "react-router-dom";
-import styles from "../../Forms.module.css";
+import styles from "../../ui/components/Forms.module.css";
 
 
 interface FormData {

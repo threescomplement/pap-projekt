@@ -9,7 +9,7 @@ import useUser from "../../hooks/useUser";
 import {EditBar} from "../../components/EditBar";
 import ErrorBox from "../../components/ErrorBox";
 import ReportBox from "../../components/ReportBox";
-import styles from './SingleReview.module.css'
+import styles from '../../ui/pages/SingleReview.module.css'
 import cardStyles from '../../ui/components/ReviewAndCommentCards.module.css'
 import "../../ui/index.css"
 

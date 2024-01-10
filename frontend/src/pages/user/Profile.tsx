@@ -1,7 +1,7 @@
 import UserService, {User} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {useNavigate} from "react-router-dom";
-import styles from "./Profile.module.css";
+import styles from "../../ui/pages/Profile.module.css";
 import {MdDeleteForever} from "react-icons/md";
 import {useState} from "react";
 import {ConfirmationPopup} from "../../components/ConfirmationPopup";

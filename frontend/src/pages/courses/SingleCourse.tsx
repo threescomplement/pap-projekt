@@ -7,7 +7,8 @@ import {Teacher, TeacherService} from "../../lib/Teacher";
 import {ratingToPercentage} from "../../lib/utils";
 import MessageBox from "../../components/MessageBox";
 import {ReviewCardWithLink} from "../../components/ReviewCards";
-import styles from "./SingleCourse.module.css"
+import styles from "../../ui/pages/SingleCourse.module.css"
+import AverageRatingDisplay from "../../components/AverageRatingDisplay";
 
 export default function SingleCourse() {
     const username = useUser().user!.username
@@ -86,34 +87,31 @@ function CourseDetails(course: Course) {
         : <p className="CourseInfo">Ten kurs nie jest przypisany do żadnego modułu</p>
 
 
-
     const reviewContent = reviews.length === 0
         ? <div className={styles.noReviewsDisclaimer}>Ten kurs nie ma jeszcze opinii</div>
-        : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews} refreshParent={afterReviewDelete}/>}</div>
-
+        : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews}
+                                                                   refreshParent={afterReviewDelete}/>}</div>
 
 
     return <div>
-            <h1 className={styles.courseHeader}>{course.name}</h1>
-            <div className={styles.teacherContent}>Lektor: {teacherContent}</div>
-            <div className={styles.courseInfoContainer}>
-                <div className={styles.courseInfo}>
-                    <h2>Informacje o kursie</h2>
-                    {moduleContent}
-                    <p>Poziom: {course.level}</p>
-                    <p>Typ kursu: {course.type}</p>
-                </div>
-                <div className={styles.courseInfo}>
-                    <h2>Uśrednione opinie</h2>
-                    <p>Jak łatwy? {ratingToPercentage(course.averageEaseRating)}</p>
-                    <p>Jak interesujący? {ratingToPercentage(course.averageInterestRating)}</p>
-                    <p>Jak angażujący? {ratingToPercentage(course.averageEngagementRating)}</p>
-                </div>
+        <h1 className={styles.courseHeader}>{course.name}</h1>
+        <div className={styles.teacherContent}>Lektor: {teacherContent}</div>
+        <div className={styles.courseInfoContainer}>
+            <div className={styles.courseInfo}>
+                <h2>Informacje o kursie</h2>
+                {moduleContent}
+                <p>Poziom: {course.level}</p>
+                <p>Typ kursu: {course.type}</p>
             </div>
-            <h2>Opinie</h2>
-            <MessageBox message={message}/>
-            {reviewContent}
+            <div className={styles.courseInfo}>
+                <AverageRatingDisplay entity={course}/>
+            </div>
+
         </div>
+        <h2>Opinie</h2>
+        <MessageBox message={message}/>
+        {reviewContent}
+    </div>
 }
 
 

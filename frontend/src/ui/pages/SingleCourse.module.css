@@ -1,7 +1,7 @@
-@import "../../ui/index.css";
+@import "../index.css";
 
 .singleCourseContainer {
-    composes: container from "../../ui/index.css";
+    composes: container from "../index.css";
 }
 
 .courseHeader {

@@ -2,7 +2,7 @@ import {FormEvent, useReducer, useState} from "react";
 import UserService, {RegisterRequest} from "../../lib/User";
 import {Link} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
-import styles from "../../Forms.module.css"
+import styles from "../../ui/components/Forms.module.css"
 
 const initialFormData: RegisterRequest = {
     username: "",

@@ -2,7 +2,7 @@ import CourseList from "../../components/CourseList";
 import React, {useEffect, useState} from "react";
 import {Course, CourseService, } from "../../lib/Course";
 import Filter, {all, languages, levels, modules, types} from "../../components/Filter";
-import styles from "./Courses.module.css"
+import styles from "../../ui/pages/Courses.module.css"
 
 export function Courses() {
     const [courses, setCourses] = useState<Course[]>([]);

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import styles from "./IntermediatePage.module.css";
+import styles from "../../ui/pages/IntermediatePage.module.css";
 
 export function ReviewDeleted() {
     const navigate = useNavigate();
@@ -15,8 +15,8 @@ export function ReviewDeleted() {
     }, [courseId, navigate]);
 
     return (
-        <div className={styles.intermediatePage}>
-            <p>Ocena została usunięta</p>
+        <div className={styles.intermediatePageContainer}>
+            <h1>Ocena została usunięta</h1>
             <p>Wkrótce zostaniesz przekierowany...</p>
         </div>
     );

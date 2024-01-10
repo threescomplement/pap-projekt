@@ -1,0 +1,71 @@
+
+.cardContainer {
+    background-color: #272727;
+    color: #fff;
+    padding: .8rem .8rem 2rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.cardAuthor {
+    font-weight: bold;
+}
+
+.ratingsContainer {
+    display: flex;
+    margin-bottom: 0.5rem;
+    justify-content: space-between;
+}
+
+.rating {
+    flex: 1;
+    margin-right: 1rem;
+}
+
+.opinion {
+    margin-top: 1rem;
+}
+
+.readMoreLink {
+    padding: .8rem;
+    color: #aaa;
+    background-color: #151515;
+}
+
+.readMoreLink:hover {
+    background-color: #66A1BF;
+    color: #272727;
+}
+
+.cardButtonContainer {
+    display: flex;
+    justify-content: right;
+    gap: .5rem;
+}
+
+.cardButtonContainer button {
+    padding: .6rem .8rem;
+    height: fit-content;
+}
+
+.commentCardContainer {
+    composes: cardContainer;
+    padding-left: 2rem;
+    padding-bottom: 1rem;
+    width: 70%
+}
+
+.usernameAndProgressContainer {
+    display: flex;
+    justify-content: left;
+    gap: 3rem;
+}
+
+/* todo: add popups when hovering over the buttons */

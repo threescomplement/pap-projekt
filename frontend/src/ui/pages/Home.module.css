@@ -1,0 +1,11 @@
+@import "../index.css";
+
+.homeContainer {
+    composes: container from '../index.css';
+    width: 80%;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+.homeContainer p {
+    color: #999; /*todo: this one?*/
+}

@@ -1,0 +1,27 @@
+@import '../index.css';
+@import '../common/select.css';
+
+.coursesHeader {
+    padding-bottom: 2rem;
+    font-size: 3rem;
+}
+
+.coursesContainer {
+    composes: container from '../index.css';
+}
+
+.coursesContainer input[type="text"] {
+    display: block;
+    padding: .8rem .8rem;
+    margin-bottom: 0;
+    width: 90%;
+}
+
+.filterContainer {
+    composes: container from '../index.css';
+    padding: 0;
+    margin: 0 0 0;
+    display: flex;
+    justify-content: flex-start;
+    gap: .5rem;
+}

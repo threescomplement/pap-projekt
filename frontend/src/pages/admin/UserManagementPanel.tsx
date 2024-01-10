@@ -3,6 +3,7 @@ import UserService, {AppUser} from "../../lib/User";
 import {MdDeleteForever, MdSave} from "react-icons/md";
 import ErrorBox from "../../components/ErrorBox";
 import EditableText from "../../components/EditableText";
+import styles from "../../ui/pages/AdminPanel.module.css"
 
 export default function UserManagementPanel() {
     const [users, setUsers] = useState<AppUser[]>([]);
@@ -15,7 +16,7 @@ export default function UserManagementPanel() {
 
     useEffect(() => reloadUsers(), []);
 
-    return <div>
+    return <div className={styles.userManagementPanel}>
         <h2>Użytkownicy</h2>
         <ErrorBox message={errorMessage}/>
         <table>
@@ -26,6 +27,8 @@ export default function UserManagementPanel() {
                 <th>Email</th>
                 <th>Role</th>
                 <th>Enabled</th>
+                <th>Delete</th>
+                <th>Save</th>
             </tr>
             </thead>
             <tbody>

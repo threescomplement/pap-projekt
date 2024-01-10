@@ -1,0 +1,39 @@
+
+@import "../index.css";
+
+
+
+.reviewForm {
+    composes: container from "../index.css";
+    gap: 2rem;
+}
+
+/*todo: refactor out*/
+.reviewForm h1 {
+    padding-bottom: 2rem;
+}
+
+.reviewForm textarea {
+    resize: vertical;
+    height: 15rem;
+    margin-bottom: 2rem;
+}
+
+.sliderContainer {
+    display: flex;
+    width: 70%; /* todo: manage how to inherit instead of giving explicitly*/
+    justify-content: space-between;
+    padding-right: 2rem;
+    padding-left: .5rem;
+    margin-bottom: 1rem;
+}
+
+.reviewForm button {
+    padding: .7rem 1rem;
+    font-size: 1.25rem;
+}
+
+.sliderContainer p {
+    color: #aaa;
+    font-size: 1.25rem;
+}

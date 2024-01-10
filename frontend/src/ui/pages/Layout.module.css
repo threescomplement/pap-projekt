@@ -1,0 +1,41 @@
+.navbarNav {
+    background-color: #222;
+    border: 1px solid black;
+}
+
+.navbarList {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: .5rem;
+}
+
+.navbarLink {
+    list-style: none;
+    font-size: 1.2rem;
+    margin: 0 .5rem;
+}
+
+.navbarLink.userProfile {
+    display: flex;
+    align-items: center; /* Align items vertically within the flex container */
+}
+
+.navbarLink a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.navbarLink a:hover {
+    text-decoration: none;
+}
+
+.profileLink {
+    composes: navbarLink;
+    margin-left: auto;
+}
+
+.profileLink a {
+    padding: .8rem .1rem;
+}
+

@@ -1,6 +1,7 @@
 import {MdDeleteForever, MdEdit} from "react-icons/md";
 import React, {MouseEventHandler, useState} from "react";
 import {ConfirmationPopup} from './ConfirmationPopup';
+import styles from './../ui/components/EditBar.module.css'
 
 
 interface EditBarProps {
@@ -19,7 +20,7 @@ export function EditBar({handleDelete, deleteConfirmationQuery, handleEdit, canE
         setVisibility={setShowDeleteConfirmation}
     />
 
-    const regularContent = <div>
+    const regularContent = <div className={styles.editBar}>
         {canEdit ? <button onClick={event => handleEdit(event)}><MdEdit/></button> : null}
         <button
             onClick={(event) => {

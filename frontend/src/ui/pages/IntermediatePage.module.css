@@ -1,0 +1,15 @@
+@import "../index.css";
+
+.intermediatePageContainer {
+    composes: container from "../index.css";
+    text-align: center;
+}
+
+.intermediatePageContainer h1 {
+    font-size: 3em;
+    margin-bottom: 2rem;
+}
+
+.intermediatePageContainer p {
+    font-size: 1.2em;
+}

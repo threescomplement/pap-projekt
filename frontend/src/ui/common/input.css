@@ -1,0 +1,64 @@
+
+input[type="text"], input[type="password"], input[type="email"], textarea {
+    color: #999;
+    padding: .5rem;
+    border: 1px solid #222;
+    border-radius: 5px;
+    font-size: 1.25rem;
+    background-color: #222;
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    width: 70%;
+    box-sizing: border-box;
+    transition: border-color 0.3s, caret-color 0.3s;
+    outline: none
+}
+
+input[type="text"]:focus, input[type="text"]:hover,
+input[type="password"]:focus, input[type="password"]:hover,
+input[type="email"]:focus, input[type="email"]:hover,
+textarea:focus, textarea:hover{
+    border-color: #aaa;
+    caret-color: #aaa;
+    color: #aaa;
+}
+
+input[type="text"]::placeholder {
+    color: #888;
+    opacity: 1;
+}
+
+input[type="text"]:hover::placeholder {
+    color: #aaa;
+}
+
+input[type="file"] {
+    /* fixme */
+    display: block;
+    padding: 0.8rem;
+    width: 90%;
+    color: #fff;
+    border: 1px solid #222;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    background-color: #222;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s, color 0.3s, background-color 0.3s, transform 0.3s; /* Add transform to the transition */
+    outline: none;
+}
+
+input[type="file"]:focus,
+input[type="file"]:hover {
+    border-color: #aaa;
+    color: #aaa;
+    background-color: #222;
+    outline: none;
+}
+
+textarea {
+    height: auto;
+    overflow-y: hidden;
+    resize: none;
+}

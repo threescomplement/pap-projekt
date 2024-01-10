@@ -4,9 +4,10 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Review, ReviewService} from "../../lib/Review";
 import useUser from "../../hooks/useUser";
 import {Teacher, TeacherService} from "../../lib/Teacher";
-import {ratingToPercentage} from "../../lib/utils";
 import MessageBox from "../../components/MessageBox";
 import {ReviewCardWithLink} from "../../components/ReviewCards";
+import styles from "../../ui/pages/SingleCourse.module.css"
+import AverageRatingDisplay from "../../components/AverageRatingDisplay";
 
 export default function SingleCourse() {
     const username = useUser().user!.username
@@ -38,9 +39,10 @@ export default function SingleCourse() {
         </div>
     }
 
-    return <div>
+    return <div className={styles.singleCourseContainer}>
         <CourseDetails {...course}/>
-        <Link to="writeReview">{userHasReview ? "Edytuj swoją opinię" : "Napisz opinię"}</Link>
+        <Link className={styles.writeReviewLink}
+              to="writeReview">{userHasReview ? "Edytuj swoją opinię" : "Napisz opinię"}</Link>
     </div>
 }
 
@@ -73,12 +75,11 @@ function CourseDetails(course: Course) {
             .catch(e => console.log(e));
 
         memorizedReloadReviews();
-
     }, [course, memorizedReloadReviews]);
 
     const teacherContent = (teacher != null && teacherLoaded)
-        ? <Link className="TeacherLink" to={`/teachers/${course.teacherId}`}> {teacher.name} </Link>
-        : <span className="TeacherLink">COURSE_TEACHER_PLACEHOLDER</span>;
+        ? <Link className={styles.teacherLink} to={`/teachers/${course.teacherId}`}> {teacher.name} </Link>
+        : <span>COURSE_TEACHER_PLACEHOLDER</span>;
 
     const moduleContent = course.module != null
         ? <p className="CourseInfo">Moduł: {course.module}</p>
@@ -86,26 +87,30 @@ function CourseDetails(course: Course) {
 
 
     const reviewContent = reviews.length === 0
-        ? <div>Ten kurs nie ma jeszcze opinii</div>
-        : <div>{<ReviewList reviews={reviews} refreshParent={afterReviewDelete}/>}</div>
+        ? <div className={styles.noReviewsDisclaimer}>Ten kurs nie ma jeszcze opinii</div>
+        : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews}
+                                                                   refreshParent={afterReviewDelete}/>}</div>
 
-    return <>
-        <h1>{course.name}</h1>
-        <p className="TeacherHeader">Lektor: {teacherContent}</p>
-        <h2>Informacje o kursie:</h2>
-        {moduleContent}
-        <p className="CourseInfo">Poziom: {course.level}</p>
-        <p className="CourseInfo">Typ kursu: {course.type}</p>
-        <h2>Uśrednione opinie</h2>
-        <div>
-            <p>Jak łatwy? {ratingToPercentage(course.averageEaseRating)}</p>
-            <p>Jak interesujący? {ratingToPercentage(course.averageInterestRating)}</p>
-            <p>Jak angażujący? {ratingToPercentage(course.averageEngagementRating)}</p>
+
+    return <div>
+        <h1 className={styles.courseHeader}>{course.name}</h1>
+        <div className={styles.teacherContent}>Lektor: {teacherContent}</div>
+        <div className={styles.courseInfoContainer}>
+            <div className={styles.courseInfo}>
+                <h2>Informacje o kursie</h2>
+                {moduleContent}
+                <p>Poziom: {course.level}</p>
+                <p>Typ kursu: {course.type}</p>
+            </div>
+            <div className={styles.courseInfo}>
+                <AverageRatingDisplay entity={course}/>
+            </div>
+
         </div>
-        <h2 className="OpinionsSection">Opinie</h2>
+        <h2>Opinie</h2>
         <MessageBox message={message}/>
         {reviewContent}
-    </>
+    </div>
 }
 
 

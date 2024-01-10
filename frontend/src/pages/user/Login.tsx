@@ -3,7 +3,7 @@ import UserService, {LoginRequest} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {Link, useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
-import styles from "../../Forms.module.css"
+import styles from "../../ui/components/Forms.module.css"
 import ErrorBox from "../../components/ErrorBox";
 
 const initialFormData: LoginRequest = {
@@ -53,8 +53,10 @@ export default function Login() {
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
             <ErrorBox message={errorMessage}/>
+            <div className={styles.buttonContainer}>
             <input type="submit" value="Log In"/>
-            <Link to={"/user/forgot-password"}>Nie pamiętam hasła</Link>
+            <Link className={styles.forgotPasswordLink} to={"/user/forgot-password"}>Nie pamiętam hasła</Link>
+            </div>
         </form>
     </div>
 }

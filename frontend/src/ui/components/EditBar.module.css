@@ -1,0 +1,7 @@
+
+.editBar {
+    padding: 0;
+    display: flex;
+    justify-content: right;
+    gap: .5rem;
+}

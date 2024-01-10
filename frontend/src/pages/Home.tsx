@@ -1,5 +1,5 @@
 
-import styles from './Home.module.css';
+import styles from '../ui/pages/Home.module.css';
 
 export function Home() {
     return (

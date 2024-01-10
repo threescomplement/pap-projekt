@@ -1,0 +1,53 @@
+/* todo: spacing between elements */
+.formContainer {
+    padding: 2rem;
+    font-family: Arial, sans-serif;
+    margin: 0 auto;
+    width: 80%;
+}
+
+.formContainer h1 {
+    color: #fff;
+    margin-bottom: 3rem;
+    font-size: 2.5rem;
+    text-align: left;
+}
+
+.formContainer label p {
+    font-size: 1.2rem;
+    color: #aaa;
+}
+
+.formContainer label input {
+    display: block;
+    width: 40%;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1em;
+    border-radius: 5px;
+    margin-top:0;
+}
+
+.formContainer input[type="submit"] {
+    padding: 0.7rem 1rem;
+    width:50%;
+    max-width: 100%;
+}
+
+.forgotPasswordLink {
+    color: #aaa;
+}
+
+.buttonContainer {
+    display: flex;
+    width: 40%;
+    justify-content: left;
+    gap: 3rem;
+}
+
+.registerButton {
+    /*fixme*/
+    width: 40% !important;
+    padding: 1rem !important;
+    margin-top: 1rem;
+}

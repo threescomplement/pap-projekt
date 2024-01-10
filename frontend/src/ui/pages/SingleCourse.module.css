@@ -1,0 +1,53 @@
+@import "../index.css";
+
+.singleCourseContainer {
+    composes: container from "../index.css";
+}
+
+.courseHeader {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.teacherContent {
+    font-size :1.5rem;
+    color: #aaa;
+}
+
+.courseInfoContainer {
+    display: flex;
+    margin: 2rem 0;
+    gap: 3rem;
+    /* todo: figure this out*/
+    justify-content: space-between;
+    padding-right: 100px
+}
+
+
+.courseInfo h2, p {
+    padding-bottom: .5rem;
+}
+
+.writeReviewLink {
+    padding: .8rem;
+    color: #aaa;
+    background-color: #151515;
+}
+
+.writeReviewLink:hover {
+    background-color: #66A1BF;
+    color: #272727;
+}
+
+.noReviewsDisclaimer {
+    margin: 1rem 0 2rem;
+}
+
+.reviewListContainer {
+    margin: 1rem 0 2rem;
+}
+
+.teacherLink {
+    padding: .4rem .3rem;
+    /* todo: space this out a bit */
+}

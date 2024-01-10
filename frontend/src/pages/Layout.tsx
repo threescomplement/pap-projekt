@@ -1,5 +1,5 @@
 import {Link, Outlet} from "react-router-dom";
-import "./Layout.css"
+import styles from '../ui/pages/Layout.module.css'
 import useUser from "../hooks/useUser";
 
 /**
@@ -13,29 +13,29 @@ export function Layout() {
     const {user} = useUser();
 
     return <>
-        <nav className="navbar-nav">
-            <ul className="navbar-list">
-                <li className="navbar-link">
+        <nav className={styles.navbarNav}>
+            <ul className={styles.navbarList}>
+                <li className={styles.navbarLink}>
                     <Link to="/">Home</Link>
                 </li>
                 {user != null && <>
-                    <li className="navbar-link">
+                    <li className={styles.navbarLink}>
                         <Link to="/courses">Kursy</Link>
                     </li>
-                    <li className="navbar-link">
+                    <li className={styles.navbarLink}>
                         <Link to="/teachers">Lektorzy</Link>
                     </li>
                 </>}
                 {user == null ? <>
-                    <li className="navbar-link">
+                    <li className={styles.navbarLink}>
                         <Link to="/user/login">Login</Link>
                     </li>
-                    <li className="navbar-link">
+                    <li className={styles.navbarLink}>
                         <Link to="/user/register">Rejestracja</Link>
                     </li>
-                </> : <p>Welcome <Link to="/user">{user.username}</Link></p>
+                </> : <li className={styles.profileLink}>Witaj, <Link to="/user">{user.username}</Link></li>
                 }
-                {user?.roles[0] === "ROLE_ADMIN" ? <li className="navbar-link">
+                {user?.roles[0] === "ROLE_ADMIN" ? <li className={styles.navbarLink}>
                     <Link to="/admin">Panel administratora</Link>
                 </li> : null}
             </ul>

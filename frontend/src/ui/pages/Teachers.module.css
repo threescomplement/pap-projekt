@@ -1,0 +1,26 @@
+@import "../index.css";
+@import "Courses.module.css";
+
+
+.teachersContainer {
+    composes: container from "../index.css";
+}
+
+.teachersHeader {
+    composes: coursesHeader from "Courses.module.css";
+}
+
+/* todo: move the searchbar and dropdown into a flex container so they fit horizontally */
+
+.teachersContainer input[type="text"] {
+    /*todo: same as coursescontainer, how to factor it out?*/
+    display: block;
+    padding: .8rem .8rem;
+    margin-bottom: 0;
+    width: 90%;
+}
+
+/* todo: make the gap between the select and table the same as in courses */
+.teachersContainer select {
+    font-size: 1.25rem;
+}

@@ -5,6 +5,7 @@ import {GoReport} from "react-icons/go";
 import ReportService, {reasons} from "../lib/Reports";
 import MessageBox from "./MessageBox";
 import ErrorBox from "./ErrorBox";
+import styles from "../ui/components/ReportBox.module.css"
 
 export interface ReportBoxProps {
     reportedEntity: Review | ReviewComment
@@ -37,13 +38,15 @@ export default function ReportBox(props: ReportBoxProps) {
         }
     }
 
-    return <div>
+    return <div className={styles.reportBox}>
         <h3>Wybierz powód zgłoszenia</h3>
         <ErrorBox message={errorMessage}/>
         <select onChange={e => setReason(e.target.value)}>
             {reasons.map(r => <option value={r}>{r}</option>)}
         </select>
-        <button onClick={handleReport}>Zgłoś</button>
+        <div className={styles.buttonContainer}>
+            <button onClick={handleReport}>Zgłoś</button>
         <button onClick={()=>setDisplayFull(false)}>Anuluj</button>
+        </div>
     </div>
 }

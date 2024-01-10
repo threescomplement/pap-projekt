@@ -1,0 +1,20 @@
+
+.reportBox {
+    background-color: #151515;
+    padding: 1rem;
+    border-radius: .5rem;
+    margin-bottom: .5rem;
+}
+
+.reportBox h3 {
+    font-size: 1.2rem;
+    color: #aaa;
+}
+
+.buttonContainer {
+    display: flex;
+    margin-top: .5rem;
+    width: 100%;
+    gap: 1rem;
+}
+

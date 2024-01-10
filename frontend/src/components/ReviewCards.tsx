@@ -7,6 +7,7 @@ import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
 import {ratingToPercentage} from "../lib/utils";
 import styles from "../ui/components/ReviewCards.module.css";
+import ReportBox from "./ReportBox";
 
 interface ReviewCardProps {
     review: Review;
@@ -47,7 +48,8 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     return <div className={styles.reviewCardContainer}>
         <div className={styles.reviewCardHeader}>
         <div className={styles.reviewCardAuthor}>{review.authorUsername} </div>
-        <div>{modificationContent}</div>
+        <div>{modificationContent}
+            <ReportBox reportedEntity={review}/></div>
         </div>
         <div className={styles.ratingsContainer}>
             <p className={styles.rating}>Jak łatwy: {ratingToPercentage(review.easeRating)}</p>

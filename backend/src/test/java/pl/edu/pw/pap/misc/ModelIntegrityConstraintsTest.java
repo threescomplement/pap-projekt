@@ -1,5 +1,6 @@
 package pl.edu.pw.pap.misc;
 
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,10 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.edu.pw.pap.PapApplication;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.comment.CommentRepository;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
+import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.teacher.Teacher;
 import pl.edu.pw.pap.teacher.TeacherRepository;
 import pl.edu.pw.pap.user.User;
@@ -39,7 +42,10 @@ public class ModelIntegrityConstraintsTest {
     PasswordEncoder passwordEncoder;
     @Autowired
     DummyData data;
-
+    @Autowired
+    ReviewReportRepository reviewReportRepository;
+    @Autowired
+    CommentReportRepository commentReportRepository;
 
     @Test
     void testRelatedComments() {

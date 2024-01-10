@@ -8,6 +8,8 @@ import {User} from "../../lib/User";
 import useUser from "../../hooks/useUser";
 import {EditBar} from "../../components/EditBar";
 import ErrorBox from "../../components/ErrorBox";
+import "./SingleReview.css"
+import ReportBox from "../../components/ReportBox";
 
 export function SingleReview() {
     const {courseId, authorUsername} = useParams();
@@ -114,7 +116,11 @@ function CommentCard({comment, afterDeleting, afterEditing}: CommentCardProps) {
         ? <CommentEditForm afterPosting={afterEditing} commentId={comment.id} setEditingForParent={setDuringEditing}
                            oldContent={comment.text}/>
         : <div>
-            <div>{comment.authorUsername} {modificationContent}</div>
+            <div>
+                <p>{comment.authorUsername}</p>
+                {modificationContent}
+                <ReportBox reportedEntity={comment}/>
+            </div>
             <div>{comment.text}</div>
             <ErrorBox message={errorMessage}/>
         </div>

@@ -3,3 +3,7 @@
 .adminHeader {
     composes: coursesHeader from "../courses/Courses.module.css";
 }
+
+.userManagementPanel {
+    margin-top: 2rem
+}

@@ -30,7 +30,7 @@ export default function Register() {
     }
 
     return <div className={styles.formContainer}>
-        <h1>Register new account</h1>
+        <h1>Rejestracja</h1>
 
         <form onSubmit={handleFormSubmit}>
             <label>
@@ -45,7 +45,7 @@ export default function Register() {
                 <p>Hasło:</p>
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
-            <input type="submit" value="Rejestracja"/>
+            <input className={styles.registerButton} type="submit" value="Rejestracja"/>
         </form>
     </div>
 }

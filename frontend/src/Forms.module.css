@@ -44,3 +44,10 @@
     justify-content: left;
     gap: 3rem;
 }
+
+.registerButton {
+    /*fixme*/
+    width: 40% !important;
+    padding: 1rem !important;
+    margin-top: 1rem;
+}

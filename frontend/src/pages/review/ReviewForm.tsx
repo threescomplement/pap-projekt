@@ -1,7 +1,7 @@
 import {useNavigate, useParams} from "react-router-dom";
 import React, {ChangeEvent, useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
-import "./ReviewForm.css"
+import styles from "../../ui/pages/ReviewForm.module.css"
 import {Review, ReviewRequest, ReviewService} from "../../lib/Review";
 import useUser from "../../hooks/useUser";
 import {ratingToPercentage} from "../../lib/utils";
@@ -77,29 +77,33 @@ export function ReviewForm() {
         // todo: remove this page from history so that clicking back doesn't return to it
     }
 
-    return <div className="review-form">
+    return <div className={styles.reviewForm}>
         <h1>{previousReview == null ? "Napisz opinię" : "Edytuj swoją opinię"}
-            {course != null && (` do kursu ${course.name}`)}</h1>`
+            {course != null && (` do kursu ${course.name}`)}</h1>
         <textarea placeholder="Co spodobało ci się w kursie, a co należy poprawić?"
                   onChange={e => setOpinion(e.target.value)}
                   value={opinion}>
         </textarea>
-        <div>
-            <p>Jak prosty był kurs?</p>
+        <div className={styles.sliderContainer}>
             <div>
-                <RatingSlider rating={easeRating} setRating={setEaseRating}/>
-                {easeRating == null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {ratingToPercentage(easeRating)}</p>}
+                <p>Jak prosty był kurs?</p>
+                <div>
+                    <RatingSlider rating={easeRating} setRating={setEaseRating}/>
+                    {easeRating == null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {ratingToPercentage(easeRating)}</p>}
+                </div>
             </div>
-        </div>
-        <div>
-            <p>Jak bardzo Cię zainteresował?</p>
-            <RatingSlider rating={interestRating} setRating={setInterestRating}/>
-            {interestRating == null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {ratingToPercentage(interestRating)}</p>}
-        </div>
-        <div>
-            <p>Jak bardzo angażujący był?</p>
-            <RatingSlider rating={engagementRating} setRating={setEngagementRating}/>
-            {engagementRating == null ? <p>Wybierz ocenę</p> : <p>Twoja ocena: {ratingToPercentage(engagementRating)}</p>}
+            <div>
+                <p>Jak bardzo Cię zainteresował?</p>
+                <RatingSlider rating={interestRating} setRating={setInterestRating}/>
+                {interestRating == null ? <p>Wybierz ocenę</p> :
+                    <p>Twoja ocena: {ratingToPercentage(interestRating)}</p>}
+            </div>
+            <div>
+                <p>Jak bardzo angażujący był?</p>
+                <RatingSlider rating={engagementRating} setRating={setEngagementRating}/>
+                {engagementRating == null ? <p>Wybierz ocenę</p> :
+                    <p>Twoja ocena: {ratingToPercentage(engagementRating)}</p>}
+            </div>
         </div>
         <div>
             <button onClick={handleClick}>Zatwierdź</button>

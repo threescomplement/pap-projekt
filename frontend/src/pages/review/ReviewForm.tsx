@@ -1,5 +1,5 @@
 import {useNavigate, useParams} from "react-router-dom";
-import React, {ChangeEvent, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Course, CourseService} from "../../lib/Course";
 import styles from "../../ui/pages/ReviewForm.module.css"
 import {Review, ReviewRequest, ReviewService} from "../../lib/Review";
@@ -55,16 +55,16 @@ export function ReviewForm() {
         };
 
         return <div>
-                <Slider.Root className={sliderStyles.SliderRoot} defaultValue={[sliderValue]}
-                             max={10} step={1}
-                             onValueCommit={handleChange}
-                >
-                    <Slider.Track className={sliderStyles.SliderTrack}>
-                        <Slider.Range className={sliderStyles.SliderRange}/>
-                    </Slider.Track>
-                    <Slider.Thumb className={sliderStyles.SliderThumb}/>
-                </Slider.Root>
-            </div>
+            <Slider.Root className={sliderStyles.SliderRoot} defaultValue={[sliderValue]}
+                         max={10} step={1}
+                         onValueCommit={handleChange}
+            >
+                <Slider.Track className={sliderStyles.SliderTrack}>
+                    <Slider.Range className={sliderStyles.SliderRange}/>
+                </Slider.Track>
+                <Slider.Thumb className={sliderStyles.SliderThumb}/>
+            </Slider.Root>
+        </div>
     }
 
     function handleClick() {

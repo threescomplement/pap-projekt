@@ -4,7 +4,6 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Review, ReviewService} from "../../lib/Review";
 import useUser from "../../hooks/useUser";
 import {Teacher, TeacherService} from "../../lib/Teacher";
-import {ratingToPercentage} from "../../lib/utils";
 import MessageBox from "../../components/MessageBox";
 import {ReviewCardWithLink} from "../../components/ReviewCards";
 import styles from "../../ui/pages/SingleCourse.module.css"

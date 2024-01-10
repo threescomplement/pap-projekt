@@ -1,9 +1,8 @@
-import {TeacherService, Teacher} from "../../lib/Teacher";
+import {Teacher, TeacherService} from "../../lib/Teacher";
 import {useParams} from "react-router-dom";
 import React, {useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
 import {Course} from "../../lib/Course";
-import {ratingToPercentage} from "../../lib/utils";
 import styles from "../../ui/pages/SingleTeacher.module.css"
 import AverageRatingDisplay from "../../components/AverageRatingDisplay";
 

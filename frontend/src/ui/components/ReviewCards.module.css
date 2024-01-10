@@ -2,14 +2,13 @@
 .reviewCardContainer {
     background-color: #272727;
     color: #fff;
-    padding: .8rem .8rem 1rem;
+    padding: .8rem .8rem 2rem;
     margin-bottom: 1rem;
     border-radius: 0.5rem;
 }
 
 .reviewCardHeader {
     display: flex;
-    /*background-color: #444;*/
     justify-content: space-between;
     align-items: center;
 }

@@ -27,4 +27,12 @@
     color: #272727;
 }
 
+.noReviewsDisclaimer {
+    margin: 1rem 0 2rem;
+}
+
+.reviewListContainer {
+    margin: 1rem 0 2rem;
+}
+
 /* todo: space the lower button out */

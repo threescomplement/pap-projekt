@@ -88,8 +88,8 @@ function CourseDetails(course: Course) {
 
 
     const reviewContent = reviews.length === 0
-        ? <div>Ten kurs nie ma jeszcze opinii</div>
-        : <div>{<ReviewList reviews={reviews} refreshParent={afterReviewDelete}/>}</div>
+        ? <div className={styles.noReviewsDisclaimer}>Ten kurs nie ma jeszcze opinii</div>
+        : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews} refreshParent={afterReviewDelete}/>}</div>
 
 
 

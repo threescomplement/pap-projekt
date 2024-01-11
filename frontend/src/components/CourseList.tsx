@@ -29,12 +29,13 @@ interface CourseProps {
 }
 
 export function CourseRow({course}: CourseProps) {
+    const hasRatings = course.numberOfRatings != "0";
     return (
         <tr id={course.id}>
             <td><Link to={`/courses/${course.id}`}> {course.name}</Link></td>
-            <td> {ratingToPercentage(course.averageEaseRating)}</td>
-            <td> {ratingToPercentage(course.averageInterestRating)}</td>
-            <td>{ratingToPercentage(course.averageEngagementRating)}</td>
-            <td>{NUM_REVIEWS_PLACEHOLDER}</td>
+            <td> {hasRatings ? ratingToPercentage(course.averageEaseRating) : "N/A"}</td>
+            <td> {hasRatings ? ratingToPercentage(course.averageInterestRating) : "N/A"}</td>
+            <td>{hasRatings ? ratingToPercentage(course.averageEngagementRating) : "N/A"}</td>
+            <td>{course.numberOfRatings}</td>
         </tr>)
 }

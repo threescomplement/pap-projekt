@@ -61,22 +61,13 @@ interface TeacherProps {
     teacher: Teacher
 }
 
-export function TeacherRow({teacher}: TeacherProps) {
+function TeacherRow({teacher}: TeacherProps) {
+    const hasReviews = teacher.numberOfRatings != "0";
     return <tr id={teacher.id}>
-        <td>
-            <Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link>
-        </td>
-        <td>
-            {ratingToPercentage(teacher.averageEaseRating)}
-        </td>
-        <td>
-            {ratingToPercentage(teacher.averageInterestRating)}
-        </td>
-        <td>
-            {ratingToPercentage(teacher.averageEngagementRating)}
-        </td>
-        <td>
-            {NUM_REVIEWS_PLACEHOLDER}
-        </td>
+        <td><Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link></td>
+        <td>{hasReviews ? ratingToPercentage(teacher.averageEaseRating) : "N/A"}</td>
+        <td>{hasReviews ? ratingToPercentage(teacher.averageInterestRating) : "N/A"}</td>
+        <td>{hasReviews ? ratingToPercentage(teacher.averageEngagementRating) : "N/A"}</td>
+        <td>{teacher.numberOfRatings}</td>
     </tr>
 }

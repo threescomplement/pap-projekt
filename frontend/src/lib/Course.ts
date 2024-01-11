@@ -12,6 +12,7 @@ export interface Course {
     averageInterestRating: string,
     averageEngagementRating: string,
     teacherId: string,
+    numberOfRatings: string,
     _links: {
         self: Link
         teacher: Link

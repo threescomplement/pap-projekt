@@ -1,6 +1,7 @@
 import {Course} from "./Course";
 import api from "./api";
 import {Link} from "./utils";
+import {Review} from "./Review";
 
 export interface Teacher {
     id: string
@@ -8,6 +9,7 @@ export interface Teacher {
     averageEaseRating: string
     averageInterestRating: string
     averageEngagementRating: string
+    numberOfRatings: string
     _links: {
         self: Link
         courses: Link
@@ -54,9 +56,16 @@ async function fetchTeacherByCourse(course: Course) {
         .catch(e => console.error(e));
 }
 
+async function fetchTeacherReviews(teacherId: string): Promise<Review[]> {
+    const response = await api.get(`/teachers/${Number(teacherId)}/reviews`);
+    const json = await response.json();
+    return json._embedded.reviews;
+}
+
 export const TeacherService = {
     fetchTeacher,
     fetchTeacherByFilters: fetchTeachersByFilters,
     fetchTeacherCourses,
-    fetchTeacherByCourse
+    fetchTeacherByCourse,
+    fetchTeacherReviews
 }

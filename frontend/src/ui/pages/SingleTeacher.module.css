@@ -25,6 +25,10 @@
     margin: 1rem 0 2rem;
 }
 
+.reviewContainer {
+    width: 90%;
+}
+
 .reviewContainer h2 {
     margin-top: 3rem;
 }

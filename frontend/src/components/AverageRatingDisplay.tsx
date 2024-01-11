@@ -13,7 +13,7 @@ export default function AverageRatingDisplay({entity}: AverageRatingDisplayProps
     // for the reviewer: is this acceptable? goofy ah polymorphism's
     const isCourse= (entity as Course).language !== undefined;
     const easeLabel = isCourse ? "Jak łatwy?" : "Jak łatwe zajęcia prowadzi?";
-    const interestLabel = isCourse ? "Jak interesujący?" : "Jak interesujące zajęcia prowdzi?";
+    const interestLabel = isCourse ? "Jak interesujący?" : "Jak interesujące zajęcia prowadzi?";
     const engagementLabel = isCourse ? "Jak angażujący?" : "Jak bardzo angażuje studentów?";
 
 

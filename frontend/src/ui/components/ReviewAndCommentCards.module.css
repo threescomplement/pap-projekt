@@ -22,6 +22,7 @@
     display: flex;
     margin-bottom: 0.5rem;
     justify-content: space-between;
+    gap: 2rem;
 }
 
 .rating {

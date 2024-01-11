@@ -22,4 +22,5 @@ public class CourseDTO extends RepresentationModel<CourseDTO> {
     private Double averageEngagementRating;
     private Integer numberOfRatings;
     private Long teacherId;
+    private String teacherName;
 }

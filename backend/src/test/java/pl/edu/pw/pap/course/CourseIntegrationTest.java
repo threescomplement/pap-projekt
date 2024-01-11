@@ -80,6 +80,8 @@ class CourseIntegrationTest {
         assertEquals(5.5, json.read("$.averageEaseRating"), 0.01);
         assertEquals(5.5, json.read("$.averageInterestRating"), 0.01);
         assertEquals(5.5, json.read("$.averageEngagementRating"), 0.01);
+        assertEquals("mgr. Jan Kowalski", json.read("$.teacherName"));
+
     }
 
     @Test

@@ -63,7 +63,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     }
 
     return <div className={styles.singleReviewContainer}>
-        <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
+        <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview} renderCourseLink={true}/>
         <MessageBox message={message}/>
         <CommentList comments={comments} afterDeleting={afterDeletingComment} afterEditing={reloadComments}/>
         <CommentInputForm afterPosting={reloadComments} courseId={courseId!}

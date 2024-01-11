@@ -15,6 +15,7 @@ import api from "../lib/api";
 interface ReviewCardProps {
     review: Review;
     afterDeleting: Function
+    renderCourseLink: boolean
 }
 
 export function ReviewCardWithLink(props: ReviewCardProps) {
@@ -35,10 +36,11 @@ export function ReviewCardWithLink(props: ReviewCardProps) {
     </div>
 }
 
-export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) {
+export function ReviewCardWithoutLink({review, afterDeleting, renderCourseLink}: ReviewCardProps) {
     const {courseId} = useParams()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const user: User = useUser().user!;
+    const [course, setCourse] = useState<Course | null>(null)
     const navigate = useNavigate();
     const isAdmin: boolean = user.roles[0] === "ROLE_ADMIN";
     const isReviewAuthor: boolean = review.authorUsername === user.username;
@@ -59,10 +61,19 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
             })
     }
 
+    useEffect(() => {
+        api.get(review._links.course.href)
+            .then(response => response.json())
+            .then(course => setCourse(course))
+    }, []);
+
+
     return <div className={styles.cardContainer}>
         <div className={styles.cardHeader}>
             <div className={styles.usernameAndProgressContainer}>
-                <p className={styles.cardAuthor}>{review.authorUsername} </p>
+                <p className={styles.cardAuthor}>{review.authorUsername}
+                    {course != null && renderCourseLink && <> o kursie<Link className={styles.courseLink} to={`/courses/${course.id}`}>{course.name}</Link></>}
+                        </p>
             </div>
             <div className={styles.cardButtonContainer}>{modificationContent}
                 <ReportBox reportedEntity={review}/></div>

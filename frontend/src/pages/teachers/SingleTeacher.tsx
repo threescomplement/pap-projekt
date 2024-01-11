@@ -88,16 +88,17 @@ export default function SingleTeacher() {
     const reviewContent = reviews.length === 0
         ? <div className={styles.noReviewsDisclaimer}>Kursy tego lektora nie mają jeszcze opinii</div>
         : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews}
-                                                                   refreshParent={afterReviewDelete}/>}</div>
+                                                                   refreshParent={afterReviewDelete}
+                                                                   renderCourseLinks={true}/>}</div>
 
 
     return <div className={styles.singleTeacherContainer}>
         <TeacherData teacher={teacher}/>
         <TeacherCourseList teacherId={teacherId}/>
         <div className={styles.reviewContainer}>
-        <h2>Opinie</h2>
-        <MessageBox message={message}/>
-        {reviewContent}
+            <h2>Opinie</h2>
+            <MessageBox message={message}/>
+            {reviewContent}
         </div>
     </div>
 }

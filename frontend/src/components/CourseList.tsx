@@ -30,7 +30,7 @@ interface CourseProps {
 }
 
 export function CourseRow({course}: CourseProps) {
-    const hasRatings = course.numberOfRatings != "0";
+    const hasRatings = parseInt(course.numberOfRatings) !== 0;
     return (
         <tr id={course.id}>
             <td><Link to={`/courses/${course.id}`}> {course.name}</Link></td>

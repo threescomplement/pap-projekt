@@ -69,4 +69,8 @@
     gap: 3rem;
 }
 
+.courseLink {
+    padding: 0.4rem;
+}
+
 /* todo: add popups when hovering over the buttons */

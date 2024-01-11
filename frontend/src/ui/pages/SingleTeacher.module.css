@@ -17,3 +17,14 @@
     padding-bottom: .5rem;
 }
 
+.noReviewsDisclaimer {
+    margin: 1rem 0 2rem;
+}
+
+.reviewListContainer {
+    margin: 1rem 0 2rem;
+}
+
+.reviewContainer h2 {
+    margin-top: 3rem;
+}

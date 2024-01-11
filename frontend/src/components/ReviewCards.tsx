@@ -1,7 +1,7 @@
 import {Review, ReviewService} from "../lib/Review";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {EditBar} from "./EditBar";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import useUser from "../hooks/useUser";
 import {User} from "../lib/User";
 import ErrorBox from "./ErrorBox";
@@ -9,6 +9,8 @@ import {ratingToPercentage} from "../lib/utils";
 import styles from "../ui/components/ReviewAndCommentCards.module.css";
 import ReportBox from "./ReportBox";
 import RatingProgressBar from "./RatingProgressBar";
+import {Course} from "../lib/Course";
+import api from "../lib/api";
 
 interface ReviewCardProps {
     review: Review;
@@ -16,9 +18,20 @@ interface ReviewCardProps {
 }
 
 export function ReviewCardWithLink(props: ReviewCardProps) {
+    const [courseId, setCourseId] = useState<Course | null>(null);
+    useEffect(() => {
+        api.get(props.review._links.course.href)
+            .then(response => response.json())
+            .then(course => course.id)
+            .then(courseId => setCourseId(courseId))
+    }, []);
+
     return <div className={styles.cardContainer}>
         <ReviewCardWithoutLink {...props}/>
-        <Link to={`reviews/${props.review.authorUsername}`} className={styles.readMoreLink}> Czytaj więcej </Link>
+        {courseId != null ?
+            <Link to={`/courses/${courseId}/reviews/${props.review.authorUsername}`}
+                  className={styles.readMoreLink}> Czytaj
+                więcej </Link> : <p>Loading review link...</p>}
     </div>
 }
 
@@ -49,7 +62,7 @@ export function ReviewCardWithoutLink({review, afterDeleting}: ReviewCardProps) 
     return <div className={styles.cardContainer}>
         <div className={styles.cardHeader}>
             <div className={styles.usernameAndProgressContainer}>
-            <p className={styles.cardAuthor}>{review.authorUsername} </p>
+                <p className={styles.cardAuthor}>{review.authorUsername} </p>
             </div>
             <div className={styles.cardButtonContainer}>{modificationContent}
                 <ReportBox reportedEntity={review}/></div>

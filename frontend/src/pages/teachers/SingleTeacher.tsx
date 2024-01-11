@@ -5,6 +5,9 @@ import CourseList from "../../components/CourseList";
 import {Course} from "../../lib/Course";
 import styles from "../../ui/pages/SingleTeacher.module.css"
 import AverageRatingDisplay from "../../components/AverageRatingDisplay";
+import {Review, ReviewService} from "../../lib/Review";
+import ReviewList from "../../components/ReviewList";
+import MessageBox from "../../components/MessageBox";
 
 interface SingleTeacherProps {
     teacher: Teacher
@@ -45,18 +48,33 @@ export default function SingleTeacher() {
     const {teacherId} = useParams();
     const [teacher, setTeacher] = useState<Teacher | null>(null);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [reviews, setReviews] = useState<Review[]>([])
+    const [message, setMessage] = useState<string>("");
+
+    function reloadReviews() {
+        TeacherService.fetchTeacherReviews(teacherId!)
+            .then(r => {
+                setReviews(r);
+            })
+            .catch(e => console.log(e));
+    }
+
+    function afterReviewDelete() {
+        reloadReviews();
+        setMessage("Opinia została usunięta.");
+    }
 
     useEffect(() => {
         if (teacherId == null) {
             console.error("teacherId is null");
             return;
         }
-        TeacherService.fetchTeacher(teacherId)
-            .then(t => {
-                    setTeacher(t);
-                    setIsLoaded(true);
-                }
-            )
+
+        TeacherService.fetchTeacher(teacherId).then((teacher) => {
+            setTeacher(teacher);
+            reloadReviews()
+            setIsLoaded(true);
+        }).catch(e => console.log("Error fetching data", e))
     }, [teacherId]);
 
     if (teacher == null || teacherId == null || !isLoaded) {
@@ -67,8 +85,19 @@ export default function SingleTeacher() {
     }
 
 
+    const reviewContent = reviews.length === 0
+        ? <div className={styles.noReviewsDisclaimer}>Kursy tego naucyzciela nie mają jeszcze opinii</div>
+        : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews}
+                                                                   refreshParent={afterReviewDelete}/>}</div>
+
+
     return <div className={styles.singleTeacherContainer}>
         <TeacherData teacher={teacher}/>
         <TeacherCourseList teacherId={teacherId}/>
+        <div className={styles.reviewContainer}>
+        <h2>Opinie</h2>
+        <MessageBox message={message}/>
+        {reviewContent}
+        </div>
     </div>
 }

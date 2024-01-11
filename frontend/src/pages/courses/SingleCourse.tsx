@@ -8,6 +8,7 @@ import MessageBox from "../../components/MessageBox";
 import {ReviewCardWithLink} from "../../components/ReviewCards";
 import styles from "../../ui/pages/SingleCourse.module.css"
 import AverageRatingDisplay from "../../components/AverageRatingDisplay";
+import ReviewList from "../../components/ReviewList";
 
 export default function SingleCourse() {
     const username = useUser().user!.username
@@ -113,21 +114,4 @@ function CourseDetails(course: Course) {
     </div>
 }
 
-
-interface ReviewListProps {
-    reviews: Review[]
-    refreshParent: Function
-}
-
-function ReviewList({reviews, refreshParent}: ReviewListProps) {
-    return <ul>
-        {reviews
-            //todo .sort by timestamps
-            .map((r) => (
-                <li key={r.authorUsername}>
-                    <ReviewCardWithLink review={r} afterDeleting={refreshParent}/>
-                </li>
-            ))}
-    </ul>
-}
 

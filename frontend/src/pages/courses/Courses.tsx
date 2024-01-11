@@ -1,6 +1,6 @@
 import CourseList from "../../components/CourseList";
 import React, {useEffect, useState} from "react";
-import {Course, CourseService, } from "../../lib/Course";
+import {Course, CourseService,} from "../../lib/Course";
 import Filter, {all, languages, levels, modules, types} from "../../components/Filter";
 import styles from "../../ui/pages/Courses.module.css"
 
@@ -56,6 +56,8 @@ export function Courses() {
                     onSelect={(e) => setModule(e.target.value)}
                 />
             </div>
-            {isLoaded ? <div className={styles.courseList}><CourseList courses={courses}/></div> : <p>Loading...</p>}
+            {isLoaded ?
+                <div className={styles.courseList}><CourseList courses={courses} showTeacherName={true}/></div> :
+                <p>Loading...</p>}
         </div>);
 }

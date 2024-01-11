@@ -1,26 +1,26 @@
 import {Course} from "../lib/Course";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Link} from "react-router-dom";
 import {ratingToPercentage} from "../lib/utils";
-import {Teacher, TeacherService} from "../lib/Teacher";
 
 interface CourseListProps {
     courses: Course[]
+    showTeacherName: boolean
 }
 
-export default function CourseList({courses}: CourseListProps) {
+export default function CourseList({courses, showTeacherName}: CourseListProps) {
 
     return courses.length !== 0 ? <table>
         <tbody>
         <tr id="headers">
             <th>Nazwa</th>
-            <th>Lektor</th>
+            {showTeacherName && <th>Lektor</th>}
             <th>Jak łatwy?</th>
             <th>Jak interesujący?</th>
             <th>Jak angażujący?</th>
             <th>Liczba opinii</th>
         </tr>
-        {courses.map(c => <CourseRow course={c}/>)}
+        {courses.map(c => <CourseRow course={c} showTeacherName={showTeacherName}/>)}
         </tbody>
     </table> : <p>Ten nauczyciel nie ma jeszcze kursów</p>;
     /* todo: styling */
@@ -29,21 +29,16 @@ export default function CourseList({courses}: CourseListProps) {
 
 interface CourseProps {
     course: Course
+    showTeacherName: boolean
 }
 
-export function CourseRow({course}: CourseProps) {
+export function CourseRow({course, showTeacherName}: CourseProps) {
     const hasRatings = parseInt(course.numberOfRatings) !== 0;
-    const [teacherName, setTeacherName] = useState<null | string>(null);
-    useEffect(() => {
-        TeacherService.fetchTeacher(course.teacherId)
-            .then(t=>setTeacherName(t.name))
-    }, []);
-
 
     return (
         <tr id={course.id}>
             <td><Link to={`/courses/${course.id}`}> {course.name}</Link></td>
-            {teacherName != null && <td><Link to={`/teachers/${course.teacherId}`}>{teacherName}</Link></td>}
+            {showTeacherName && <td><Link to={`/teachers/${course.teacherId}`}>{course.teacherName}</Link></td>}
             <td> {hasRatings ? ratingToPercentage(course.averageEaseRating) : "N/A"}</td>
             <td> {hasRatings ? ratingToPercentage(course.averageInterestRating) : "N/A"}</td>
             <td>{hasRatings ? ratingToPercentage(course.averageEngagementRating) : "N/A"}</td>

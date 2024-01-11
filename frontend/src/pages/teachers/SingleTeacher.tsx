@@ -1,11 +1,11 @@
 import {Teacher, TeacherService} from "../../lib/Teacher";
 import {useParams} from "react-router-dom";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import CourseList from "../../components/CourseList";
 import {Course} from "../../lib/Course";
 import styles from "../../ui/pages/SingleTeacher.module.css"
 import AverageRatingDisplay from "../../components/AverageRatingDisplay";
-import {Review, ReviewService} from "../../lib/Review";
+import {Review} from "../../lib/Review";
 import ReviewList from "../../components/ReviewList";
 import MessageBox from "../../components/MessageBox";
 
@@ -39,7 +39,7 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
 
     return <div className={styles.teacherCourseList}>
         <h2>Kursy</h2>
-        <CourseList courses={courses}/>
+        <CourseList courses={courses} showTeacherName={false}/>
     </div>
 }
 
@@ -50,6 +50,7 @@ export default function SingleTeacher() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([])
     const [message, setMessage] = useState<string>("");
+    const memorizedReloadReviews = useCallback(reloadReviews, [teacherId])
 
     function reloadReviews() {
         TeacherService.fetchTeacherReviews(teacherId!)
@@ -72,10 +73,10 @@ export default function SingleTeacher() {
 
         TeacherService.fetchTeacher(teacherId).then((teacher) => {
             setTeacher(teacher);
-            reloadReviews()
+            memorizedReloadReviews()
             setIsLoaded(true);
         }).catch(e => console.log("Error fetching data", e))
-    }, [teacherId]);
+    }, [teacherId, memorizedReloadReviews]);
 
     if (teacher == null || teacherId == null || !isLoaded) {
         return <>

@@ -1,7 +1,7 @@
 import {Course} from "../lib/Course";
 import React from "react";
 import {Link} from "react-router-dom";
-import {NUM_REVIEWS_PLACEHOLDER, ratingToPercentage} from "../lib/utils";
+import {ratingToPercentage} from "../lib/utils";
 
 interface CourseListProps {
     courses: Course[]
@@ -9,7 +9,7 @@ interface CourseListProps {
 
 export default function CourseList({courses}: CourseListProps) {
 
-    return <table>
+    return courses.length !== 0 ?<table>
         <tbody>
         <tr id="headers">
             <th>Nazwa</th>
@@ -20,7 +20,8 @@ export default function CourseList({courses}: CourseListProps) {
         </tr>
         {courses.map(c => <CourseRow course={c}/>)}
         </tbody>
-    </table>;
+    </table> : <p>Ten nauczyciel nie ma jeszcze kursów</p>;
+    /* todo: styling */
 }
 
 

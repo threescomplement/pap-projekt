@@ -37,7 +37,7 @@ function TeacherCourseList({teacherId}: TeacherCourseListProps) {
             .then(c => setCourses(c))
     }, [teacherId]);
 
-    return <div>
+    return <div className={styles.teacherCourseList}>
         <h2>Kursy</h2>
         <CourseList courses={courses}/>
     </div>
@@ -86,7 +86,7 @@ export default function SingleTeacher() {
 
 
     const reviewContent = reviews.length === 0
-        ? <div className={styles.noReviewsDisclaimer}>Kursy tego naucyzciela nie mają jeszcze opinii</div>
+        ? <div className={styles.noReviewsDisclaimer}>Kursy tego lektora nie mają jeszcze opinii</div>
         : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews}
                                                                    refreshParent={afterReviewDelete}/>}</div>
 

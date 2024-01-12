@@ -76,15 +76,8 @@ export function ReportCard(props: ReportCardProps) {
     const [showOkConfirmation, setShowOkConfirmation] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
-    //TODO refactor this, include the params in the DTO instead of relying on links being the same
-    function extractLink(report: Report): string {
-        const baseLink = report._links.review.href;
-        const idx = baseLink.indexOf("/api") + 4;
-        return baseLink.substring(idx);
-    }
-
     return <div>
-        <Link to={extractLink(props.report)}>
+        <Link to={`/courses/${props.report.courseId}/reviews/${props.report.reviewerUsername}`}>
             <h3>Zgłoszone przez użytkownika {props.report.reportingUsername}</h3>
         </Link>
         <p className={styles.reportReason}>Powód zgłoszenia: {props.report.reason}</p>

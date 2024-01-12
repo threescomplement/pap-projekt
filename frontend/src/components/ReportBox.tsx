@@ -12,7 +12,8 @@ export interface ReportBoxProps {
 }
 export default function ReportBox(props: ReportBoxProps) {
     const [displayFull, setDisplayFull] = useState(false);
-    const [reason, setReason] = useState("");
+    /*todo: not set an initial value for the reason this way*/
+    const [reason, setReason] = useState("nieprawdziwe informacje");
     const [reportSent, setReportSent] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 

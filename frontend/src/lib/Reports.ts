@@ -7,6 +7,8 @@ export interface Report {
     reportedText: string
     reportingUsername: string
     reason: string
+    courseId: string
+    reviewerUsername: string
     _links: {
         self: Link
         entity: Link
@@ -15,7 +17,7 @@ export interface Report {
 }
 
 export interface ReportRequest {
-    reason: string
+    reportReason: string
 }
 
 // TODO more reasonable options
@@ -42,8 +44,8 @@ async function deleteReportedEntity(report: Report): Promise<boolean> {
     return response.ok;
 }
 
-async function reportEntity(entity: Review | ReviewComment, reason: string): Promise<boolean> {
-    const body: ReportRequest = {reason};
+async function reportEntity(entity: Review | ReviewComment, reportReason: string): Promise<boolean> {
+    const body: ReportRequest = {reportReason};
     const response = await api.post(`${entity._links.self.href}/reports`, body);
     return response.ok;
 }

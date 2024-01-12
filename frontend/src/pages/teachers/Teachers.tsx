@@ -3,7 +3,7 @@ import {TeacherService, Teacher} from "../../lib/Teacher";
 import Filter, {all, languages} from "../../components/Filter";
 import styles from "../../ui/pages/Teachers.module.css";
 import {Link} from "react-router-dom";
-import {NUM_REVIEWS_PLACEHOLDER, ratingToPercentage} from "../../lib/utils";
+import {ratingToPercentage} from "../../lib/utils";
 
 export function Teachers() {
     const [teachers, setTeachers] = useState<Teacher[]>([]);
@@ -61,22 +61,13 @@ interface TeacherProps {
     teacher: Teacher
 }
 
-export function TeacherRow({teacher}: TeacherProps) {
+function TeacherRow({teacher}: TeacherProps) {
+    const hasReviews = parseInt(teacher.numberOfRatings) !== 0;
     return <tr id={teacher.id}>
-        <td>
-            <Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link>
-        </td>
-        <td>
-            {ratingToPercentage(teacher.averageEaseRating)}
-        </td>
-        <td>
-            {ratingToPercentage(teacher.averageInterestRating)}
-        </td>
-        <td>
-            {ratingToPercentage(teacher.averageEngagementRating)}
-        </td>
-        <td>
-            {NUM_REVIEWS_PLACEHOLDER}
-        </td>
+        <td><Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link></td>
+        <td>{hasReviews ? ratingToPercentage(teacher.averageEaseRating) : "N/A"}</td>
+        <td>{hasReviews ? ratingToPercentage(teacher.averageInterestRating) : "N/A"}</td>
+        <td>{hasReviews ? ratingToPercentage(teacher.averageEngagementRating) : "N/A"}</td>
+        <td>{teacher.numberOfRatings}</td>
     </tr>
 }

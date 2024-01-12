@@ -16,8 +16,6 @@ export function formReducer<T>(state: T, event: ChangeEvent<HTMLInputElement>): 
     }
 }
 
-export const NUM_REVIEWS_PLACEHOLDER = 0;
-
 export function ratingToPercentage(rating: string | number) {
     const numericRating = typeof rating === 'string' ? parseFloat(rating) : rating;
     if (isNaN(numericRating)) return '0%';

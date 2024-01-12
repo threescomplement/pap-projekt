@@ -53,7 +53,7 @@ export default function ReportsPanel() {
     useEffect(() => {
         loadReports()
             .catch(e => console.error(e));
-    })
+    }, [])
 
     return <div>
         <h2>Zgłoszenia</h2>

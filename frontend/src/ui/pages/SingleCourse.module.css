@@ -51,3 +51,7 @@
     padding: .4rem .3rem;
     /* todo: space this out a bit */
 }
+
+.teacherCourseList p {
+    margin-top: 3rem;
+}

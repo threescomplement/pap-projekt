@@ -49,6 +49,7 @@ public class CourseService {
                 .averageEngagementRating(averageEngagementRating)
                 .numberOfRatings(reviews.size())
                 .teacherId(course.getTeacher().getId())
+                .teacherName(course.getTeacher().getName())
                 .build();
     }
 

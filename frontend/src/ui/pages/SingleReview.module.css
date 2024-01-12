@@ -22,3 +22,7 @@
 .addCommentBox button {
     padding: .8rem
 }
+
+.commentEditForm {
+    display: block;
+}

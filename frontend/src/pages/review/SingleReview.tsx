@@ -194,14 +194,16 @@ function CommentEditForm({afterPosting, commentId, setEditingForParent, oldConte
             .catch(e => console.log(e));
     }
 
-    return <div>
+    return <div className={styles.commentEditForm}>
     <textarea
         placeholder="Twój komentarz"
         onChange={e => setComment(e.target.value)}
         value={comment}
     />
+        <div>
         <button onClick={handleCommentSubmit}>Edytuj komentarz</button>
         <button onClick={() => setEditingForParent(false)}>Anuluj</button>
+            </div>
     </div>
 
 }

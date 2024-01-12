@@ -7,6 +7,8 @@ export interface Report {
     reportedText: string
     reportingUsername: string
     reason: string
+    courseId: string
+    reviewerUsername: string
     _links: {
         self: Link
         entity: Link

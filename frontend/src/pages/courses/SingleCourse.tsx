@@ -5,7 +5,6 @@ import {Review, ReviewService} from "../../lib/Review";
 import useUser from "../../hooks/useUser";
 import {Teacher, TeacherService} from "../../lib/Teacher";
 import MessageBox from "../../components/MessageBox";
-import {ReviewCardWithLink} from "../../components/ReviewCards";
 import styles from "../../ui/pages/SingleCourse.module.css"
 import AverageRatingDisplay from "../../components/AverageRatingDisplay";
 import ReviewList from "../../components/ReviewList";

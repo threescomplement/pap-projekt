@@ -62,7 +62,7 @@ interface TeacherProps {
 }
 
 function TeacherRow({teacher}: TeacherProps) {
-    const hasReviews = teacher.numberOfRatings != "0";
+    const hasReviews = parseInt(teacher.numberOfRatings) !== 0;
     return <tr id={teacher.id}>
         <td><Link to={`/teachers/${teacher.id}`}> {teacher.name}</Link></td>
         <td>{hasReviews ? ratingToPercentage(teacher.averageEaseRating) : "N/A"}</td>

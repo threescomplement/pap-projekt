@@ -20,9 +20,9 @@ export default function CourseList({courses, showTeacherName}: CourseListProps) 
             <th>Jak angażujący?</th>
             <th>Liczba opinii</th>
         </tr>
-        {courses.map(c => <CourseRow course={c} showTeacherName={showTeacherName}/>)}
+        {courses.map(c => <CourseRow key={c.id} course={c} showTeacherName={showTeacherName}/>)}
         </tbody>
-    </table> : <p>Ten nauczyciel nie ma jeszcze kursów</p>;
+    </table> : <p>Brak kursów do wyświetlenia</p>;
     /* todo: styling */
 }
 

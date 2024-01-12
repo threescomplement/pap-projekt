@@ -37,7 +37,6 @@ export function ReviewCardWithLink(props: ReviewCardProps) {
 }
 
 export function ReviewCardWithoutLink({review, afterDeleting, renderCourseLink}: ReviewCardProps) {
-    const {courseId} = useParams()
     const [errorMessage, setErrorMessage] = useState<string>("")
     const user: User = useUser().user!;
     const [course, setCourse] = useState<Course | null>(null)
@@ -48,13 +47,13 @@ export function ReviewCardWithoutLink({review, afterDeleting, renderCourseLink}:
         <EditBar
             handleDelete={(e) => handleDeleteReview(e)}
             deleteConfirmationQuery={"Czy na pewno chcesz usunąć opinię?"}
-            handleEdit={(_) => navigate(`/courses/${courseId}/writeReview`)}
+            handleEdit={(_) => navigate(`/courses/${course!.id}/writeReview`)}
             canEdit={isReviewAuthor}
         /> : null;
 
     function handleDeleteReview(e: React.MouseEvent) {
         e.preventDefault()
-        ReviewService.deleteReview(courseId!, review.authorUsername)
+        ReviewService.deleteReview(course!.id, review.authorUsername)
             .then(deleted => {
                 (deleted) ? afterDeleting() : setErrorMessage('Przy usuwaniu opinii wystąpił błąd. ' +
                     'Spróbuj ponownie lub skontaktuj się z administracją...');
@@ -75,8 +74,8 @@ export function ReviewCardWithoutLink({review, afterDeleting, renderCourseLink}:
                     {course != null && renderCourseLink && <> o kursie<Link className={styles.courseLink} to={`/courses/${course.id}`}>{course.name}</Link></>}
                         </p>
             </div>
-            <div className={styles.cardButtonContainer}>{modificationContent}
-                <ReportBox reportedEntity={review}/></div>
+            {course != null ? <div className={styles.cardButtonContainer}>{modificationContent}
+                <ReportBox reportedEntity={review}/></div> : <p>Loading...</p>}
         </div>
         <div className={styles.ratingsContainer}>
             <div>

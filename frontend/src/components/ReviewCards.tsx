@@ -1,5 +1,5 @@
 import {Review, ReviewService} from "../lib/Review";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {EditBar} from "./EditBar";
 import React, {useEffect, useState} from "react";
 import useUser from "../hooks/useUser";
@@ -25,7 +25,7 @@ export function ReviewCardWithLink(props: ReviewCardProps) {
             .then(response => response.json())
             .then(course => course.id)
             .then(courseId => setCourseId(courseId))
-    }, []);
+    }, [props.review._links.course.href]);
 
     return <div className={styles.cardContainer}>
         <ReviewCardWithoutLink {...props}/>
@@ -64,7 +64,7 @@ export function ReviewCardWithoutLink({review, afterDeleting, renderCourseLink}:
         api.get(review._links.course.href)
             .then(response => response.json())
             .then(course => setCourse(course))
-    }, []);
+    }, [review._links.course.href]);
 
 
     return <div className={styles.cardContainer}>

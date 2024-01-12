@@ -78,8 +78,14 @@ interface CommentListProps {
 }
 
 export function CommentList({comments, afterDeleting, afterEditing}: CommentListProps) {
+    const sortedComments = comments.sort((a, b) => {
+        const dateA = new Date(a.created);
+        const dateB = new Date(b.created);
+        return dateA.getTime() - dateB.getTime();
+    });
+
     return <ul>
-        {comments //todo: sort
+        {sortedComments //todo: factor out sorting these and reviews to a separate function
             .map(c => <li
                 key={c.id}><CommentCard comment={c} afterDeleting={afterDeleting} afterEditing={afterEditing}/>
             </li>)}

@@ -28,6 +28,8 @@ a {
     padding: .8rem;
     transition: background-color 0.3s, border-radius 0.3s;
     border-radius: .3rem;
+    display: inline-block;
+    line-height: 1.6;
 }
 
 a:hover {
@@ -55,7 +57,7 @@ html {
 
 @media screen and (min-width: 600px) {
     html {
-        font-size: 18px;
+        font-size: 16px;
     }
 }
 

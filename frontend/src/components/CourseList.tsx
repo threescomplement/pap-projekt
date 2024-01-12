@@ -1,40 +1,47 @@
 import {Course} from "../lib/Course";
 import React from "react";
 import {Link} from "react-router-dom";
-import {NUM_REVIEWS_PLACEHOLDER, ratingToPercentage} from "../lib/utils";
+import {ratingToPercentage} from "../lib/utils";
 
 interface CourseListProps {
     courses: Course[]
+    showTeacherName: boolean
 }
 
-export default function CourseList({courses}: CourseListProps) {
+export default function CourseList({courses, showTeacherName}: CourseListProps) {
 
-    return <table>
+    return courses.length !== 0 ? <table>
         <tbody>
         <tr id="headers">
             <th>Nazwa</th>
+            {showTeacherName && <th>Lektor</th>}
             <th>Jak łatwy?</th>
             <th>Jak interesujący?</th>
             <th>Jak angażujący?</th>
             <th>Liczba opinii</th>
         </tr>
-        {courses.map(c => <CourseRow course={c}/>)}
+        {courses.map(c => <CourseRow course={c} showTeacherName={showTeacherName}/>)}
         </tbody>
-    </table>;
+    </table> : <p>Ten nauczyciel nie ma jeszcze kursów</p>;
+    /* todo: styling */
 }
 
 
 interface CourseProps {
     course: Course
+    showTeacherName: boolean
 }
 
-export function CourseRow({course}: CourseProps) {
+export function CourseRow({course, showTeacherName}: CourseProps) {
+    const hasRatings = parseInt(course.numberOfRatings) !== 0;
+
     return (
         <tr id={course.id}>
             <td><Link to={`/courses/${course.id}`}> {course.name}</Link></td>
-            <td> {ratingToPercentage(course.averageEaseRating)}</td>
-            <td> {ratingToPercentage(course.averageInterestRating)}</td>
-            <td>{ratingToPercentage(course.averageEngagementRating)}</td>
-            <td>{NUM_REVIEWS_PLACEHOLDER}</td>
+            {showTeacherName && <td><Link to={`/teachers/${course.teacherId}`}>{course.teacherName}</Link></td>}
+            <td> {hasRatings ? ratingToPercentage(course.averageEaseRating) : "N/A"}</td>
+            <td> {hasRatings ? ratingToPercentage(course.averageInterestRating) : "N/A"}</td>
+            <td>{hasRatings ? ratingToPercentage(course.averageEngagementRating) : "N/A"}</td>
+            <td>{course.numberOfRatings}</td>
         </tr>)
 }

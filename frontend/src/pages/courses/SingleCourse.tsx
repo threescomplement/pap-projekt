@@ -5,9 +5,9 @@ import {Review, ReviewService} from "../../lib/Review";
 import useUser from "../../hooks/useUser";
 import {Teacher, TeacherService} from "../../lib/Teacher";
 import MessageBox from "../../components/MessageBox";
-import {ReviewCardWithLink} from "../../components/ReviewCards";
 import styles from "../../ui/pages/SingleCourse.module.css"
 import AverageRatingDisplay from "../../components/AverageRatingDisplay";
+import ReviewList from "../../components/ReviewList";
 
 export default function SingleCourse() {
     const username = useUser().user!.username
@@ -89,7 +89,8 @@ function CourseDetails(course: Course) {
     const reviewContent = reviews.length === 0
         ? <div className={styles.noReviewsDisclaimer}>Ten kurs nie ma jeszcze opinii</div>
         : <div className={styles.reviewListContainer}>{<ReviewList reviews={reviews}
-                                                                   refreshParent={afterReviewDelete}/>}</div>
+                                                                   refreshParent={afterReviewDelete}
+                                                                   renderCourseLinks={false}/>}</div>
 
 
     return <div>
@@ -113,21 +114,4 @@ function CourseDetails(course: Course) {
     </div>
 }
 
-
-interface ReviewListProps {
-    reviews: Review[]
-    refreshParent: Function
-}
-
-function ReviewList({reviews, refreshParent}: ReviewListProps) {
-    return <ul>
-        {reviews
-            //todo .sort by timestamps
-            .map((r) => (
-                <li key={r.authorUsername}>
-                    <ReviewCardWithLink review={r} afterDeleting={refreshParent}/>
-                </li>
-            ))}
-    </ul>
-}
 

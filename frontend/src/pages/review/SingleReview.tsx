@@ -63,7 +63,7 @@ export function ReviewDetails({review}: ReviewDetailsProps) {
     }
 
     return <div className={styles.singleReviewContainer}>
-        <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview}/>
+        <ReviewCardWithoutLink review={review} afterDeleting={afterDeletingReview} renderCourseLink={true}/>
         <MessageBox message={message}/>
         <CommentList comments={comments} afterDeleting={afterDeletingComment} afterEditing={reloadComments}/>
         <CommentInputForm afterPosting={reloadComments} courseId={courseId!}
@@ -78,8 +78,14 @@ interface CommentListProps {
 }
 
 export function CommentList({comments, afterDeleting, afterEditing}: CommentListProps) {
+    const sortedComments = comments.sort((a, b) => {
+        const dateA = new Date(a.created);
+        const dateB = new Date(b.created);
+        return dateA.getTime() - dateB.getTime();
+    });
+
     return <ul>
-        {comments //todo: sort
+        {sortedComments //todo: factor out sorting these and reviews to a separate function
             .map(c => <li
                 key={c.id}><CommentCard comment={c} afterDeleting={afterDeleting} afterEditing={afterEditing}/>
             </li>)}
@@ -188,14 +194,16 @@ function CommentEditForm({afterPosting, commentId, setEditingForParent, oldConte
             .catch(e => console.log(e));
     }
 
-    return <div>
+    return <div className={styles.commentEditForm}>
     <textarea
         placeholder="Twój komentarz"
         onChange={e => setComment(e.target.value)}
         value={comment}
     />
+        <div>
         <button onClick={handleCommentSubmit}>Edytuj komentarz</button>
         <button onClick={() => setEditingForParent(false)}>Anuluj</button>
+            </div>
     </div>
 
 }

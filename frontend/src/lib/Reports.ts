@@ -45,7 +45,6 @@ async function deleteReportedEntity(report: Report): Promise<boolean> {
 }
 
 async function reportEntity(entity: Review | ReviewComment, reportReason: string): Promise<boolean> {
-    console.log(reportReason)
     const body: ReportRequest = {reportReason};
     const response = await api.post(`${entity._links.self.href}/reports`, body);
     return response.ok;

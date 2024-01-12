@@ -28,6 +28,9 @@ a {
     padding: .8rem;
     transition: background-color 0.3s, border-radius 0.3s;
     border-radius: .3rem;
+    display: inline-block;
+    line-height: 1.6;
+    margin: -0.8rem;
 }
 
 a:hover {

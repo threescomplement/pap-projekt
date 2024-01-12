@@ -2,7 +2,7 @@
 .cardContainer {
     background-color: #272727;
     color: #fff;
-    padding: .8rem;
+    padding: .8rem 2rem 2rem;
     margin-bottom: 1rem;
     border-radius: 0.5rem;
 }
@@ -77,7 +77,7 @@
     padding: 0.4rem;
 }
 
-@media (max-width: 1000px) {
+@media (max-width: 1200px) {
     .ratingsContainer {
         flex-direction: column;
         gap: 1rem;

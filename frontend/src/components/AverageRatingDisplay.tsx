@@ -14,7 +14,7 @@ export default function AverageRatingDisplay({entity}: AverageRatingDisplayProps
     const isCourse = (entity as Course).language !== undefined;
     const entityToString = isCourse ? "kurs" : "lektor";
     const easeLabel = isCourse ? "Jak łatwy?" : "Jak łatwe zajęcia prowadzi?";
-    const interestLabel = isCourse ? "Jak interesujący?" : "Jak interesujące zajęcia prowdzi?";
+    const interestLabel = isCourse ? "Jak interesujący?" : "Jak interesujące zajęcia prowadzi?";
     const engagementLabel = isCourse ? "Jak angażujący?" : "Jak bardzo angażuje studentów?";
     const hasReviews = parseInt(entity.numberOfRatings) !== 0;
 

@@ -95,6 +95,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -103,12 +105,15 @@ public class ReportIntegrationTests {
         assertEquals("user_3", json.read("$._embedded.reports[2].reportingUsername"));
         assertEquals("", json.read("$._embedded.reports[2].reason"));
         assertEquals("W porządku", json.read("$._embedded.reports[2].reportedText"));
-
+        assertEquals("rdeckard", json.read("$._embedded.reports[2].reviewerUsername"));
+        assertEquals(3, (int) json.read("$._embedded.reports[2].courseId"));
 
         // first comment report is the same
         assertEquals("user_3", json.read("$._embedded.reports[3].reportingUsername"));
         assertEquals("brak kultury", json.read("$._embedded.reports[3].reason"));
         assertEquals("czyli co?", json.read("$._embedded.reports[3].reportedText"));
+        assertEquals("rdeckard", json.read("$._embedded.reports[3].reviewerUsername"));
+        assertEquals(3, (int) json.read("$._embedded.reports[3].courseId"));
         assertTrue(json.read("$._embedded.reports[3]._links.self.href").toString().endsWith("/api/admin/reports/comments/1"));
         assertTrue(json.read("$._embedded.reports[3]._links.entity.href").toString().endsWith("/api/comments/2"));
         assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/3/reviews/rdeckard"));
@@ -117,6 +122,8 @@ public class ReportIntegrationTests {
         assertEquals("rbatty", json.read("$._embedded.reports[5].reportingUsername"));
         assertEquals("jajo", json.read("$._embedded.reports[5].reason"));
         assertEquals("czyli co?", json.read("$._embedded.reports[5].reportedText"));
+        assertEquals("rdeckard", json.read("$._embedded.reports[5].reviewerUsername"));
+        assertEquals(3, (int) json.read("$._embedded.reports[5].courseId"));
 
 
         //links
@@ -188,9 +195,12 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
+
 
         assertEquals("user_3", json.read("$._embedded.reports[3].reportingUsername"));
         assertEquals("brak kultury", json.read("$._embedded.reports[3].reason"));
@@ -216,9 +226,12 @@ public class ReportIntegrationTests {
         assertEquals("admin", returnedReport.read("$.reportingUsername"));
         assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", returnedReport.read("$.reportedText"));
+        assertEquals("rdeckard", returnedReport.read("$.reviewerUsername"));
+        assertEquals(1, (int) returnedReport.read("$.courseId"));
         assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
         assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
+
 
         endpoint = "/api/admin/reports";
         response = restTemplate.exchange(buildUrl(endpoint, port),
@@ -232,12 +245,16 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
 
         assertEquals("admin", json.read("$._embedded.reports[3].reportingUsername"));
         assertEquals("zle mu patrzy z oczu", json.read("$._embedded.reports[3].reason"));
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", json.read("$._embedded.reports[3].reportedText"));
+        assertEquals("rdeckard", json.read("$._embedded.reports[3].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[3].courseId"));
         assertTrue(json.read("$._embedded.reports[3]._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
         assertTrue(json.read("$._embedded.reports[3]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -255,6 +272,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", returnedReport.read("$.reportingUsername"));
         assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", returnedReport.read("$.reportedText"));
+        assertEquals("rdeckard", returnedReport.read("$.reviewerUsername"));
+        assertEquals(1,(int) returnedReport.read("$.courseId"));
         assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
         assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -274,12 +293,16 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
 
         assertEquals("rdeckard", json.read("$._embedded.reports[3].reportingUsername"));
         assertEquals("zle mu patrzy z oczu", json.read("$._embedded.reports[3].reason"));
         assertEquals("Dobrze prowadzony kurs, wymagający nauczyciel", json.read("$._embedded.reports[3].reportedText"));
+        assertEquals("rdeckard", json.read("$._embedded.reports[3].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[3].courseId"));
         assertTrue(json.read("$._embedded.reports[3]._links.self.href").toString().endsWith("/api/admin/reports/reviews/4"));
         assertTrue(json.read("$._embedded.reports[3]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
         assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -352,6 +375,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -359,7 +384,8 @@ public class ReportIntegrationTests {
         assertEquals("user_3", json.read("$._embedded.reports[2].reportingUsername"));
         assertEquals("brak kultury", json.read("$._embedded.reports[2].reason"));
         assertEquals("czyli co?", json.read("$._embedded.reports[2].reportedText"));
-
+        assertEquals("rdeckard", json.read("$._embedded.reports[2].reviewerUsername"));
+        assertEquals(3, (int) json.read("$._embedded.reports[2].courseId"));
         assertTrue(json.read("$._embedded.reports[2]._links.self.href").toString().endsWith("/api/admin/reports/comments/1"));
         assertTrue(json.read("$._embedded.reports[2]._links.entity.href").toString().endsWith("/api/comments/2"));
         assertTrue(json.read("$._embedded.reports[2]._links.review.href").toString().endsWith("/api/courses/3/reviews/rdeckard"));
@@ -394,6 +420,8 @@ public class ReportIntegrationTests {
         assertEquals("admin", returnedReport.read("$.reportingUsername"));
         assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
         assertEquals("rel", returnedReport.read("$.reportedText"));
+        assertEquals("rdeckard", returnedReport.read("$.reviewerUsername"));
+        assertEquals(1, (int) returnedReport.read("$.courseId"));
         assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
         assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/comments/1"));
         assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -412,6 +440,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
 
@@ -419,6 +449,8 @@ public class ReportIntegrationTests {
         assertEquals("admin", json.read("$._embedded.reports[6].reportingUsername"));
         assertEquals("zle mu patrzy z oczu", json.read("$._embedded.reports[6].reason"));
         assertEquals("rel", json.read("$._embedded.reports[6].reportedText"));
+        assertEquals("rdeckard", json.read("$._embedded.reports[6].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[6].courseId"));
         assertTrue(json.read("$._embedded.reports[6]._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
         assertTrue(json.read("$._embedded.reports[6]._links.entity.href").toString().endsWith("/api/comments/1"));
         assertTrue(json.read("$._embedded.reports[6]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -438,6 +470,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", returnedReport.read("$.reportingUsername"));
         assertEquals("zle mu patrzy z oczu", returnedReport.read("$.reason"));
         assertEquals("rel", returnedReport.read("$.reportedText"));
+        assertEquals("rdeckard", returnedReport.read("$.reviewerUsername"));
+        assertEquals(1, (int) returnedReport.read("$.courseId"));
         assertTrue(returnedReport.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
         assertTrue(returnedReport.read("$._links.entity.href").toString().endsWith("/api/comments/1"));
         assertTrue(returnedReport.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -457,6 +491,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
 
@@ -464,6 +500,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[6].reportingUsername"));
         assertEquals("zle mu patrzy z oczu", json.read("$._embedded.reports[6].reason"));
         assertEquals("rel", json.read("$._embedded.reports[6].reportedText"));
+        assertEquals("rdeckard", json.read("$._embedded.reports[6].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[6].courseId"));
         assertTrue(json.read("$._embedded.reports[6]._links.self.href").toString().endsWith("/api/admin/reports/comments/4"));
         assertTrue(json.read("$._embedded.reports[6]._links.entity.href").toString().endsWith("/api/comments/1"));
         assertTrue(json.read("$._embedded.reports[6]._links.review.href").toString().endsWith("/api/courses/1/reviews/rdeckard"));
@@ -514,6 +552,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$._embedded.reports[0].reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$._embedded.reports[0].reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$._embedded.reports[0].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[0]._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
         assertTrue(json.read("$._embedded.reports[0]._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._embedded.reports[0]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -522,6 +562,8 @@ public class ReportIntegrationTests {
         assertEquals("user_3", json.read("$._embedded.reports[3].reportingUsername"));
         assertEquals("skill issue", json.read("$._embedded.reports[3].reason"));
         assertEquals("trudne serio", json.read("$._embedded.reports[3].reportedText"));
+        assertEquals("rbatty", json.read("$._embedded.reports[0].reviewerUsername"));
+        assertEquals(1, (int) json.read("$._embedded.reports[0].courseId"));
         assertTrue(json.read("$._embedded.reports[3]._links.self.href").toString().endsWith("/api/admin/reports/comments/2"));
         assertTrue(json.read("$._embedded.reports[3]._links.entity.href").toString().endsWith("/api/comments/4"));
         assertTrue(json.read("$._embedded.reports[3]._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -591,6 +633,8 @@ public class ReportIntegrationTests {
         assertEquals("user_3", json.read("$.reportingUsername"));
         assertEquals("skill issue", json.read("$.reason"));
         assertEquals("trudne serio", json.read("$.reportedText"));
+        assertEquals("rbatty", json.read("$.reviewerUsername"));
+        assertEquals(1, (int) json.read("$.courseId"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/2"));
         assertTrue(json.read("$._links.entity.href").toString().endsWith("/api/comments/4"));
         assertTrue(json.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -627,6 +671,8 @@ public class ReportIntegrationTests {
         assertEquals("rdeckard", json.read("$.reportingUsername"));
         assertEquals("obelgi w strone prowadzacego", json.read("$.reason"));
         assertEquals("Zbyt duże wymagania do studentów", json.read("$.reportedText"));
+        assertEquals(1, (int) json.read("$.courseId"));
+        assertEquals("rbatty", json.read("$.reviewerUsername"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
         assertTrue(json.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
         assertTrue(json.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));

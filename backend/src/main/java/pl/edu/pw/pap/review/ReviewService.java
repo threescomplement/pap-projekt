@@ -91,7 +91,7 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
-        // set reports as resolved TODO: set reason as "deleted content"
+        // set reports as resolved TODO: set reason as "deleted content" or similar
         // can maybe be done with one Update query instead of two, but idk if it really matters?
         List<ReviewReport> reviewReports = reviewReportRepository.findByCourseIdAndReviewerUsernameAndResolved(
                 review.getCourse().getId(), review.getUser().getUsername(), false);

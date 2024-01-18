@@ -70,7 +70,7 @@ public class CommentService {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
-        // set reports as resolved TODO: set reason as "deleted content"
+        // set reports as resolved TODO: set reason as "deleted content" or similar
         List<CommentReport> commentReports = commentReportRepository.findByCommentIdAndResolved(commentId, false);
         commentReportRepository.saveAll(commentReports
                 .stream()

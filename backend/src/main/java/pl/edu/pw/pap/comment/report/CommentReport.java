@@ -6,6 +6,8 @@ import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
 import pl.edu.pw.pap.user.User;
 
+import java.sql.Timestamp;
+
 @Setter
 @Getter
 @Entity
@@ -26,6 +28,8 @@ public class CommentReport {
     private String reviewerUsername;
     private Boolean resolved;
     private String resolvedByUsername;
+    private Timestamp resolvedTimestamp;
+    private String resolvedMethod;
 
 
     public CommentReport(User reportingUser, String reason, Comment reportedComment) {
@@ -38,7 +42,8 @@ public class CommentReport {
         this.reviewerUsername = reportedComment.getReview().getUser().getUsername();
         this.resolved = false;
         this.resolvedByUsername = null;
-
+        this.resolvedMethod = null;
+        this.resolvedTimestamp = null;
     }
 
     protected CommentReport() {

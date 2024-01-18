@@ -16,7 +16,6 @@ import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportNotFoundException;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
-import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserNotFoundException;
 import pl.edu.pw.pap.user.UserRepository;
 

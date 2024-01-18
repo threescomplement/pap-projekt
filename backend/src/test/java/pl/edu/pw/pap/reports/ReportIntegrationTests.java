@@ -40,9 +40,6 @@ public class ReportIntegrationTests {
     @LocalServerPort
     private int port;
 
-    @MockBean
-    private JavaMailSender fakeEmailSender;
-
     @Autowired
     TeacherRepository teacherRepository;
     @Autowired

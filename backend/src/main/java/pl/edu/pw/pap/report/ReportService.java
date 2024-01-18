@@ -44,6 +44,8 @@ public class ReportService {
                 .reason(report.getReason())
                 .reviewerUsername(report.getReviewerUsername())
                 .courseId(report.getCourseId())
+                .resolved(report.getResolved())
+                .resolvedByUsername(report.getResolvedByUsername())
                 .build();
 
         return reportDTO.add(
@@ -61,6 +63,8 @@ public class ReportService {
                 .reason(report.getReason())
                 .reviewerUsername(report.getReviewerUsername())
                 .courseId(report.getCourseId())
+                .resolved(report.getResolved())
+                .resolvedByUsername(report.getResolvedByUsername())
                 .build();
         return reportDTO.add(
                 linkTo(methodOn(ReportController.class).getCommentReport(report.getId())).withSelfRel(),

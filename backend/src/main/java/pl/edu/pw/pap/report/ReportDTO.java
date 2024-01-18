@@ -17,4 +17,6 @@ public class ReportDTO extends RepresentationModel<ReportDTO>{
     private String reason;
     private Long courseId;
     private String reviewerUsername;
+    private Boolean resolved;
+    private String resolvedByUsername;
 }

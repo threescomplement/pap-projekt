@@ -24,6 +24,9 @@ public class CommentReport {
     private String commenterUsername;
     private Long courseId;
     private String reviewerUsername;
+    private Boolean resolved;
+    private String resolvedByUsername;
+
 
     public CommentReport(User reportingUser, String reason, Comment reportedComment) {
         this.reason = reason;
@@ -33,6 +36,8 @@ public class CommentReport {
         this.commenterUsername = reportedComment.getUser().getUsername();
         this.courseId = reportedComment.getReview().getCourse().getId();
         this.reviewerUsername = reportedComment.getReview().getUser().getUsername();
+        this.resolved = false;
+        this.resolvedByUsername = null;
 
     }
 

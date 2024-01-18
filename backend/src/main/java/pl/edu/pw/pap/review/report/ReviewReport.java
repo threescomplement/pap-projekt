@@ -13,16 +13,19 @@ public class ReviewReport {
 
     @GeneratedValue
     @Id
-    Long id;
+    private Long id;
 
 
     // TODO: Model a proper relation between ReviewReport and Review
-    Long courseId;
-    String reviewerUsername;
-    String reportedText;
+    private Long courseId;
+    private String reviewerUsername;
+    private String reportedText;
 
-    String reportingUsername;
-    String reason;
+    private String reportingUsername;
+    private String reason;
+    private Boolean resolved;
+    private String resolvedByUsername;
+
 
     public ReviewReport(User reportingUser, String reason, Review reportedReview) {
         this.reason = reason;
@@ -30,6 +33,8 @@ public class ReviewReport {
         this.courseId = reportedReview.getCourse().getId();
         this.reviewerUsername = reportedReview.getUser().getUsername();
         this.reportedText = reportedReview.getOpinion();
+        this.resolved = false;
+        this.resolvedByUsername = null;
     }
 
     protected ReviewReport() {

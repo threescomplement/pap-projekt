@@ -51,9 +51,21 @@ public class ReportController {
     }
 
 
-    @GetMapping("api/admin/reports")
+    @GetMapping("api/admin/reports/all")
     public RepresentationModel<ReportDTO> getAllReports() {
         List<ReportDTO> reports = reportService.getAllReports();
+        return HalModelBuilder.emptyHalModel()
+                .embed(reports.isEmpty() ? Collections.emptyList() : reports, LinkRelation.of("reports"))
+                .link(linkTo(methodOn(ReportController.class).getAllReports()).withSelfRel())
+                .build();
+    }
+
+    @GetMapping("api/admin/reports/{resolvedStatus}")
+    public RepresentationModel<ReportDTO> getAllReportsByResolvedStatus(@PathVariable(required = false) Boolean resolvedStatus) {
+        if (resolvedStatus == null){
+            resolvedStatus = false;
+        }
+        List<ReportDTO> reports = reportService.getReportsByResolved(resolvedStatus);
         return HalModelBuilder.emptyHalModel()
                 .embed(reports.isEmpty() ? Collections.emptyList() : reports, LinkRelation.of("reports"))
                 .link(linkTo(methodOn(ReportController.class).getAllReports()).withSelfRel())

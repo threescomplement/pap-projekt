@@ -73,10 +73,7 @@ public class ReportService {
         );
     }
 
-
-    public List<ReportDTO> getAllReports() {
-        var reviewReports = reviewReportRepository.findAll();
-        var commentReports = commentReportRepository.findAll();
+    private List<ReportDTO> concatIntoDtoList(List<CommentReport> commentReports, List<ReviewReport> reviewReports){
         ArrayList<ReportDTO> allReports = new ArrayList<>(reviewReports
                 .stream()
                 .map(this::convertReportToDto)
@@ -85,7 +82,19 @@ public class ReportService {
                 .stream()
                 .map(this::convertReportToDto)
                 .toList());
-        return allReports.stream().toList();
+        return allReports;
+    }
+
+    public List<ReportDTO> getAllReports() {
+        var reviewReports = reviewReportRepository.findAll();
+        var commentReports = commentReportRepository.findAll();
+        return concatIntoDtoList(commentReports, reviewReports);
+    }
+
+    public List<ReportDTO> getReportsByResolved(Boolean resolvedStatus) {
+        var reviewReports = reviewReportRepository.findByResolved(resolvedStatus);
+        var commentReports = commentReportRepository.findByResolved(resolvedStatus);
+        return concatIntoDtoList(commentReports, reviewReports);
     }
 
     public void deleteCommentReport(Long commentReportId){
@@ -138,6 +147,7 @@ public class ReportService {
 
         return convertReportToDto(report);
     }
+
 
 
 }

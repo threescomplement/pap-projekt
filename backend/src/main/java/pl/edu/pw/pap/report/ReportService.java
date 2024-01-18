@@ -16,6 +16,7 @@ import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportNotFoundException;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
+import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserNotFoundException;
 import pl.edu.pw.pap.user.UserRepository;
 
@@ -149,5 +150,21 @@ public class ReportService {
     }
 
 
+    public ReportDTO resolveCommentReport(Long commentReportId, UserPrincipal userPrincipal) {
+        var commentReport = commentReportRepository.findById(commentReportId)
+                .orElseThrow(() -> new CommentReportNotFoundException("No report with id:" + commentReportId));
+        commentReport.setResolved(true);
+        commentReport.setResolvedByUsername(userPrincipal.getUsername());
+        // TODO: add taken action (here would be simply resolved, content delete when deleting)
+        return convertReportToDto(commentReportRepository.save(commentReport));
+    }
 
+    public ReportDTO resolveReviewReport(Long reviewReportId, UserPrincipal userPrincipal) {
+        var reviewReport = reviewReportRepository.findById(reviewReportId)
+                .orElseThrow(() -> new ReviewReportNotFoundException("No review report with id " + reviewReportId));
+        reviewReport.setResolved(true);
+        reviewReport.setResolvedByUsername(userPrincipal.getUsername());
+        // TODO: add taken action (here would be simply resolved, content delete when deleting)
+        return convertReportToDto(reviewReportRepository.save(reviewReport));
+    }
 }

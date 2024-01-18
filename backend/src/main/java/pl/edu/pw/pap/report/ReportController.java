@@ -20,6 +20,7 @@ import pl.edu.pw.pap.user.UserNotFoundException;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -62,14 +63,22 @@ public class ReportController {
 
     @GetMapping("api/admin/reports/{resolvedStatus}")
     public RepresentationModel<ReportDTO> getAllReportsByResolvedStatus(@PathVariable(required = false) Boolean resolvedStatus) {
-        if (resolvedStatus == null){
-            resolvedStatus = false;
-        }
-        List<ReportDTO> reports = reportService.getReportsByResolved(resolvedStatus);
+        List<ReportDTO> reports = reportService.getReportsByResolved(Objects.requireNonNullElse(resolvedStatus, false));
         return HalModelBuilder.emptyHalModel()
                 .embed(reports.isEmpty() ? Collections.emptyList() : reports, LinkRelation.of("reports"))
                 .link(linkTo(methodOn(ReportController.class).getAllReports()).withSelfRel())
                 .build();
+    }
+
+    @PutMapping("/api/admin/reports/comments/{commentReportId}")
+    public ReportDTO resolveCommentReport(@PathVariable Long commentReportId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+
+        return reportService.resolveCommentReport(commentReportId, userPrincipal);
+    }
+
+    @PutMapping("/api/admin/reports/reviews/{reviewReportId}")
+    public ReportDTO resolveReviewReport(@PathVariable Long reviewReportId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        return reportService.resolveReviewReport(reviewReportId, userPrincipal);
     }
 
 

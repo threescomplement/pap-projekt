@@ -11,4 +11,6 @@ public interface CommentReportRepository extends JpaRepository<CommentReport, Lo
     Long removeByCommentId(Long commentId);
 
     List<CommentReport> findByResolved(Boolean resolvedStatus);
+
+    List<CommentReport> findByCommentIdAndResolved(Long commentId, Boolean resolvedStatus);
 }

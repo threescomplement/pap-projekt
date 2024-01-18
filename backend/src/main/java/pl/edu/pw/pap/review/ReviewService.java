@@ -9,6 +9,7 @@ import pl.edu.pw.pap.comment.ForbiddenException;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
+import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.teacher.TeacherNotFoundException;
@@ -90,10 +91,16 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
-        // clear reports TODO: model relation to do this automatically with cascades
-        reviewReportRepository.removeByCourseIdAndReviewerUsername(
-                review.getCourse().getId(), review.getUser().getUsername());
-
+        // set reports as resolved TODO: set reason as "deleted content"
+        // can maybe be done with one Update query instead of two, but idk if it really matters?
+        List<ReviewReport> reviewReports = reviewReportRepository.findByCourseIdAndReviewerUsernameAndResolved(
+                review.getCourse().getId(), review.getUser().getUsername(), false);
+        reviewReportRepository.saveAll(reviewReports
+                .stream()
+                .peek(report -> report.setResolved(true))
+                .peek(report -> report.setResolvedByUsername(userPrincipal.getUsername()))
+                .toList()
+        );
         reviewRepository.delete(review);
     }
 

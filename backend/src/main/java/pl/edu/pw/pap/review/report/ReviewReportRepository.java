@@ -11,4 +11,5 @@ public interface ReviewReportRepository extends JpaRepository<ReviewReport, Long
     Long removeByCourseIdAndReviewerUsername(Long courseId, String reviewerUsername);
 
     List<ReviewReport> findByResolved(Boolean resolvedStatus);
+    List<ReviewReport> findByCourseIdAndReviewerUsernameAndResolved(Long courseId, String reviewerUsername, Boolean resolvedStatus);
 }

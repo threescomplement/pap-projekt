@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
@@ -69,8 +70,14 @@ public class CommentService {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
-        //clear reports TODO: model relation to do this with cascades
-        commentReportRepository.removeByCommentId(commentId);
+        // set reports as resolved TODO: set reason as "deleted content"
+        List<CommentReport> commentReports = commentReportRepository.findByCommentIdAndResolved(commentId, false);
+        commentReportRepository.saveAll(commentReports
+                .stream()
+                .peek(report -> report.setResolved(true))
+                .peek(report -> report.setResolvedByUsername(principal.getUsername()))
+                .toList()
+        );
         commentRepository.delete(comment);
 
     }

@@ -19,6 +19,8 @@ import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.UserNotFoundException;
 import pl.edu.pw.pap.user.UserRepository;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,8 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
+                .resolvedMethod(report.getResolvedMethod())
+                .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
 
         return reportDTO.add(
@@ -65,6 +69,8 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
+                .resolvedMethod(report.getResolvedMethod())
+                .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
         return reportDTO.add(
                 linkTo(methodOn(ReportController.class).getCommentReport(report.getId())).withSelfRel(),
@@ -154,7 +160,8 @@ public class ReportService {
                 .orElseThrow(() -> new CommentReportNotFoundException("No report with id:" + commentReportId));
         commentReport.setResolved(true);
         commentReport.setResolvedByUsername(userPrincipal.getUsername());
-        // TODO: add taken action (here would be simply resolved, content delete when deleting)
+        commentReport.setResolvedMethod("Discarded");
+        commentReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
         return convertReportToDto(commentReportRepository.save(commentReport));
     }
 
@@ -163,7 +170,8 @@ public class ReportService {
                 .orElseThrow(() -> new ReviewReportNotFoundException("No review report with id " + reviewReportId));
         reviewReport.setResolved(true);
         reviewReport.setResolvedByUsername(userPrincipal.getUsername());
-        // TODO: add taken action (here would be simply resolved, content delete when deleting)
+        reviewReport.setResolvedMethod("Discarded");
+        reviewReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
         return convertReportToDto(reviewReportRepository.save(reviewReport));
     }
 }

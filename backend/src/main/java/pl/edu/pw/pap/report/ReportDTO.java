@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.sql.Timestamp;
 
 
 @Data
@@ -19,4 +20,6 @@ public class ReportDTO extends RepresentationModel<ReportDTO>{
     private String reviewerUsername;
     private Boolean resolved;
     private String resolvedByUsername;
+    private Timestamp resolvedTimestamp;
+    private String resolvedMethod;
 }

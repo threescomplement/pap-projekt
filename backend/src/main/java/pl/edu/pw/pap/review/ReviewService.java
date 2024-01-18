@@ -18,6 +18,8 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -93,12 +95,18 @@ public class ReviewService {
         Review review = maybeReview.get();
         // set reports as resolved TODO: set reason as "deleted content" or similar
         // can maybe be done with one Update query instead of two, but idk if it really matters?
+        Instant currentTime = Instant.now();
         List<ReviewReport> reviewReports = reviewReportRepository.findByCourseIdAndReviewerUsernameAndResolved(
                 review.getCourse().getId(), review.getUser().getUsername(), false);
         reviewReportRepository.saveAll(reviewReports
                 .stream()
-                .peek(report -> report.setResolved(true))
-                .peek(report -> report.setResolvedByUsername(userPrincipal.getUsername()))
+                .peek(report -> {
+                    report.setResolved(true);
+                    report.setResolvedByUsername(userPrincipal.getUsername());
+                    report.setResolvedMethod("Content deleted");
+                    // in order for all of them to have the same resolve timestamp
+                    report.setResolvedTimestamp(Timestamp.from(currentTime));
+                })
                 .toList()
         );
         reviewRepository.delete(review);

@@ -16,6 +16,8 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,12 +72,18 @@ public class CommentService {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
-        // set reports as resolved TODO: set reason as "deleted content" or similar
+        // set reports as resolved
+        Instant currentTime = Instant.now();
         List<CommentReport> commentReports = commentReportRepository.findByCommentIdAndResolved(commentId, false);
         commentReportRepository.saveAll(commentReports
                 .stream()
-                .peek(report -> report.setResolved(true))
-                .peek(report -> report.setResolvedByUsername(principal.getUsername()))
+                .peek(report -> {
+                    report.setResolved(true);
+                    report.setResolvedByUsername(principal.getUsername());
+                    report.setResolvedMethod("Content deleted");
+                    // in order for all of them to have the same resolve timestamp
+                    report.setResolvedTimestamp(Timestamp.from(currentTime));
+                })
                 .toList()
         );
         commentRepository.delete(comment);

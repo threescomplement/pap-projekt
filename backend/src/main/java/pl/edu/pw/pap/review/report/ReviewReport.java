@@ -18,7 +18,6 @@ public class ReviewReport {
     private Long id;
 
 
-    // TODO: Model a proper relation between ReviewReport and Review
     private Long courseId;
     private String reviewerUsername;
     private String reportedText;

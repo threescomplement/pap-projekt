@@ -20,7 +20,6 @@ public class CommentReport {
     private String reason; // TODO: change to enum
     private String reportingUsername;
 
-    // TODO: Model a proper relation between CommentReport and Comment
     private Long commentId;
     private String reportedText;
     private String commenterUsername;

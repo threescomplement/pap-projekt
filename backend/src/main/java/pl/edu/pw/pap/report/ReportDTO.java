@@ -21,5 +21,5 @@ public class ReportDTO extends RepresentationModel<ReportDTO>{
     private Boolean resolved;
     private String resolvedByUsername;
     private Timestamp resolvedTimestamp;
-    private String resolvedMethod;
+    private String status;
 }

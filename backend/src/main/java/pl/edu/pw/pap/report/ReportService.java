@@ -48,7 +48,7 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
-                .resolvedMethod(report.getStatus().message)
+                .status(report.getStatus().message)
                 .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
 
@@ -69,7 +69,7 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
-                .resolvedMethod(report.getStatus().message)
+                .status(report.getStatus().message)
                 .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
         return reportDTO.add(

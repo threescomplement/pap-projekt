@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import pl.edu.pw.pap.comment.Comment;
+import pl.edu.pw.pap.report.ReportStatus;
 import pl.edu.pw.pap.user.User;
 
 import java.sql.Timestamp;

@@ -8,7 +8,6 @@ import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportNotFoundException;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
-import pl.edu.pw.pap.comment.report.ReportStatus;
 import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewNotFoundException;

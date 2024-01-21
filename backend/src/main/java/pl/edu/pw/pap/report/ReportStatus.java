@@ -1,4 +1,4 @@
-package pl.edu.pw.pap.comment.report;
+package pl.edu.pw.pap.report;
 
 public enum ReportStatus {
     DISCARDED("Report discarded"),
@@ -6,7 +6,7 @@ public enum ReportStatus {
 
     public final String message;
 
-    private ReportStatus(String label) {
+    ReportStatus(String label) {
         this.message = label;
     }
 }

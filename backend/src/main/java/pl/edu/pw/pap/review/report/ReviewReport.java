@@ -3,6 +3,7 @@ package pl.edu.pw.pap.review.report;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pl.edu.pw.pap.comment.report.ReportStatus;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.user.User;
 
@@ -27,7 +28,7 @@ public class ReviewReport {
     private Boolean resolved;
     private String resolvedByUsername;
     private Timestamp resolvedTimestamp;
-    private String resolvedMethod;
+    private ReportStatus resolvedMethod;
 
 
     public ReviewReport(User reportingUser, String reason, Review reportedReview) {

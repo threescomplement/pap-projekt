@@ -8,6 +8,7 @@ import pl.edu.pw.pap.comment.CommentRepository;
 import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportNotFoundException;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
+import pl.edu.pw.pap.comment.report.ReportStatus;
 import pl.edu.pw.pap.review.ReviewController;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewNotFoundException;
@@ -48,7 +49,7 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
-                .resolvedMethod(report.getResolvedMethod())
+                .resolvedMethod(report.getResolvedMethod().message)
                 .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
 
@@ -69,7 +70,7 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
-                .resolvedMethod(report.getResolvedMethod())
+                .resolvedMethod(report.getResolvedMethod().message)
                 .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
         return reportDTO.add(
@@ -160,7 +161,7 @@ public class ReportService {
                 .orElseThrow(() -> new CommentReportNotFoundException("No report with id:" + commentReportId));
         commentReport.setResolved(true);
         commentReport.setResolvedByUsername(userPrincipal.getUsername());
-        commentReport.setResolvedMethod("Discarded");
+        commentReport.setResolvedMethod(ReportStatus.DISCARDED);
         commentReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
         return convertReportToDto(commentReportRepository.save(commentReport));
     }
@@ -170,7 +171,7 @@ public class ReportService {
                 .orElseThrow(() -> new ReviewReportNotFoundException("No review report with id " + reviewReportId));
         reviewReport.setResolved(true);
         reviewReport.setResolvedByUsername(userPrincipal.getUsername());
-        reviewReport.setResolvedMethod("Discarded");
+        reviewReport.setResolvedMethod(ReportStatus.DISCARDED);
         reviewReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
         return convertReportToDto(reviewReportRepository.save(reviewReport));
     }

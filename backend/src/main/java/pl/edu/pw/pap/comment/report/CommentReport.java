@@ -28,7 +28,7 @@ public class CommentReport {
     private Boolean resolved;
     private String resolvedByUsername;
     private Timestamp resolvedTimestamp;
-    private String resolvedMethod;
+    private ReportStatus resolvedMethod;
 
 
     public CommentReport(User reportingUser, String reason, Comment reportedComment) {

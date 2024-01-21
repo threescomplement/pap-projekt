@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
+import pl.edu.pw.pap.comment.report.ReportStatus;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewRepository;
@@ -80,7 +81,7 @@ public class CommentService {
                 .peek(report -> {
                     report.setResolved(true);
                     report.setResolvedByUsername(principal.getUsername());
-                    report.setResolvedMethod("Content deleted");
+                    report.setResolvedMethod(ReportStatus.CONTENT_DELETE);
                     // in order for all of them to have the same resolve timestamp
                     report.setResolvedTimestamp(Timestamp.from(currentTime));
                 })

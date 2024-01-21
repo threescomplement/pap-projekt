@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.ForbiddenException;
+import pl.edu.pw.pap.comment.report.ReportStatus;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
@@ -103,7 +104,7 @@ public class ReviewService {
                 .peek(report -> {
                     report.setResolved(true);
                     report.setResolvedByUsername(userPrincipal.getUsername());
-                    report.setResolvedMethod("Content deleted");
+                    report.setResolvedMethod(ReportStatus.CONTENT_DELETE);
                     // in order for all of them to have the same resolve timestamp
                     report.setResolvedTimestamp(Timestamp.from(currentTime));
                 })

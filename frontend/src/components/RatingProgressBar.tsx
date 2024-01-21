@@ -8,7 +8,9 @@ export default function RatingProgressBar({value}: RatingProgressBarProps) {
     const parsedValue = parseFloat(value)
     const progresBarColor = parsedValue <=4
         ? '#ff6166'
-        : (parsedValue <= 7.5 ? '#fdfd96': '#c1e1c1');
+        : (parsedValue <= 7.5
+            ? '#fdfd96'
+            : '#c1e1c1');
 
     const dynamicProgressBarStyles = {
         'background-color': progresBarColor,

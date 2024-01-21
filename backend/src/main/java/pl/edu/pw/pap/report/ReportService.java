@@ -48,7 +48,7 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
-                .resolvedMethod(report.getResolvedMethod().message)
+                .resolvedMethod(report.getStatus().message)
                 .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
 
@@ -69,7 +69,7 @@ public class ReportService {
                 .courseId(report.getCourseId())
                 .resolved(report.getResolved())
                 .resolvedByUsername(report.getResolvedByUsername())
-                .resolvedMethod(report.getResolvedMethod().message)
+                .resolvedMethod(report.getStatus().message)
                 .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
         return reportDTO.add(
@@ -160,7 +160,7 @@ public class ReportService {
                 .orElseThrow(() -> new CommentReportNotFoundException("No report with id:" + commentReportId));
         commentReport.setResolved(true);
         commentReport.setResolvedByUsername(userPrincipal.getUsername());
-        commentReport.setResolvedMethod(ReportStatus.DISCARDED);
+        commentReport.setStatus(ReportStatus.DISCARDED);
         commentReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
         return convertReportToDto(commentReportRepository.save(commentReport));
     }
@@ -170,7 +170,7 @@ public class ReportService {
                 .orElseThrow(() -> new ReviewReportNotFoundException("No review report with id " + reviewReportId));
         reviewReport.setResolved(true);
         reviewReport.setResolvedByUsername(userPrincipal.getUsername());
-        reviewReport.setResolvedMethod(ReportStatus.DISCARDED);
+        reviewReport.setStatus(ReportStatus.DISCARDED);
         reviewReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
         return convertReportToDto(reviewReportRepository.save(reviewReport));
     }

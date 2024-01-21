@@ -104,7 +104,7 @@ public class ReviewService {
                 .peek(report -> {
                     report.setResolved(true);
                     report.setResolvedByUsername(userPrincipal.getUsername());
-                    report.setResolvedMethod(ReportStatus.CONTENT_DELETE);
+                    report.setStatus(ReportStatus.CONTENT_DELETE);
                     // in order for all of them to have the same resolve timestamp
                     report.setResolvedTimestamp(Timestamp.from(currentTime));
                 })

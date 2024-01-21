@@ -1,6 +1,7 @@
 package pl.edu.pw.pap.report;
 
 public enum ReportStatus {
+    ACTIVE("Awaiting review"),
     DISCARDED("Report discarded"),
     CONTENT_DELETE("Reported content deleted");
 

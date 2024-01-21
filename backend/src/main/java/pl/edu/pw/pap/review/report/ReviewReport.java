@@ -28,7 +28,7 @@ public class ReviewReport {
     private Boolean resolved;
     private String resolvedByUsername;
     private Timestamp resolvedTimestamp;
-    private ReportStatus resolvedMethod;
+    private ReportStatus status;
 
 
     public ReviewReport(User reportingUser, String reason, Review reportedReview) {
@@ -40,7 +40,7 @@ public class ReviewReport {
         this.resolved = false;
         this.resolvedByUsername = null;
         this.resolvedTimestamp = null;
-        this.resolvedMethod = null;
+        this.status = ReportStatus.ACTIVE;
     }
 
     protected ReviewReport() {

@@ -29,7 +29,7 @@ public class CommentReport {
     private Boolean resolved;
     private String resolvedByUsername;
     private Timestamp resolvedTimestamp;
-    private ReportStatus resolvedMethod;
+    private ReportStatus status;
 
 
     public CommentReport(User reportingUser, String reason, Comment reportedComment) {
@@ -42,7 +42,7 @@ public class CommentReport {
         this.reviewerUsername = reportedComment.getReview().getUser().getUsername();
         this.resolved = false;
         this.resolvedByUsername = null;
-        this.resolvedMethod = null;
+        this.status = ReportStatus.ACTIVE;
         this.resolvedTimestamp = null;
     }
 

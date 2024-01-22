@@ -602,10 +602,6 @@ public class ReportIntegrationTests {
         reports = json.read("$._embedded.reports");
         assertEquals(3, reports.size());
 
-
-
-
-
     }
 
     @Test
@@ -615,6 +611,23 @@ public class ReportIntegrationTests {
         String endpoint = "/api/comments/2";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+
+
+        endpoint = "/api/admin/reports/false";
+        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        var json = JsonPath.parse(response.getBody());
+        List<String> reports = json.read("$._embedded.reports");
+        System.out.print(reports);
+        // the comment had 2 reports
+        // 5 unresolved in total, now two less are unresolved
+        assertEquals(3, reports.size());
+
+        endpoint = "/api/admin/reports/true";
+        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        json = JsonPath.parse(response.getBody());
+        reports = json.read("$._embedded.reports");
+        assertEquals(3, reports.size());
+
 
     }
 

@@ -4,11 +4,15 @@ import {Review} from "./Review";
 import {ReviewComment} from "./ReviewComment";
 
 export interface Report {
-    reportedText: string
     reportingUsername: string
+    reportedText: string
     reason: string
     courseId: string
     reviewerUsername: string
+    resolved: boolean
+    resolvedByUsername: string
+    resolvedTimestamp: string
+    status: string
     _links: {
         self: Link
         entity: Link
@@ -28,14 +32,26 @@ export const reasons = [
     "inne"
 ];
 
-async function getAllReports(): Promise<Report[]> {
-    const response = await api.get("/admin/reports");
+async function getUnresolvedReports(): Promise<Report[]> {
+    const response = await api.get("/admin/reports/false");
+    const json = await response.json();
+    console.log(json._embedded.reports)
+    return json._embedded.reports;
+}
+
+async function getResolvedReports(): Promise<Report[]> {
+    const response = await api.get("/admin/reports/true");
     const json = await response.json();
     return json._embedded.reports;
 }
 
-async function deleteReport(report: Report): Promise<boolean> {
-    const response = await api.delete(report._links.self.href);
+async function getAllReports(): Promise<Report[]> {
+    const response = await api.get("/admin/reports/all");
+    const json = await response.json();
+    return json._embedded.reports;
+}
+async function resolveReport(report: Report): Promise<boolean> {
+    const response = await api.put(`${report._links.self.href}/resolve`, null);
     return response.ok;
 }
 
@@ -52,7 +68,9 @@ async function reportEntity(entity: Review | ReviewComment, reportReason: string
 
 const ReportService = {
     getAllReports,
-    deleteReport,
+    getUnresolvedReports,
+    getResolvedReports,
+    resolveReport,
     deleteReportedEntity,
     reportEntity
 };

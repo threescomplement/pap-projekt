@@ -12,7 +12,7 @@ export default function ReportsPanel() {
 
     async function loadReports() {
         try {
-            const reports = await ReportService.getAllReports();
+            const reports = await ReportService.getUnresolvedReports();
             setReports(reports);
             setErrorMessage("");
         } catch (e) {
@@ -22,7 +22,7 @@ export default function ReportsPanel() {
 
     async function handleContentOk(report: Report) {
         try {
-            const ok = await ReportService.deleteReport(report);
+            const ok = await ReportService.resolveReport(report);
             if (ok) {
                 await loadReports();
                 setErrorMessage("");

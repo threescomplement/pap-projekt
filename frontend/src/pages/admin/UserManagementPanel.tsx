@@ -3,7 +3,6 @@ import UserService, {AppUser} from "../../lib/User";
 import {MdDeleteForever, MdSave} from "react-icons/md";
 import ErrorBox from "../../components/ErrorBox";
 import EditableText from "../../components/EditableText";
-import styles from "../../ui/pages/AdminPanel.module.css"
 
 export default function UserManagementPanel() {
     const [users, setUsers] = useState<AppUser[]>([]);

@@ -4,7 +4,6 @@ import ErrorBox from "../../components/ErrorBox";
 import {Link} from "react-router-dom";
 import {ConfirmationPopup} from "../../components/ConfirmationPopup";
 import styles from "../../ui/pages/AdminPanel.module.css"
-import reports from "../../lib/Reports";
 
 export default function ReportsPanel() {
     const [unresolvedReports, setUnresolvedReports] = useState<Report[]>([]);

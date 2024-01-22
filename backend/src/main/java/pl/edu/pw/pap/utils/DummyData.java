@@ -9,6 +9,7 @@ import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
+import pl.edu.pw.pap.report.ReportStatus;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.review.report.ReviewReport;
@@ -19,6 +20,8 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -95,6 +98,10 @@ public class DummyData {
         reviewReport_1 = reviewReportRepository.save(new ReviewReport(user_1, "obelgi w strone prowadzacego", review_2));
         reviewReport_2 = new ReviewReport(user_3, "nie obiektywna ocena", review_2);
         reviewReport_2.setResolved(true);
+        reviewReport_2.setResolvedTimestamp(Timestamp.from(Instant.now()));
+        reviewReport_2.setStatus(ReportStatus.DISCARDED);
+        reviewReport_2.setResolvedByUsername("admin");
+
         reviewReport_2 = reviewReportRepository.save(reviewReport_2);
         reviewReport_3 =  reviewReportRepository.save(new ReviewReport(user_3, "", review_4));
 

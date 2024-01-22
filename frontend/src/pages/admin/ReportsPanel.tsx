@@ -81,7 +81,7 @@ interface reportListProps {
 
 function ReportList(p: reportListProps) {
     return <ul className="tw-block tw-bg-darker-accent tw-py-5 tw-px-7 tw-mt-0 tw-rounded-b-lg">
-        {/*todo: to the reviewer -  is passing the link as a key ok?*/}
+        {/*todo: to the reviewer -  is passing the link as a key ok? theres no other unqiue info in the dto*/}
         {p.reports.map(r => <li
             key={r.reportingUsername + r._links.entity.href} className={styles.reportCard}>
             <ReportCard report={r} handleContentOk={p.handleContentOk} handleDeleteContent={p.handleDeleteContent}/>
@@ -110,7 +110,7 @@ export function ReportCard(props: ReportCardProps) {
             </Link>}
         <p className={styles.reportMetadata}>Powód zgłoszenia: {props.report.reason}</p>
         {props.report.resolved && <p
-            className={styles.reportMetadata}>Status: {props.report.status} by {props.report.resolvedByUsername}</p>
+            className={styles.reportMetadata}>Status: {props.report.status} przez użytkownika {props.report.resolvedByUsername}</p>
         }
         <h3 className="tw-pb-2">Treść</h3>
         <p>{props.report.reportedText}</p>

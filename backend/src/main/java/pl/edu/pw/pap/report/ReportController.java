@@ -71,13 +71,13 @@ public class ReportController {
                 .build();
     }
 
-    @PutMapping("/api/admin/reports/comments/{commentReportId}")
+    @PutMapping("/api/admin/reports/comments/{commentReportId}/resolve")
     public ReportDTO resolveCommentReport(@PathVariable Long commentReportId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         return reportService.resolveCommentReport(commentReportId, userPrincipal);
     }
 
-    @PutMapping("/api/admin/reports/reviews/{reviewReportId}")
+    @PutMapping("/api/admin/reports/reviews/{reviewReportId}/resolve")
     public ReportDTO resolveReviewReport(@PathVariable Long reviewReportId, @AuthenticationPrincipal UserPrincipal userPrincipal) {
         return reportService.resolveReviewReport(reviewReportId, userPrincipal);
     }

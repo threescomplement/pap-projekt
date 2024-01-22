@@ -1,4 +1,3 @@
-import styles from "./InformationBoxes.module.css"
 
 export interface MessageBoxProps {
     message: string

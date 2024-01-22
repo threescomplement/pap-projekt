@@ -46,7 +46,6 @@ async function fetchTeacherCourses(teacherId: string): Promise<Course[]> {
 async function fetchTeachersByFilters(filters: TeacherFilters): Promise<Teacher[]> {
     const response = await api.get("/teachers", null, filters);
     const json = await response.json();
-    console.log(json);
     return json._embedded.teachers;
 }
 

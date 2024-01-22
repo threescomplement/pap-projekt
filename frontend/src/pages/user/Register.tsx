@@ -1,8 +1,9 @@
 import {FormEvent, useReducer, useState} from "react";
 import UserService, {RegisterRequest} from "../../lib/User";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {formReducer} from "../../lib/utils";
-import styles from "../../ui/components/Forms.module.css"
+import formStyles from "../../ui/components/Forms.module.css"
+import "../../ui/index.css"
 
 const initialFormData: RegisterRequest = {
     username: "",
@@ -13,6 +14,7 @@ const initialFormData: RegisterRequest = {
 export default function Register() {
     const [formData, setFormData] = useReducer(formReducer<RegisterRequest>, initialFormData);
     const [isRegistered, setIsRegistered] = useState(false);
+    const navigate = useNavigate();
 
     function handleFormSubmit(event: FormEvent) {
         event.preventDefault();
@@ -22,14 +24,19 @@ export default function Register() {
     }
 
     if (isRegistered) {
-        return <>
-            <h1>Rejestracja ukończona</h1>
-            <p>Potwierdź adres mailowy przed zalogowaniem</p>
-            <Link to="/user/login">Login</Link>
-        </>;
+        return (
+            <div className="tw-max-w-.9 tw-my-10 tw-ml-20 tw-p-5">
+                <h1 className="tw-mb-10 tw-mt-10 tw-text-5xl">Rejestracja ukończona</h1>
+                <p className="tw-text-2xl">Potwierdź adres mailowy przed zalogowaniem</p>
+                <button className="tw-py-3 tw-px-8 tw-text-xl tw-mt-6 tw-w-2/12"
+                        onClick={() => navigate("/user/login")}>Login
+                </button>
+            </div>
+        );
+
     }
 
-    return <div className={styles.formContainer}>
+    return <div className={formStyles.formContainer}>
         <h1>Rejestracja</h1>
 
         <form onSubmit={handleFormSubmit}>
@@ -45,7 +52,7 @@ export default function Register() {
                 <p>Hasło:</p>
                 <input name="password" type="password" onChange={setFormData}/>
             </label>
-            <input className={styles.registerButton} type="submit" value="Rejestracja"/>
+            <input className={formStyles.registerButton} type="submit" value="Rejestracja"/>
         </form>
     </div>
 }

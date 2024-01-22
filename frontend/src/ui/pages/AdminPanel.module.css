@@ -4,10 +4,6 @@
     composes: coursesHeader from "Courses.module.css";
 }
 
-.userManagementPanel {
-    /*margin-top: 2rem*/
-}
-
 .managementAndReportContainer {
     display: flex;
     margin-top: 2rem;
@@ -48,4 +44,3 @@
     flex-grow: 0;
     height: fit-content;
 }
-/*todo: needs more love*/

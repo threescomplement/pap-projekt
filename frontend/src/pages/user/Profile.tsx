@@ -19,6 +19,8 @@ export default function Profile({user}: ProfileProps) {
         return <h1>Zaloguj się, aby wyświetlić swój profil...</h1>;
     }
 
+    const roleString = user.roles[0] === "ROLE_ADMIN" ? "Administrator" :  "Użytkownik";
+
     const handleLogout = () => {
         setUser(null);
         navigate("/user/login");
@@ -36,7 +38,7 @@ export default function Profile({user}: ProfileProps) {
             <div className={styles.userInfo}>
                 <p>Nazwa użytkownika: {user.username}</p>
                 <p>Email: {user.email}</p>
-                <p>Role: {user.roles}</p>
+                <p>Rola: {roleString}</p>
             </div>
             <button className={styles.logoutButton} onClick={handleLogout}>Wyloguj się</button>
             <button onClick={() => navigate("/user/change-password")}>Zmień hasło</button>

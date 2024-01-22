@@ -21,6 +21,7 @@ public class CommentReport {
     private String reason; // TODO: change to enum
     private String reportingUsername;
 
+    // TODO: Model relation with comment because this is silly
     private Long commentId;
     private String reportedText;
     private String commenterUsername;

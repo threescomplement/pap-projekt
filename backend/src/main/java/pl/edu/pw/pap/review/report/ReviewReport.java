@@ -19,6 +19,7 @@ public class ReviewReport {
     private Long id;
 
 
+    // TODO model relation with review
     private Long courseId;
     private String reviewerUsername;
     private String reportedText;

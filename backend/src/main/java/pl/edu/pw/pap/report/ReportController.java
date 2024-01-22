@@ -63,6 +63,7 @@ public class ReportController {
 
     @GetMapping("api/admin/reports/{resolvedStatus}")
     public RepresentationModel<ReportDTO> getAllReportsByResolvedStatus(@PathVariable(required = false) Boolean resolvedStatus) {
+        // TODO: default value doesnt work
         List<ReportDTO> reports = reportService.getReportsByResolved(Objects.requireNonNullElse(resolvedStatus, false));
         return HalModelBuilder.emptyHalModel()
                 .embed(reports.isEmpty() ? Collections.emptyList() : reports, LinkRelation.of("reports"))

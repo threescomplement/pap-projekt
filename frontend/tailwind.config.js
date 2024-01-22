@@ -8,6 +8,7 @@ module.exports = {
                 'darker-accent': '#222',
                 'dark-accent': '#272727',
                 'blue-accent': '#66A1BF',
+                'table-row': '#2a2a2a'
             }
         },
     },

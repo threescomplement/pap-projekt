@@ -1,19 +1,22 @@
 import ReportService, {Report} from "../../lib/Reports";
-import {useEffect, useState} from "react";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 import ErrorBox from "../../components/ErrorBox";
 import {Link} from "react-router-dom";
 import {ConfirmationPopup} from "../../components/ConfirmationPopup";
 import styles from "../../ui/pages/AdminPanel.module.css"
+import reports from "../../lib/Reports";
 
-// TODO styling
 export default function ReportsPanel() {
-    const [reports, setReports] = useState<Report[]>([]);
+    const [unresolvedReports, setUnresolvedReports] = useState<Report[]>([]);
+    const [resolvedReports, setResolvedReports] = useState<Report[]>([]);
     const [errorMessage, setErrorMessage] = useState("");
+    const [currentResolvedFilter, setCurrentResolvedFilter] = useState<boolean>(false);
 
     async function loadReports() {
         try {
-            const reports = await ReportService.getUnresolvedReports();
-            setReports(reports);
+            const reports = await ReportService.getAllReports();
+            setUnresolvedReports(reports.filter((r) => !r.resolved))
+            setResolvedReports(reports.filter((r) => r.resolved))
             setErrorMessage("");
         } catch (e) {
             setErrorMessage("Pobieranie nie powiodło się");
@@ -56,18 +59,37 @@ export default function ReportsPanel() {
     }, [])
 
     return <div>
-        <h2>Zgłoszenia</h2>
+        <h2 className="tw-mb-0">Zgłoszenia</h2>
         <ErrorBox message={errorMessage}/>
-        <div className="tw-flex tw-mt-6 tw-gap-2">
-        <button className="tw-py-3">Nierozwiązane</button><button>Rozwiązane</button>
+        <div className="tw-flex tw-mt-6 tw-gap-2 tw-w-full">
+            <button className={currentResolvedFilter ? styles.filterButton: styles.activeFilterButton}
+                    onClick={() => setCurrentResolvedFilter(false)}>Nierozwiązane</button>
+            <button className={!currentResolvedFilter ? styles.filterButton: styles.activeFilterButton}
+                    onClick={() => setCurrentResolvedFilter(true)}>Rozwiązane</button>
         </div>
-        <ul className="tw-block">
-            {reports.map(r => <li className={styles.reportCard}>
-                <ReportCard report={r} handleContentOk={handleContentOk} handleDeleteContent={handleDeleteContent}/>
-            </li>)}
-        </ul>
+        <ReportList reports={currentResolvedFilter ? resolvedReports : unresolvedReports}
+                    setResolvedFilter={setCurrentResolvedFilter} handleContentOk={handleContentOk}
+                    handleDeleteContent={handleDeleteContent}/>
     </div>;
 }
+
+interface reportListProps {
+    reports: Report[]
+    setResolvedFilter: Dispatch<SetStateAction<boolean>>
+    handleContentOk: (report: Report) => void
+    handleDeleteContent: (report: Report) => void
+}
+
+function ReportList(p: reportListProps) {
+    return <ul className="tw-block tw-bg-darker-accent tw-py-5 tw-px-7 tw-mt-0 tw-rounded-b-lg">
+        {/*todo: to the reviewer -  is passing the link as a key ok?*/}
+        {p.reports.map(r => <li
+            key={r.reportingUsername + r._links.entity.href} className={styles.reportCard}>
+            <ReportCard report={r} handleContentOk={p.handleContentOk} handleDeleteContent={p.handleDeleteContent}/>
+        </li>)}
+    </ul>
+}
+
 
 export interface ReportCardProps {
     report: Report
@@ -79,27 +101,34 @@ export function ReportCard(props: ReportCardProps) {
     const [showOkConfirmation, setShowOkConfirmation] = useState(false);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
+    const cardHeader = <h3 className="tw-py-3 tw-leading-7">Zgłoszone przez użytkownika {props.report.reportingUsername}</h3>
+
     return <div>
-        <Link to={`/courses/${props.report.courseId}/reviews/${props.report.reviewerUsername}`}>
-            <h3>Zgłoszone przez użytkownika {props.report.reportingUsername}</h3>
-        </Link>
-        <p className={styles.reportReason}>Powód zgłoszenia: {props.report.reason}</p>
-        <h3>Treść</h3>
+        {props.report.resolved
+            ? cardHeader
+            : <Link className="tw-p-0" to={`/courses/${props.report.courseId}/reviews/${props.report.reviewerUsername}`}>
+                {cardHeader}
+            </Link>}
+        <p className={styles.reportMetadata}>Powód zgłoszenia: {props.report.reason}</p>
+        {props.report.resolved && <p
+            className={styles.reportMetadata}>Status: {props.report.status} by {props.report.resolvedByUsername}</p>
+        }
+        <h3 className="tw-pb-2">Treść</h3>
         <p>{props.report.reportedText}</p>
-        <div className={styles.reportCardButtonContainer}>{showOkConfirmation
+        {props.report.resolved || <div className={styles.reportCardButtonContainer}>{showOkConfirmation
             ? <ConfirmationPopup
                 query={"Czy na pewno chcesz usunąć zgłoszenie?"}
                 handleConfirmation={() => props.handleContentOk(props.report)}
                 setVisibility={setShowOkConfirmation}/>
-            : <button onClick={() => setShowOkConfirmation(true)}>Content is ok</button>
+            : <button onClick={() => setShowOkConfirmation(true)}>Treść w porządku</button>
         }
-        {showDeleteConfirmation
-            ? <ConfirmationPopup
-                query={"Czy na pewno chcesz usunąć zgłoszoną treść?"}
-                handleConfirmation={() => props.handleDeleteContent(props.report)}
-                setVisibility={setShowDeleteConfirmation}/>
-            : <button onClick={() => setShowDeleteConfirmation(true)}>Delete reported content</button>
-        }
-        </div>
+            {showDeleteConfirmation
+                ? <ConfirmationPopup
+                    query={"Czy na pewno chcesz usunąć zgłoszoną treść?"}
+                    handleConfirmation={() => props.handleDeleteContent(props.report)}
+                    setVisibility={setShowDeleteConfirmation}/>
+                : <button onClick={() => setShowDeleteConfirmation(true)}>Usuń zgłoszoną treść</button>
+            }
+        </div>}
     </div>
 }

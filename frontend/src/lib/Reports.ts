@@ -35,7 +35,6 @@ export const reasons = [
 async function getUnresolvedReports(): Promise<Report[]> {
     const response = await api.get("/admin/reports/false");
     const json = await response.json();
-    console.log(json._embedded.reports)
     return json._embedded.reports;
 }
 

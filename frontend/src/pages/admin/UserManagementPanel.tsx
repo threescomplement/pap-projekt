@@ -16,10 +16,10 @@ export default function UserManagementPanel() {
 
     useEffect(() => reloadUsers(), []);
 
-    return <div className={styles.userManagementPanel}>
+    return <div>
         <h2>Użytkownicy</h2>
         <ErrorBox message={errorMessage}/>
-        <table>
+        <table className="tw-mt-6">
             <thead>
             <tr>
                 <th>Id</th>

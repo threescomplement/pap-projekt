@@ -6,10 +6,10 @@ export interface MessageBoxProps {
 
 // TODO styling
 export default function MessageBox(props: MessageBoxProps) {
-    const cls = props.message === ""
-        ? styles.hidden
-        : styles.messageBox
-    return <div className={cls}>
+    return <div className={props.message === ""
+        ? "tw-invisible"
+        : "tw-bg-blue-accent tw-text-dark-accent tw-w-1/4 tw-rounded-md tw-text-center tw-pt-4 tw-pb-3 tw-px-2 tw-my-3"}>
+
         <p>{props.message}</p>
     </div>;
 }

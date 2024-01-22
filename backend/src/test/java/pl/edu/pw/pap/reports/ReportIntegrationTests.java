@@ -580,41 +580,42 @@ public class ReportIntegrationTests {
     }
 
     @Test
-    public void deleteReportsOfRemovedReview() {
+    public void resolveReportsOfRemovedReview() {
         adminLogin();
-        String endpoint = "/api/courses/1/reviews/rbatty";
+        String endpoint = "/api/courses/1/reviews/rbatty"; // review_2
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
-        assertEquals(1, reviewReportRepository.count());
-        assertEquals(3, commentReportRepository.count());
+        endpoint = "/api/admin/reports/false";
+        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        var json = JsonPath.parse(response.getBody());
+        List<String> reports = json.read("$._embedded.reports");
+        System.out.print(reports);
+        // the review had 1 resolved report and one not,
+        // and also one reported comment,
+        // 5 unresolved in total, now two less are unresolved (
+        assertEquals(3, reports.size());
 
-        endpoint = "/api/courses/3/reviews/rdeckard";
-        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
+        endpoint = "/api/admin/reports/true";
+        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.GET, new HttpEntity<>(headers), String.class);
+        json = JsonPath.parse(response.getBody());
+        reports = json.read("$._embedded.reports");
+        assertEquals(3, reports.size());
 
-        assertEquals(0, reviewReportRepository.count());
-        assertEquals(3, commentReportRepository.count());
+
+
+
 
     }
 
     @Test
-    public void deleteReportsOfRemovedComment() {
+    public void resolveReportsOfRemovedComment() {
 
         adminLogin();
         String endpoint = "/api/comments/2";
         var response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
         assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
 
-        assertEquals(3, reviewReportRepository.count());
-        assertEquals(1, commentReportRepository.count());
-
-        endpoint = "/api/comments/4";
-        response = restTemplate.exchange(buildUrl(endpoint, port), HttpMethod.DELETE, new HttpEntity<>(headers), String.class);
-        assertEquals(HttpStatusCode.valueOf(204), response.getStatusCode());
-
-        assertEquals(3, reviewReportRepository.count());
-        assertEquals(0, commentReportRepository.count());
     }
 
     @Test

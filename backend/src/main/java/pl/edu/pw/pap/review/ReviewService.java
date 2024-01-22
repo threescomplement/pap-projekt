@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.ForbiddenException;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.report.ReportStatus;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
@@ -35,6 +36,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final ReviewReportRepository reviewReportRepository;
+    private final CommentReportRepository commentReportRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
@@ -110,6 +112,21 @@ public class ReviewService {
                 })
                 .toList()
         );
+        var comments = review.getComments();
+        for (var comment: comments){
+            var commentReports = commentReportRepository.findByCommentIdAndResolved(comment.getId(), false);
+            commentReportRepository.saveAll(commentReports
+                    .stream()
+                    .peek(report -> {
+                        report.setResolved(true);
+                        report.setResolvedByUsername(userPrincipal.getUsername());
+                        report.setStatus(ReportStatus.CONTENT_DELETE);
+                        // in order for all of them to have the same resolve timestamp
+                        report.setResolvedTimestamp(Timestamp.from(currentTime));
+                    })
+                    .toList()
+            );
+        }
         reviewRepository.delete(review);
     }
 

@@ -14,14 +14,11 @@
     gap: 3rem;
 }
 
-.reportList {
-    display: block;
-}
 
 .reportCard {
     background-color: #272727;
     border-radius: .5rem;
-    margin: 1rem;
+    margin-top: 1rem;
     padding: 1rem 1.5rem 1rem;
 }
 

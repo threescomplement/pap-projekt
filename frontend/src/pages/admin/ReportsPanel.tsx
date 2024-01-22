@@ -58,7 +58,10 @@ export default function ReportsPanel() {
     return <div>
         <h2>Zgłoszenia</h2>
         <ErrorBox message={errorMessage}/>
-        <ul className={styles.reportList}>
+        <div className="tw-flex tw-mt-6 tw-gap-2">
+        <button className="tw-py-3">Nierozwiązane</button><button>Rozwiązane</button>
+        </div>
+        <ul className="tw-block">
             {reports.map(r => <li className={styles.reportCard}>
                 <ReportCard report={r} handleContentOk={handleContentOk} handleDeleteContent={handleDeleteContent}/>
             </li>)}

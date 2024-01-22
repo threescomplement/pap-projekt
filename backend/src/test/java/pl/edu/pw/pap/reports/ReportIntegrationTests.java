@@ -751,7 +751,7 @@ public class ReportIntegrationTests {
         assertEquals("rbatty", json.read("$.reviewerUsername"));
         assertEquals(true, json.read("$.resolved"));
         assertEquals("admin", json.read("$.resolvedByUsername"));
-        assertEquals("Report discarded", json.read("$.status"));
+        assertEquals("Zgłoszenie odrzucone", json.read("$.status"));
 
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/admin/reports/reviews/1"));
         assertTrue(json.read("$._links.entity.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -775,7 +775,7 @@ public class ReportIntegrationTests {
         assertEquals(1, (int) json.read("$.courseId"));
         assertEquals(false, json.read("$.resolved"));
         assertNull(json.read("$.resolvedByUsername"));
-        assertEquals("Awaiting review", json.read("$.status"));
+        assertEquals("Oczekuje na rozpatrzenie", json.read("$.status"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/2"));
         assertTrue(json.read("$._links.entity.href").toString().endsWith("/api/comments/4"));
         assertTrue(json.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));
@@ -796,7 +796,7 @@ public class ReportIntegrationTests {
         assertEquals(1, (int) json.read("$.courseId"));
         assertEquals(true, json.read("$.resolved"));
         assertEquals("admin", json.read("$.resolvedByUsername"));
-        assertEquals("Report discarded", json.read("$.status"));
+        assertEquals("Zgłoszenie odrzucone", json.read("$.status"));
         assertTrue(json.read("$._links.self.href").toString().endsWith("/api/admin/reports/comments/2"));
         assertTrue(json.read("$._links.entity.href").toString().endsWith("/api/comments/4"));
         assertTrue(json.read("$._links.review.href").toString().endsWith("/api/courses/1/reviews/rbatty"));

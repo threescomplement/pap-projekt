@@ -57,7 +57,7 @@ export default function ReportsPanel() {
             .catch(e => console.error(e));
     }, [])
 
-    return <div>
+    return <div className="tw-w-8/12">
         <h2 className="tw-mb-0">Zgłoszenia</h2>
         <ErrorBox message={errorMessage}/>
         <div className="tw-flex tw-mt-6 tw-gap-2 tw-w-full">

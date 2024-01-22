@@ -7,7 +7,7 @@
 .managementAndReportContainer {
     display: flex;
     margin-top: 2rem;
-    width: 100%;
+    width: 90%;
     gap: 3rem;
 }
 
@@ -47,6 +47,7 @@
 
 .activeFilterButton {
     composes: filterButton;
+    color: #fff;
     background-color: #222222;
 }
 

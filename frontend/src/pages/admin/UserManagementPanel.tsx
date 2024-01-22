@@ -15,7 +15,7 @@ export default function UserManagementPanel() {
 
     useEffect(() => reloadUsers(), []);
 
-    return <div>
+    return <div className="tw-w-full">
         <h2>Użytkownicy</h2>
         <ErrorBox message={errorMessage}/>
         <table className="tw-mt-6">

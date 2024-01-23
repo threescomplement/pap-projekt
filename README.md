@@ -13,7 +13,6 @@ Równoległe repozytoria na GitHub i wydziałowym GitLab
 * Mikołaj Garbowski
 * Michał Łuszczek
 * Maksym Bieńkowski
-* Tomasz Kurzela
 
 ## Opis projektu
 Aplikacja służąca do wystawiania przez studentów i przeglądania opinii o kursach językowych oferowanych przez 

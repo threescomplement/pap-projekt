@@ -81,7 +81,7 @@ public class CommentService {
                 .peek(report -> {
                     report.setResolved(true);
                     report.setResolvedByUsername(principal.getUsername());
-                    report.setStatus(ReportStatus.CONTENT_DELETE);
+                    report.setStatus(ReportStatus.CONTENT_DELETED);
                     // in order for all of them to have the same resolve timestamp
                     report.setResolvedTimestamp(Timestamp.from(currentTime));
                 })

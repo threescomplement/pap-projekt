@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pl.edu.pw.pap.comment.ForbiddenException;
+import pl.edu.pw.pap.comment.report.CommentReportRepository;
+import pl.edu.pw.pap.report.ReportStatus;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
 import pl.edu.pw.pap.course.CourseNotFoundException;
+import pl.edu.pw.pap.review.report.ReviewReport;
 import pl.edu.pw.pap.review.report.ReviewReportRepository;
 import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.teacher.TeacherNotFoundException;
@@ -17,6 +20,8 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +36,7 @@ public class ReviewService {
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
     private final ReviewReportRepository reviewReportRepository;
+    private final CommentReportRepository commentReportRepository;
 
 
     public ReviewDTO convertToDTO(Review review) {
@@ -90,10 +96,37 @@ public class ReviewService {
 
         log.debug("Trying to remove review");
         Review review = maybeReview.get();
-        // clear reports TODO: model relation to do this automatically with cascades
-        reviewReportRepository.removeByCourseIdAndReviewerUsername(
-                review.getCourse().getId(), review.getUser().getUsername());
-
+        // set reports as resolved TODO: set reason as "deleted content" or similar
+        // can maybe be done with one Update query instead of two, but idk if it really matters?
+        Instant currentTime = Instant.now();
+        List<ReviewReport> reviewReports = reviewReportRepository.findByCourseIdAndReviewerUsernameAndResolved(
+                review.getCourse().getId(), review.getUser().getUsername(), false);
+        reviewReportRepository.saveAll(reviewReports
+                .stream()
+                .peek(report -> {
+                    report.setResolved(true);
+                    report.setResolvedByUsername(userPrincipal.getUsername());
+                    report.setStatus(ReportStatus.CONTENT_DELETE);
+                    // in order for all of them to have the same resolve timestamp
+                    report.setResolvedTimestamp(Timestamp.from(currentTime));
+                })
+                .toList()
+        );
+        var comments = review.getComments();
+        for (var comment: comments){
+            var commentReports = commentReportRepository.findByCommentIdAndResolved(comment.getId(), false);
+            commentReportRepository.saveAll(commentReports
+                    .stream()
+                    .peek(report -> {
+                        report.setResolved(true);
+                        report.setResolvedByUsername(userPrincipal.getUsername());
+                        report.setStatus(ReportStatus.CONTENT_DELETE);
+                        // in order for all of them to have the same resolve timestamp
+                        report.setResolvedTimestamp(Timestamp.from(currentTime));
+                    })
+                    .toList()
+            );
+        }
         reviewRepository.delete(review);
     }
 

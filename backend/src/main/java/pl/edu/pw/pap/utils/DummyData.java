@@ -9,6 +9,7 @@ import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
 import pl.edu.pw.pap.course.Course;
 import pl.edu.pw.pap.course.CourseRepository;
+import pl.edu.pw.pap.report.ReportStatus;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewRepository;
 import pl.edu.pw.pap.review.report.ReviewReport;
@@ -19,6 +20,8 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.emailverification.EmailVerificationTokenRepository;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -93,7 +96,13 @@ public class DummyData {
 //        rdeckard: 1 review reports, user3: 2 review reports
 //         review_2 has 2 reports, review4 has 1 report
         reviewReport_1 = reviewReportRepository.save(new ReviewReport(user_1, "obelgi w strone prowadzacego", review_2));
-        reviewReport_2 = reviewReportRepository.save(new ReviewReport(user_3, "nie obiektywna ocena", review_2));
+        reviewReport_2 = new ReviewReport(user_3, "nie obiektywna ocena", review_2);
+        reviewReport_2.setResolved(true);
+        reviewReport_2.setResolvedTimestamp(Timestamp.from(Instant.now()));
+        reviewReport_2.setStatus(ReportStatus.DISCARDED);
+        reviewReport_2.setResolvedByUsername("admin");
+
+        reviewReport_2 = reviewReportRepository.save(reviewReport_2);
         reviewReport_3 =  reviewReportRepository.save(new ReviewReport(user_3, "", review_4));
 
         // rbatty: 1 comment reports, user3: 2 comment reports

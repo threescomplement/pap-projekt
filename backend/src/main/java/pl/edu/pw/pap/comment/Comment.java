@@ -19,7 +19,7 @@ public class Comment {
     @Id
     @GeneratedValue
     private Long id;
-
+    @Column(length = 1024)
     private String text;
     private Boolean edited;
     @CreationTimestamp

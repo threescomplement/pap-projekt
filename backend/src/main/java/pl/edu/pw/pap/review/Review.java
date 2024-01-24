@@ -31,6 +31,7 @@ public class Review {
     @JoinColumn(name = "course_id")
     private Course course;
 
+    @Column(length = 1024)
     private String opinion;
     private int easeRating;
     private int interestRating;

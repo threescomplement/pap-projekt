@@ -89,7 +89,6 @@ function ReportList(p: reportListProps) {
     </ul>
 }
 
-
 export interface ReportCardProps {
     report: Report
     handleContentOk: (report: Report) => void
@@ -112,7 +111,7 @@ export function ReportCard(props: ReportCardProps) {
         {props.report.resolved && <p
             className={styles.reportMetadata}>Status: {props.report.status} przez użytkownika {props.report.resolvedByUsername}</p>
         }
-        <h3 className="tw-pb-2">Treść</h3>
+        <h3 className="tw-pb-2 tw-flex">Treść</h3>
         <p>{props.report.reportedText}</p>
         {props.report.resolved || <div className={styles.reportCardButtonContainer}>{showOkConfirmation
             ? <ConfirmationPopup

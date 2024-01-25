@@ -1,6 +1,6 @@
 # Programowanie Aplikacyjne 2023Z - projekt
 
-[![Java CI with Gradle](https://github.com/mGarbowski/pap-projekt/actions/workflows/gradle.yml/badge.svg)](https://github.com/mGarbowski/pap-projekt/actions/workflows/gradle.yml)
+![Tests](https://github.com/mGarbowski/pap-projekt/actions/workflows/all-tests.yml/badge.svg)
 
 Projekt semestralny
 

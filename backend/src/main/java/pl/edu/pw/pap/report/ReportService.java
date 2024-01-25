@@ -19,6 +19,8 @@ import pl.edu.pw.pap.security.UserPrincipal;
 import pl.edu.pw.pap.user.UserNotFoundException;
 import pl.edu.pw.pap.user.UserRepository;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,6 +46,10 @@ public class ReportService {
                 .reason(report.getReason())
                 .reviewerUsername(report.getReviewerUsername())
                 .courseId(report.getCourseId())
+                .resolved(report.getResolved())
+                .resolvedByUsername(report.getResolvedByUsername())
+                .status(report.getStatus().message)
+                .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
 
         return reportDTO.add(
@@ -61,6 +67,10 @@ public class ReportService {
                 .reason(report.getReason())
                 .reviewerUsername(report.getReviewerUsername())
                 .courseId(report.getCourseId())
+                .resolved(report.getResolved())
+                .resolvedByUsername(report.getResolvedByUsername())
+                .status(report.getStatus().message)
+                .resolvedTimestamp(report.getResolvedTimestamp())
                 .build();
         return reportDTO.add(
                 linkTo(methodOn(ReportController.class).getCommentReport(report.getId())).withSelfRel(),
@@ -69,10 +79,7 @@ public class ReportService {
         );
     }
 
-
-    public List<ReportDTO> getAllReports() {
-        var reviewReports = reviewReportRepository.findAll();
-        var commentReports = commentReportRepository.findAll();
+    private List<ReportDTO> concatIntoDtoList(List<CommentReport> commentReports, List<ReviewReport> reviewReports){
         ArrayList<ReportDTO> allReports = new ArrayList<>(reviewReports
                 .stream()
                 .map(this::convertReportToDto)
@@ -81,7 +88,19 @@ public class ReportService {
                 .stream()
                 .map(this::convertReportToDto)
                 .toList());
-        return allReports.stream().toList();
+        return allReports;
+    }
+
+    public List<ReportDTO> getAllReports() {
+        var reviewReports = reviewReportRepository.findAll();
+        var commentReports = commentReportRepository.findAll();
+        return concatIntoDtoList(commentReports, reviewReports);
+    }
+
+    public List<ReportDTO> getReportsByResolved(Boolean resolvedStatus) {
+        var reviewReports = reviewReportRepository.findByResolved(resolvedStatus);
+        var commentReports = commentReportRepository.findByResolved(resolvedStatus);
+        return concatIntoDtoList(commentReports, reviewReports);
     }
 
     public void deleteCommentReport(Long commentReportId){
@@ -136,4 +155,23 @@ public class ReportService {
     }
 
 
+    public ReportDTO resolveCommentReport(Long commentReportId, UserPrincipal userPrincipal) {
+        var commentReport = commentReportRepository.findById(commentReportId)
+                .orElseThrow(() -> new CommentReportNotFoundException("No report with id:" + commentReportId));
+        commentReport.setResolved(true);
+        commentReport.setResolvedByUsername(userPrincipal.getUsername());
+        commentReport.setStatus(ReportStatus.DISCARDED);
+        commentReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
+        return convertReportToDto(commentReportRepository.save(commentReport));
+    }
+
+    public ReportDTO resolveReviewReport(Long reviewReportId, UserPrincipal userPrincipal) {
+        var reviewReport = reviewReportRepository.findById(reviewReportId)
+                .orElseThrow(() -> new ReviewReportNotFoundException("No review report with id " + reviewReportId));
+        reviewReport.setResolved(true);
+        reviewReport.setResolvedByUsername(userPrincipal.getUsername());
+        reviewReport.setStatus(ReportStatus.DISCARDED);
+        reviewReport.setResolvedTimestamp(Timestamp.from(Instant.now()));
+        return convertReportToDto(reviewReportRepository.save(reviewReport));
+    }
 }

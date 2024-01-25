@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import pl.edu.pw.pap.comment.report.CommentReport;
 import pl.edu.pw.pap.comment.report.CommentReportRepository;
+import pl.edu.pw.pap.report.ReportStatus;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.review.ReviewKey;
 import pl.edu.pw.pap.review.ReviewRepository;
@@ -15,6 +17,8 @@ import pl.edu.pw.pap.user.User;
 import pl.edu.pw.pap.user.UserRepository;
 import pl.edu.pw.pap.user.UserNotFoundException;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,8 +73,20 @@ public class CommentService {
             throw (new ForbiddenException(("You are not permitted to delete that comment")));
         }
 
-        //clear reports TODO: model relation to do this with cascades
-        commentReportRepository.removeByCommentId(commentId);
+        // set reports as resolved
+        Instant currentTime = Instant.now();
+        List<CommentReport> commentReports = commentReportRepository.findByCommentIdAndResolved(commentId, false);
+        commentReportRepository.saveAll(commentReports
+                .stream()
+                .peek(report -> {
+                    report.setResolved(true);
+                    report.setResolvedByUsername(principal.getUsername());
+                    report.setStatus(ReportStatus.CONTENT_DELETED);
+                    // in order for all of them to have the same resolve timestamp
+                    report.setResolvedTimestamp(Timestamp.from(currentTime));
+                })
+                .toList()
+        );
         commentRepository.delete(comment);
 
     }

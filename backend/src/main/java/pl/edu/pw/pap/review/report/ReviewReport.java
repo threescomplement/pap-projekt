@@ -3,8 +3,11 @@ package pl.edu.pw.pap.review.report;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import pl.edu.pw.pap.report.ReportStatus;
 import pl.edu.pw.pap.review.Review;
 import pl.edu.pw.pap.user.User;
+
+import java.sql.Timestamp;
 
 @Setter
 @Getter
@@ -13,16 +16,21 @@ public class ReviewReport {
 
     @GeneratedValue
     @Id
-    Long id;
+    private Long id;
 
 
-    // TODO: Model a proper relation between ReviewReport and Review
-    Long courseId;
-    String reviewerUsername;
-    String reportedText;
+    // TODO model relation with review
+    private Long courseId;
+    private String reviewerUsername;
+    private String reportedText;
 
-    String reportingUsername;
-    String reason;
+    private String reportingUsername;
+    private String reason;
+    private Boolean resolved;
+    private String resolvedByUsername;
+    private Timestamp resolvedTimestamp;
+    private ReportStatus status;
+
 
     public ReviewReport(User reportingUser, String reason, Review reportedReview) {
         this.reason = reason;
@@ -30,6 +38,10 @@ public class ReviewReport {
         this.courseId = reportedReview.getCourse().getId();
         this.reviewerUsername = reportedReview.getUser().getUsername();
         this.reportedText = reportedReview.getOpinion();
+        this.resolved = false;
+        this.resolvedByUsername = null;
+        this.resolvedTimestamp = null;
+        this.status = ReportStatus.ACTIVE;
     }
 
     protected ReviewReport() {

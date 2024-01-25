@@ -5,7 +5,6 @@ import {Link} from "react-router-dom";
 import {ConfirmationPopup} from "../../components/ConfirmationPopup";
 import styles from "../../ui/pages/AdminPanel.module.css"
 
-// TODO styling
 export default function ReportsPanel() {
     const [unresolvedReports, setUnresolvedReports] = useState<Report[]>([]);
     const [resolvedReports, setResolvedReports] = useState<Report[]>([]);
@@ -112,7 +111,7 @@ export function ReportCard(props: ReportCardProps) {
         {props.report.resolved && <p
             className={styles.reportMetadata}>Status: {props.report.status} przez użytkownika {props.report.resolvedByUsername}</p>
         }
-        <h3 className="tw-pb-2 tw-flex">Treść</h3> {/*todo: tinker*/}
+        <h3 className="tw-pb-2 tw-flex">Treść</h3>
         <p>{props.report.reportedText}</p>
         {props.report.resolved || <div className={styles.reportCardButtonContainer}>{showOkConfirmation
             ? <ConfirmationPopup

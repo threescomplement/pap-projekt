@@ -3,7 +3,6 @@ export interface MessageBoxProps {
     message: string
 }
 
-// TODO styling
 export default function MessageBox(props: MessageBoxProps) {
     return <div className={props.message === ""
         ? "tw-invisible"

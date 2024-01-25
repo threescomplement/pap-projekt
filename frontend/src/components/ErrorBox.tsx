@@ -6,7 +6,7 @@ export interface ErrorBoxProps {
 
 export default function ErrorBox(props: ErrorBoxProps) {
     const cls = props.message === ""
-        ? styles.hidden
+        ? "tw-invisible"
         : styles.errorBox;
 
     return <div className={cls}>

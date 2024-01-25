@@ -7,18 +7,21 @@
 .managementAndReportContainer {
     display: flex;
     margin-top: 2rem;
+    width: 90%;
     gap: 3rem;
 }
 
-.reportList {
-    display: block;
-}
 
 .reportCard {
-    background-color: #272727;
+    background-color: #2a2a2a;
     border-radius: .5rem;
-    margin: 1rem;
+    margin-top: 1rem;
     padding: 1rem 1.5rem 1rem;
+}
+
+.reportCard:first-child {
+    margin-top: 0;
+    padding-top: 1rem;
 }
 
 .reportCard h3 {
@@ -26,11 +29,26 @@
     margin-bottom: 0;
 }
 
-.reportReason {
+.reportMetadata {
     color: #fff;
     font-size: 1rem;
     margin-top: 0;
     margin-bottom: .5rem;
+}
+
+.filterButton {
+    border-bottom-left-radius: 0;
+    font-size: 1.2rem;
+    width: 100%;
+    padding-top: .7rem;
+    padding-bottom: .7rem;
+    border-bottom-right-radius: 0;
+}
+
+.activeFilterButton {
+    composes: filterButton;
+    color: #fff;
+    background-color: #222222;
 }
 
 .reportCardButtonContainer {

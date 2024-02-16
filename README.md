@@ -6,6 +6,9 @@ Programowanie Aplikacyjne w semestrze 2023Z.
 
 ![Tests](https://github.com/mGarbowski/pap-projekt/actions/workflows/all-tests.yml/badge.svg)
 
+* [Aplikacja](https://pap.mgarbowski.pl)
+* [Scraper do strony SJO](https://github.com/mGarbowski/sjo-scraper)
+
 ## Autorzy
 
 * Mikołaj Garbowski

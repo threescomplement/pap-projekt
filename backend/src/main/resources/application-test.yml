@@ -1,0 +1,5 @@
+security:
+  jwt:
+    secret-key: "not-the-production-key"
+app:
+  website-base-url: "http://localhost:3000"

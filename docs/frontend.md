@@ -1,7 +1,8 @@
 # Frontend
-Frontend do aplikacji stanowi aplikacja webowa w frameworku React, używamy języka TypeScript.
+Frontend do aplikacji stanowi aplikacja webowa w języku TypeScript, wykorzystuje React i Tailwind CSS.
+W planach są migracja stylowania całej aplikacji do Tailwind CSS i migracja samej aplikacji do NextJS.
 
-Kod związany z frontendem znajduje się w katalogu [frontend](../frontend)
+Kod związany z aplikacji frontendowej znajduje się w katalogu [frontend](../frontend)
 
 ## Instalacja
 Do pracy potrzebne są lokalnie zainstalowane NodeJS i npm
@@ -30,7 +31,7 @@ npm start
 
 Buduje aplikację i startuje serwer deweloperski, który umożliwia wygodną pracę. Automatycznie powinno otworzyć się
 okno przeglądarki z otwartą aplikacją domyślnie pod `http://localhost:3000`. Po zmodyfikowaniu pliku źródłowego
-i zapisaniu go, strona od razu się przeładowuje bez konieczności wyłączania i włączania (wymagane tylko w szczególnych 
+i zapisaniu go strona od razu się przeładowuje bez konieczności wyłączania i włączania (wymagane tylko w szczególnych 
 przypadkach).
 
 ### Uruchomienie testów
@@ -38,28 +39,33 @@ przypadkach).
 npm test
 ```
 
-Korzystamy z biblioteki Jest, domyślnej dla `create-react-app`
+Korzystamy z biblioteki Jest, domyślnej dla `create-react-app`.
+Ostrzeżenia ESLint są traktowane jako błędy.
 
 ### Budowanie aplikacji
 ```shell
 npm run build
 ```
 
-Tworzy zoptymalizowany build aplikacji przystosowany do wdrożenia na serwerze.
+Tworzy zoptymalizowany build aplikacji, przystosowany do wdrożenia na serwerze.
 
 ## Struktura katalogów
-W głównym katalogu [frontend](../frontend) znajdują się pliki konfiguracyjne i `.env` określający zmienne środowiskowe,
-do których możemy odwołać się w aplikacji `process.env.NAZWA_ZMIENNEJ`.
+W głównym katalogu [frontend](../frontend) znajdują się pliki konfiguracyjne. W plikach `.env.production` 
+i `.env.development` zdefiniowane są odpowiednie zmienne środowiskowe, do których możemy odwołać się w aplikacji przez
+`process.env.NAZWA_ZMIENNEJ`. Aplikacja uruchomiona przez `npm start` używa profilu `development`, a zbudowana przez
+`npm run build` używa profilu `production`.
 
 Katalog [src](../frontend/src) zawiera właściwy kod źródłowy. Punktem wejścia aplikacji jest 
 [index.tsx](../frontend/src/index.tsx), głównym komponentem jest [App.tsx](../frontend/src/App.tsx).
 
 Katalog [lib](../frontend/src/lib) zawiera zwykłe pliki `.ts` zawierające logikę biznesową.
 
-Katalog [pages](../frontend/src/pages) zawiera komponenty obsługujące routing podstrony aplikacji używane przez React 
-Router (patrz na [App.tsx](../frontend/src/App.tsx)).
+Katalog [pages](../frontend/src/pages) zawiera komponenty podstron używanych przez React Router 
+(patrz na [App.tsx](../frontend/src/App.tsx)).
 
-Katalog [hooks](../frontend/src/hooks) zawiera własne hooki. 
+Katalog [hooks](../frontend/src/hooks) zawiera własne React Hooks. 
 (patrz [Reusing logic with custom hooks](https://react.dev/learn/reusing-logic-with-custom-hooks))
 
 Katalog [components](../frontend/src/components) zawiera pozostałe komponenty.
+
+Katalog [ui](../frontend/src/ui) zawiera stylowanie.
